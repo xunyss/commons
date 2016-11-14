@@ -7,7 +7,7 @@
 	
 	<groupId>org.xunyss.commons</groupId>
 	<artifactId>commons</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.5-RELEASE</version>
 	<packaging>jar</packaging>
 
 	<name>commons</name>
@@ -44,15 +44,25 @@
 					<target>1.7</target>
 				</configuration>
 			</plugin>
-			
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 			<plugin>
 				<groupId>com.github.github</groupId>
 				<artifactId>site-maven-plugin</artifactId>
-				<version>0.12</version>
 				<configuration>
 					<message>deploy for ${project.version}</message>
 					<noJekyll>true</noJekyll>
-					<merge>false</merge>
+					<merge>true</merge><!-- true: keep version history -->
 					<outputDirectory>${project.build.directory}/mvn-repo</outputDirectory>
 					<branch>refs/heads/mvn-repo</branch>
 					<includes>
