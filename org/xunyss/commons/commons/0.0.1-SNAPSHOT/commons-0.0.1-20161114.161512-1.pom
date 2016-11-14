@@ -54,7 +54,10 @@
 					<noJekyll>true</noJekyll>
 					<outputDirectory>${project.build.directory}/mvn-repo</outputDirectory>
 					<branch>refs/heads/mvn-repo</branch>
-					<includes><include>**/*</include></includes>
+					<merge>false</merge>
+					<includes>
+						<include>**/*</include>
+					</includes>
 					<repositoryOwner>xunyss</repositoryOwner>
 					<repositoryName>commons</repositoryName>
 				</configuration>
