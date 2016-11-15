@@ -7,7 +7,7 @@
 	
 	<groupId>org.xunyss.commons</groupId>
 	<artifactId>commons</artifactId>
-	<version>0.5-RELEASE</version>
+	<version>0.5.1-RELEASE</version>
 	<packaging>jar</packaging>
 
 	<name>commons</name>

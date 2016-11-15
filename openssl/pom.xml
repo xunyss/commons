@@ -7,7 +7,7 @@
 	
 	<groupId>org.xunyss.openssl</groupId>
 	<artifactId>openssl</artifactId>
-	<version>0.0.1-RELEASE</version>
+	<version>0.1.1-RELEASE</version>
 	<packaging>jar</packaging>
 
 	<name>openssl</name>
@@ -32,7 +32,7 @@
 		<dependency>
 			<groupId>org.xunyss.commons</groupId>
 			<artifactId>commons</artifactId>
-			<version>0.5-RELEASE</version>
+			<version>0.5.1-RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
