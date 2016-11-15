@@ -62,7 +62,7 @@
 				<configuration>
 					<message>deploy for ${project.version}</message>
 					<noJekyll>true</noJekyll>
-					<merge>false</merge><!-- true: keep version history -->
+					<merge>true</merge><!-- true: keep version history -->
 					<outputDirectory>${project.build.directory}/mvn-repo</outputDirectory>
 					<branch>refs/heads/mvn-repo</branch>
 					<includes>
