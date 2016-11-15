@@ -13,6 +13,9 @@ import org.xunyss.commons.util.ObjectUtils;
 import org.xunyss.commons.util.ResourceUtils;
 
 /**
+ * https://wiki.openssl.org/index.php/Binaries
+ * https://indy.fulgan.com/SSL/
+ * openssl-1.0.2g-i386-win32
  * 
  * @author XUNYSS
  */
