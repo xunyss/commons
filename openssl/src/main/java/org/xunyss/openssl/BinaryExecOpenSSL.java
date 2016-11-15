@@ -30,7 +30,7 @@ public class BinaryExecOpenSSL {
 	}
 	
 	
-	private static final String BINARY_RESOURCE_PATH = "/com/xunyss/openssl/binary";
+	private static final String BINARY_RESOURCE_PATH = "/org/xunyss/openssl/binary";
 	
 	private String binaryResourcePath;
 	private File extractDir;
@@ -39,7 +39,7 @@ public class BinaryExecOpenSSL {
 	
 	private BinaryExecOpenSSL() {
 		binaryResourcePath = BINARY_RESOURCE_PATH + FileUtils.FILE_SEPARATOR + getOS();
-		extractDir = new File(FileUtils.getTempDir(), "com_xunyss_openssl_bin");
+		extractDir = new File(FileUtils.getTempDir(), "org_xunyss_openssl_bin");
 		
 		binName = extractDir.getPath() + File.separator + getBinName();
 		
