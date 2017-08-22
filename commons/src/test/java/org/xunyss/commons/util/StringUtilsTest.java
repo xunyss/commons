@@ -13,4 +13,9 @@ public class StringUtilsTest {
 	public void testStringUtils() {
 		Assert.assertEquals(StringUtils.remove("hello", "he"), "llo");
 	}
+
+	@Test
+	public void test2() {
+		Assert.assertNotEquals(StringUtils.removeLast("helloh", "oh"), "hell");
+	}
 }
