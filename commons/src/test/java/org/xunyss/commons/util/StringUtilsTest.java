@@ -10,12 +10,12 @@ import org.junit.Test;
 public class StringUtilsTest {
 
 	@Test
-	public void testStringUtils() {
+	public void remove() {
 		Assert.assertEquals(StringUtils.remove("hello", "he"), "llo");
 	}
 
 	@Test
-	public void test2() {
+	public void removeLast() {
 		Assert.assertEquals(StringUtils.removeLast("helloh", "oh"), "hell");
 	}
 }
