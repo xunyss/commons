@@ -1,19 +1,11 @@
 package io.xunyss.openssl;
 
-import java.io.BufferedOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.io.StringWriter;
-import java.io.Writer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.junit.Test;
-
-import io.xunyss.commons.io.WriterOutputStream;
 
 /**
  *
