@@ -8,7 +8,7 @@ import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.URL;
 
-import org.xunyss.commons.util.IOUtils;
+import io.xunyss.commons.io.IOUtils;
 
 /**
  * 

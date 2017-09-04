@@ -8,7 +8,7 @@ import java.util.Enumeration;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import org.xunyss.commons.util.IOUtils;
+import io.xunyss.commons.io.IOUtils;
 
 /**
  * 

@@ -11,6 +11,9 @@ import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import io.xunyss.commons.io.IOUtils;
+import io.xunyss.commons.lang.StringUtils;
+
 /**
  *
  * @author XUNYSS
@@ -103,7 +106,7 @@ public class ArchiveUtils {
 			jarResource = ResourceUtils.JAR_RESOURCE_ROOT + jarEntry.getName();
 			
 			if (jarResource.startsWith(resourcePath)) {
-				String relativePath = StringUtils.remove(jarResource, resourcePath);
+				String relativePath = StringUtils.removeStart(jarResource, resourcePath);
 				File dstFile = relativePath.isEmpty() ?
 						new File(dstDir, FileUtils.getSimpleFilename(jarResource)) :	// resourcePath is file
 						new File(dstDir, relativePath);									// resourcePath is directory
