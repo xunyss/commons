@@ -14,18 +14,6 @@ import org.junit.Test;
 public class OpenSSLTest {
 	
 	@Test
-	public void help() throws IOException {
-//		OpenSSL openssl = new OpenSSL(System.out);
-//		openssl.exec("version");
-		
-		StringWriter sw = new StringWriter();
-		OpenSSL openssl = new OpenSSL(sw);
-		openssl.exec("version");
-		
-		System.err.println(sw.toString());
-	}
-	
-	@Test
 	public void testSSL() throws IOException {
 		OpenSSL openssl = new OpenSSL(System.out);
 		openssl.exec("asn1parse", "-genstr", "UTF8:hello world");
@@ -46,5 +34,11 @@ public class OpenSSLTest {
 		while (m.find()) {
 			System.out.println("... " + m.group(2));
 		}
+	}
+	
+	@Test
+	public void version() {
+		OpenSSL openssl = new OpenSSL();
+		openssl.version();
 	}
 }

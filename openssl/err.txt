@@ -1,0 +1,42 @@
+
+D:\xdev\git\commons\openssl\target\classes>
+java -cp /xdev/git/commons/commons/target/classes;. io.xunyss.openssl.OpenSSL
+
+
+(binName = null;)
+java.io.IOException: openSSL execution fail
+	at io.xunyss.openssl.OpenSSLExecutor.exec(OpenSSLExecutor.java:149)
+	at io.xunyss.openssl.OpenSSL.version(OpenSSL.java:49)
+	at io.xunyss.openssl.OpenSSL.main(OpenSSL.java:59)
+Caused by: java.io.IOException: Cannot run program "null": error=2, 그런 파일이나 디렉터리가 없습니다
+	at java.lang.ProcessBuilder.start(ProcessBuilder.java:1047)
+	at java.lang.Runtime.exec(Runtime.java:617)
+	at java.lang.Runtime.exec(Runtime.java:450)
+	at java.lang.Runtime.exec(Runtime.java:347)
+	at io.xunyss.openssl.OpenSSLExecutor.exec(OpenSSLExecutor.java:130)
+	... 2 more
+Caused by: java.io.IOException: error=2, 그런 파일이나 디렉터리가 없습니다
+	at java.lang.UNIXProcess.forkAndExec(Native Method)
+	at java.lang.UNIXProcess.<init>(UNIXProcess.java:187)
+	at java.lang.ProcessImpl.start(ProcessImpl.java:130)
+	at java.lang.ProcessBuilder.start(ProcessBuilder.java:1028)
+	... 6 more
+
+(binName = "openssl2";)
+java.io.IOException: openSSL execution fail
+	at io.xunyss.openssl.OpenSSLExecutor.exec(OpenSSLExecutor.java:149)
+	at io.xunyss.openssl.OpenSSL.version(OpenSSL.java:49)
+	at io.xunyss.openssl.OpenSSL.main(OpenSSL.java:59)
+Caused by: java.io.IOException: Cannot run program "null": error=2, 그런 파일이나 디렉터리가 없습니다
+	at java.lang.ProcessBuilder.start(ProcessBuilder.java:1047)
+	at java.lang.Runtime.exec(Runtime.java:617)
+	at java.lang.Runtime.exec(Runtime.java:450)
+	at java.lang.Runtime.exec(Runtime.java:347)
+	at io.xunyss.openssl.OpenSSLExecutor.exec(OpenSSLExecutor.java:130)
+	... 2 more
+Caused by: java.io.IOException: error=2, 그런 파일이나 디렉터리가 없습니다
+	at java.lang.UNIXProcess.forkAndExec(Native Method)
+	at java.lang.UNIXProcess.<init>(UNIXProcess.java:187)
+	at java.lang.ProcessImpl.start(ProcessImpl.java:130)
+	at java.lang.ProcessBuilder.start(ProcessBuilder.java:1028)
+	... 6 more

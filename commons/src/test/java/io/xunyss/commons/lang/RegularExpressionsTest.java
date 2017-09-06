@@ -10,6 +10,16 @@ import org.junit.Test;
 public class RegularExpressionsTest {
 	
 	@Test
+	public void delimiterSpace() {
+		String string = "hello world  man";
+		System.out.println(ArrayUtils.toString(string.split(RegularExpressions.DELIMITER_SPACE)));
+		System.out.println(ArrayUtils.toString("hello".split(RegularExpressions.DELIMITER_SPACE)));
+		
+		System.out.println(ArrayUtils.toString(string.split(" ")));
+		System.out.println(ArrayUtils.toString("hello".split(" ")));
+	}
+	
+	@Test
 	public void delimiterCommaSpace() {
 		String string = "item1, item2   item3 ,item4";
 		String[] array = string.split(RegularExpressions.DELIMITER_COMMA_SPACE);

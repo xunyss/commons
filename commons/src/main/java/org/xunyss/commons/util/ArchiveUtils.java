@@ -11,6 +11,7 @@ import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import io.xunyss.commons.io.FileUtils;
 import io.xunyss.commons.io.IOUtils;
 import io.xunyss.commons.lang.StringUtils;
 

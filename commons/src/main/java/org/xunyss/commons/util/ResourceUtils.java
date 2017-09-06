@@ -11,11 +11,8 @@ import java.net.URLDecoder;
 public class ResourceUtils {
 	
 	public static final String URL_PROTOCOL_FILE      = "file";
-	
 	public static final String URL_PROTOCOL_JAR       = "jar";
-	
 	public static final String JAR_RESOURCE_ROOT      = "/";
-	
 	public static final String JAR_RESOURCE_SEPARATOR = "!/";
 	
 	private ResourceUtils() {
@@ -54,21 +51,6 @@ public class ResourceUtils {
 		}
 		else {
 			return jarResourceUrl;
-		}
-	}
-
-	/**
-	 * 
-	 * @param url
-	 * @return
-	 */
-	public static URL decodeURL(URL url) {
-		try {
-			String newUrl = URLDecoder.decode(url.toString(), "UTF-8");
-			return new URL(newUrl);
-		}
-		catch (Exception e) {
-			return url;
 		}
 	}
 }

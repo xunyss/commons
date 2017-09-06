@@ -13,11 +13,12 @@ import io.xunyss.commons.io.WriterOutputStream;
  */
 public class OpenSSL {
 	
-	private BinaryExecOpenSSL binOpenSSL;
+	private OpenSSLExecutor openSSLExecutor;
 	private OutputStream outputStream;
 	
+	
 	public OpenSSL(OutputStream outputStream) {
-		binOpenSSL = BinaryExecOpenSSL.getInstance();
+		openSSLExecutor = OpenSSLExecutor.getInstance();
 		setOutputStream(outputStream);
 	}
 	
@@ -33,12 +34,28 @@ public class OpenSSL {
 		this.outputStream = outputStream;
 	}
 	
+	
+	public void exec(OutputStream outputStream, String... args) throws IOException {
+		openSSLExecutor.exec(outputStream, args);
+	}
+	
 	public void exec(String... args) throws IOException {
-		binOpenSSL.exec(outputStream, args);
+		exec(outputStream, args);
 	}
 	
 	
 	public String version() {
-		return "";
+		try {
+			openSSLExecutor.exec(System.out, "version");
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	
+	public static void main(String[] args) {
+		new OpenSSL().version();
 	}
 }
