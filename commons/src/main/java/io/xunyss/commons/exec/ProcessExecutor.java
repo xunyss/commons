@@ -13,6 +13,8 @@ import io.xunyss.commons.lang.RegularExpressions;
 
 /**
  *
+ * TODO: MS949 output --> UTF-8 구현
+ *
  * @author XUNYSS
  */
 public class ProcessExecutor {

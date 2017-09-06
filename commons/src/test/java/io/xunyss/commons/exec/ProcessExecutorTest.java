@@ -17,7 +17,11 @@ public class ProcessExecutorTest {
 		ProcessExecutor processExecutor = new ProcessExecutor();
 //		processExecutor.execute(binName, "asn1parse", "-genstr", "UTF8:\"hello world\"");
 //		processExecutor.execute(binName, "asn1parse", "-genstr", "UTF8:\"hello", "", "world\"");
-		processExecutor.execute(binName, "version");
+
+//		processExecutor.execute(binName, "version");
+		processExecutor.execute("cmd /c dir");
+		
+		
 	}
 	
 	@Test
