@@ -95,10 +95,10 @@ public class ArrayUtils {
 			
 			arrayString.append('[');
 			for (int index = 0; index < arrayLength; index++) {
-				arrayString.append(array[index]);
-				if (index < arrayLength - 1) {
+				if (index > 0) {
 					arrayString.append(',').append(' ');
 				}
+				arrayString.append(array[index]);
 			}
 			return arrayString.append(']')
 					.toString();

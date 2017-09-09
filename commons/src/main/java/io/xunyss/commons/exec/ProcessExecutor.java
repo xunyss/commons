@@ -22,47 +22,46 @@ public class ProcessExecutor {
 	/**
 	 *
 	 */
-	private Runtime runtime = Runtime.getRuntime();
+	private static Runtime RUNTIME = Runtime.getRuntime();
 	
 	private StreamHandler streamHandler;
+	
 	
 	public void setStreamHandler(StreamHandler streamHandler) {
 		this.streamHandler = streamHandler;
 	}
 	
 	public int execute(String... arguments) throws InterruptedException, IOException {
+		
+		
+		return 0;
+	}
+	
+	public int execute1(String... arguments) throws InterruptedException, IOException {
 		OutputStream outputStream = System.out;
 		
-		Process process;
+		String[] cmdArray = toCmdArray(arguments);
+		Process process = RUNTIME.exec(cmdArray);
 		
-		try {
-			String[] cmdArray = toCmdArray(arguments);
-			process = runtime.exec(cmdArray);
-			
-			// stdout
-			IOUtils.closeQuietly(process.getOutputStream());
-			
-			// stdin
-			InputStream processInputStream = process.getInputStream();
-			IOUtils.copy(processInputStream, outputStream);
-			IOUtils.closeQuietly(processInputStream);
-			
-			// stderr
-			InputStream processErrorStream = process.getErrorStream();
-			IOUtils.copy(processErrorStream, outputStream);
-			IOUtils.closeQuietly(processErrorStream);
-			
-			process.waitFor();
-			process.destroy();
-			
-			// 정상: 0
-			System.out.println("exit value: " + process.exitValue());
-			return process.exitValue();
-		}
-		catch (InterruptedException | IOException e) {
-			e.printStackTrace();
-			throw e;
-		}
+		// stdout
+		IOUtils.closeQuietly(process.getOutputStream());
+		
+		// stdin
+		InputStream processInputStream = process.getInputStream();
+		IOUtils.copy(processInputStream, outputStream);
+		IOUtils.closeQuietly(processInputStream);
+		
+		// stderr
+		InputStream processErrorStream = process.getErrorStream();
+		IOUtils.copy(processErrorStream, outputStream);
+		IOUtils.closeQuietly(processErrorStream);
+		
+		process.waitFor();
+		process.destroy();
+		
+		// 정상: 0
+		System.out.println("exit value: " + process.exitValue());
+		return process.exitValue();
 	}
 	
 	/**
