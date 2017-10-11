@@ -5,7 +5,7 @@
 
 	<modelVersion>4.0.0</modelVersion>
 	
-	<groupId>org.xunyss.openssl</groupId>
+	<groupId>io.xunyss.openssl</groupId>
 	<artifactId>openssl</artifactId>
 	<version>0.1.2-RELEASE</version>
 	<packaging>jar</packaging>
@@ -30,7 +30,7 @@
 	
 	<dependencies>
 		<dependency>
-			<groupId>org.xunyss.commons</groupId>
+			<groupId>io.xunyss.commons</groupId>
 			<artifactId>commons</artifactId>
 			<version>0.5.1-RELEASE</version>
 		</dependency>
