@@ -53,7 +53,7 @@ public class OpenSSLExecutor {
 			if (SystemUtils.IS_OS_WINDOWS) {	// windows
 				temporaryInstall("win32", "openssl.exe");
 			}
-			// TODO linux, unix, ...
+			// TODO Linux, Unix, ...
 			initialized = selfTest();
 		}
 	}
@@ -113,9 +113,9 @@ public class OpenSSLExecutor {
 	
 	
 	public int exec(OutputStream outputStream, String... args) throws IOException {
-		if (!initialized) {
-			throw new IOException("openSSL is not initialized");
-		}
+//		if (!initialized) {
+//			throw new IOException("openSSL is not initialized");
+//		}
 		//------------------------------------------------------------------------------------------
 		try {
 			ProcessExecutor processExecutor = new ProcessExecutor();

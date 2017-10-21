@@ -1,7 +1,6 @@
 package io.xunyss.openssl;
 
 import java.io.IOException;
-import java.io.StringWriter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

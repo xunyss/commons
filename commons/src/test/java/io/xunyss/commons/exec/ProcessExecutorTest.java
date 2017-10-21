@@ -12,14 +12,14 @@ public class ProcessExecutorTest {
 	
 	@Test
 	public void openssl() throws Exception {
-		String binName = "D:\\xdev\\git\\commons\\openssl\\target\\classes\\io\\xunyss\\openssl\\binary\\win32\\openssl.exe";
+		String binName = "C:\\xdev\\git\\commons\\openssl\\target\\classes\\io\\xunyss\\openssl\\binary\\win32\\openssl.exe";
 		
 		ProcessExecutor processExecutor = new ProcessExecutor();
 //		processExecutor.execute(binName, "asn1parse", "-genstr", "UTF8:\"hello world\"");
 //		processExecutor.execute(binName, "asn1parse", "-genstr", "UTF8:\"hello", "", "world\"");
 
 //		processExecutor.execute(binName, "version");
-		processExecutor.execute("cmd /c dir");
+		processExecutor.execute1("cmd /c dir");
 		
 		
 	}
@@ -30,15 +30,15 @@ public class ProcessExecutorTest {
 		
 		ProcessExecutor processExecutor = new ProcessExecutor();
 		processExecutor.setStreamHandler(streamHandler);
-		processExecutor.execute("cmd", "/C", "dir");
+		processExecutor.execute1("cmd", "/C", "dir");
 	}
 	
 	@Test
 	public void notepad() throws Exception {
 		ProcessExecutor processExecutor = new ProcessExecutor();
-		String cmd = "D:\\xdev\\git\\commons\\openssl\\target\\classes\\io\\xunyss\\openssl\\binary\\win32\\openssl.exe asn1parse -genstr UTF8:\"hello world\"";
+		String cmd = "C:\\xdev\\git\\commons\\openssl\\target\\classes\\io\\xunyss\\openssl\\binary\\win32\\openssl.exe asn1parse -genstr UTF8:\"hello world\"";
 //		processExecutor.execute("notepad");
-		processExecutor.execute(cmd);
+		processExecutor.execute1(cmd);
 	}
 	
 	

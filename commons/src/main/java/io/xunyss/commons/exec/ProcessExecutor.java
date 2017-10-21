@@ -34,6 +34,7 @@ public class ProcessExecutor {
 	public int execute(String... arguments) throws InterruptedException, IOException {
 		
 		
+		
 		return 0;
 	}
 	
@@ -43,15 +44,15 @@ public class ProcessExecutor {
 		String[] cmdArray = toCmdArray(arguments);
 		Process process = RUNTIME.exec(cmdArray);
 		
-		// stdout
+		// standard output
 		IOUtils.closeQuietly(process.getOutputStream());
 		
-		// stdin
+		// standard input
 		InputStream processInputStream = process.getInputStream();
 		IOUtils.copy(processInputStream, outputStream);
 		IOUtils.closeQuietly(processInputStream);
 		
-		// stderr
+		// standard error
 		InputStream processErrorStream = process.getErrorStream();
 		IOUtils.copy(processErrorStream, outputStream);
 		IOUtils.closeQuietly(processErrorStream);
