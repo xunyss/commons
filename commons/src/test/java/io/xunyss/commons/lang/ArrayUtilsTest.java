@@ -1,5 +1,6 @@
 package io.xunyss.commons.lang;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -10,36 +11,44 @@ public class ArrayUtilsTest {
 	
 	@Test
 	public void getComponentType() {
-		Class<?> clazz = ArrayUtilsTest.class.getComponentType();
-		System.out.println(clazz);
-		
-		String string = new String();
-		System.out.println(string.getClass());
+		Assert.assertNull(getClass().getComponentType());
 		
 		String[] array = new String[] {null, ""};
-		System.out.println(array.getClass());
-		System.out.println(array.getClass().getComponentType());
+		Assert.assertEquals(String.class, array.getClass().getComponentType());
 	}
 	
 	@Test
 	public void isArray() {
-		String[] array = {"a", "b", "c", "d"};
-		int[] array2 = {1, 2, 3, 4, 5};
-		System.out.println((Object)array2 instanceof int[]);
-		System.out.println(ArrayUtils.isArray(array2));
+		String[] stringArray = {"a", "b", "c", "d"};
+		Assert.assertTrue(stringArray instanceof String[]);
+		Assert.assertTrue(ArrayUtils.isArray(stringArray));
+		
+		int[] intArray = {1, 2, 3, 4, 5};
+		Assert.assertTrue(intArray instanceof int[]);
+		Assert.assertTrue(ArrayUtils.isArray(intArray));
 	}
 	
 	@Test
 	public void add() {
-		String[] array = {"a", "b", "c", "d"};
-		String[] newArray = ArrayUtils.add("e", array);
-		System.out.println(ArrayUtils.toString(newArray));
+		Assert.assertArrayEquals(
+				new String[] {"a", "b", "c"},
+				ArrayUtils.add(new String[] {"a", "b"}, "c")
+		);
+		
+		Assert.assertArrayEquals(
+				new String[] {"a", "b", "c"},
+				ArrayUtils.add("a", new String[] {"b", "c"})
+		);
+		
+		Assert.assertArrayEquals(
+				new String[] {"a", "b", "c", "d"},
+				ArrayUtils.add(new String[] {"a", "b"}, new String[] {"c", "d"})
+		);
 	}
 	
 	@Test
 	public void toArrayString() {
 		String[] array = {"a", "b", "c", "d"};
-		String string = ArrayUtils.toString(array);
-		System.out.println(string);
+		Assert.assertEquals("[a, b, c, d]", ArrayUtils.toString(array));
 	}
 }

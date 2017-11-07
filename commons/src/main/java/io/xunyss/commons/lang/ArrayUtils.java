@@ -21,8 +21,8 @@ public class ArrayUtils {
 	
 	/**
 	 *
-	 * @param object
-	 * @return
+	 * @param object object
+	 * @return {@code true} if object is array, {@code false} otherwise
 	 */
 	public static boolean isArray(final Object object) {
 		return object != null && object.getClass().isArray();
@@ -30,10 +30,10 @@ public class ArrayUtils {
 	
 	/**
 	 *
-	 * @param array1
-	 * @param array2
-	 * @param <T>
-	 * @return
+	 * @param array1 array1
+	 * @param array2 array2
+	 * @param <T> the component type of the array
+	 * @return A new array
 	 */
 	public static <T> T[] add(final T[] array1, final T... array2) {
 		int newArrayLength = array1.length + array2.length;
@@ -48,10 +48,10 @@ public class ArrayUtils {
 	
 	/**
 	 *
-	 * @param array
-	 * @param element
-	 * @param <T>
-	 * @return
+	 * @param array array
+	 * @param element the object to add
+	 * @param <T> the component type of the array
+	 * @return A new array
 	 */
 	public static <T> T[] add(final T[] array, final T element) {
 		int arrayLength = array.length;
@@ -66,10 +66,10 @@ public class ArrayUtils {
 	
 	/**
 	 *
-	 * @param element
-	 * @param array
-	 * @param <T>
-	 * @return
+	 * @param element the object to add
+	 * @param array array
+	 * @param <T> the component type of the array
+	 * @return A new array
 	 */
 	public static <T> T[] add(final T element, final T... array) {
 		int arrayLength = array.length;
@@ -84,9 +84,9 @@ public class ArrayUtils {
 	
 	/**
 	 *
-	 * @param array
-	 * @param <T>
-	 * @return
+	 * @param array array
+	 * @param <T> the component type of the array
+	 * @return string
 	 */
 	public static <T> String toString(final T[] array) {
 		if (array != null) {
