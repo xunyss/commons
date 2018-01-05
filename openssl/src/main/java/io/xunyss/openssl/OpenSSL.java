@@ -13,34 +13,67 @@ import io.xunyss.commons.io.WriterOutputStream;
  */
 public class OpenSSL {
 	
+	/**
+	 * OpenSSL command executor
+	 */
 	private OpenSSLExecutor openSSLExecutor;
+	
+	/**
+	 * OpenSSL command output
+	 */
 	private OutputStream outputStream;
 	
 	
+	/**
+	 *
+	 * @param outputStream
+	 */
 	public OpenSSL(OutputStream outputStream) {
 		openSSLExecutor = OpenSSLExecutor.getInstance();
 		setOutputStream(outputStream);
 	}
 	
+	/**
+	 *
+	 * @param writer
+	 */
 	public OpenSSL(Writer writer) {
 		this(new WriterOutputStream(writer));
 	}
 	
+	/**
+	 *
+	 */
 	public OpenSSL() {
 		this(NullOutputStream.NULL_OUTPUT_STREAM);
 	}
 	
+	/**
+	 *
+	 * @param outputStream
+	 */
 	public void setOutputStream(OutputStream outputStream) {
 		this.outputStream = outputStream;
 	}
 	
 	
-	public void exec(OutputStream outputStream, String... args) throws IOException {
-		openSSLExecutor.exec(outputStream, args);
+	/**
+	 *
+	 * @param outputStream
+	 * @param commands
+	 * @throws IOException
+	 */
+	public void exec(OutputStream outputStream, String... commands) throws IOException {
+		openSSLExecutor.exec(outputStream, commands);
 	}
 	
-	public void exec(String... args) throws IOException {
-		exec(outputStream, args);
+	/**
+	 *
+	 * @param commands
+	 * @throws IOException
+	 */
+	public void exec(String... commands) throws IOException {
+		exec(outputStream, commands);
 	}
 	
 	
@@ -52,10 +85,5 @@ public class OpenSSL {
 			e.printStackTrace();
 		}
 		return null;
-	}
-	
-	
-	public static void main(String[] args) {
-		new OpenSSL().version();
 	}
 }

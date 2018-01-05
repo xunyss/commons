@@ -5,13 +5,13 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URL;
 
-import org.xunyss.commons.util.ArchiveUtils;
-import org.xunyss.commons.util.ResourceUtils;
-
 import io.xunyss.commons.exec.ProcessExecutor;
 import io.xunyss.commons.io.FileUtils;
 import io.xunyss.commons.io.NullOutputStream;
+import io.xunyss.commons.lang.ArrayUtils;
 import io.xunyss.commons.lang.SystemUtils;
+import org.xunyss.commons.util.ArchiveUtils;
+import org.xunyss.commons.util.ResourceUtils;
 
 /**
  * https://wiki.openssl.org/index.php/Binaries
@@ -48,11 +48,15 @@ public class OpenSSLExecutor {
 	private boolean initialized = false;	// ..
 	
 	
+	/**
+	 * constructor
+	 */
 	private OpenSSLExecutor() {
 		if (!(initialized = selfTest())) {
 			if (SystemUtils.IS_OS_WINDOWS) {	// windows
 				temporaryInstall("win32", "openssl.exe");
 			}
+			
 			// TODO Linux, Unix, ...
 			initialized = selfTest();
 		}
@@ -64,6 +68,7 @@ public class OpenSSLExecutor {
 			return 0 == exec(NullOutputStream.NULL_OUTPUT_STREAM, "version");
 		}
 		catch (IOException ioe) {
+			ioe.printStackTrace();
 			return false;
 		}
 	}
@@ -112,14 +117,17 @@ public class OpenSSLExecutor {
 	}
 	
 	
-	public int exec(OutputStream outputStream, String... args) throws IOException {
+	public int exec(OutputStream outputStream, String... commands) throws IOException {
 //		if (!initialized) {
 //			throw new IOException("openSSL is not initialized");
 //		}
 		//------------------------------------------------------------------------------------------
+		String[] cmd = ArrayUtils.add(binName, commands);
+		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+		System.out.println(ArrayUtils.toString(cmd));
 		try {
 			ProcessExecutor processExecutor = new ProcessExecutor();
-			return processExecutor.execute(args);
+			return processExecutor.execute1(cmd);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
