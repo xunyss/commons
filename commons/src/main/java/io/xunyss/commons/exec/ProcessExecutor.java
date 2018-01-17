@@ -2,19 +2,21 @@ package io.xunyss.commons.exec;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import io.xunyss.commons.io.IOUtils;
 import io.xunyss.commons.lang.ArrayUtils;
 import io.xunyss.commons.lang.RegularExpressions;
+import io.xunyss.commons.lang.SystemUtils;
 
 /**
  *
  * TODO: MS949 output --> UTF-8 구현
- *
+ * TODO: console cli 수행 전용 메소드
+ * TODO: stdout, stderr 같이 나오게
+ * TODO: web-app 에서 테스트 해 봐야 함 (VM 종료 안하는 상태에서)
+ * 
  * @author XUNYSS
  */
 public class ProcessExecutor {
@@ -24,44 +26,85 @@ public class ProcessExecutor {
 	 */
 	private static Runtime RUNTIME = Runtime.getRuntime();
 	
-	private StreamHandler streamHandler;
 	
+	private File workingDirectory = null;
+	
+	private Environment environment = null;
+	
+	private StreamHandler streamHandler = null;
+	
+	
+	public ProcessExecutor() {
+		
+	}
+	
+	
+	public void setWorkingDirectory(File workingDirectory) {
+		this.workingDirectory = workingDirectory;
+	}
+	
+	public void setWorkingDirectory(String workingDirectory) {
+		this.workingDirectory = new File(workingDirectory);
+	}
+	
+	public void setEnvironment(Environment environment) {
+		this.environment = environment;
+	}
 	
 	public void setStreamHandler(StreamHandler streamHandler) {
 		this.streamHandler = streamHandler;
 	}
 	
-	public int execute(String... arguments) throws InterruptedException, IOException {
+	public Process execute(String... arguments) throws IOException, InterruptedException {
+		final Process process = RUNTIME.exec(
+				toCmdArray(arguments),
+				Environment.toStrings(environment),
+				workingDirectory);
 		
+		/*
+		 * 
+		 */
+		if (streamHandler != null) {
+			// set process streams
+			streamHandler.setProcessInputStream(process.getInputStream());
+			streamHandler.setProcessErrorStream(process.getErrorStream());
+			streamHandler.setProcessOutputStream(process.getOutputStream());
+			
+			//
+			streamHandler.start();
+			
+			try {
+				process.waitFor();
+			}
+			catch (InterruptedException ie) {
+				// 어떤 경우에??
+				process.destroy();
+			}
+			
+			//
+			streamHandler.stop();
+			
+			// close process streams
+			IOUtils.closeQuietly(process.getOutputStream());
+			IOUtils.closeQuietly(process.getInputStream());
+			IOUtils.closeQuietly(process.getErrorStream());
+		}
 		
-		return 99999;
+		// TODO: handle exitValue
+		return process;
 	}
 	
-	public int execute1(String... arguments) throws InterruptedException, IOException {
-		OutputStream outputStream = System.out;
+	public Process executeCommandLine(final String... arguments) throws IOException, InterruptedException {
+		String[] commandArguments; 
+		if (SystemUtils.IS_OS_WINDOWS) {
+			commandArguments = ArrayUtils.add("cmd /c", arguments);
+		}
+		else {
+			// 확인 필요
+			commandArguments = ArrayUtils.add("sh -c", arguments);
+		}
 		
-		String[] cmdArray = toCmdArray(arguments);
-		Process process = RUNTIME.exec(cmdArray);
-		
-		// standard output
-		IOUtils.closeQuietly(process.getOutputStream());
-		
-		// standard input
-		InputStream processInputStream = process.getInputStream();
-		IOUtils.copy(processInputStream, outputStream);
-		IOUtils.closeQuietly(processInputStream);
-		
-		// standard error
-		InputStream processErrorStream = process.getErrorStream();
-		IOUtils.copy(processErrorStream, outputStream);
-		IOUtils.closeQuietly(processErrorStream);
-		
-		process.waitFor();
-		process.destroy();
-		
-		// 정상: 0
-		System.out.println("exit value: " + process.exitValue());
-		return process.exitValue();
+		return execute(commandArguments);
 	}
 	
 	/**

@@ -4,7 +4,13 @@ package io.xunyss.commons.exec;
  *
  * @author XUNYSS
  */
-public class ExecuteException extends Exception {
+public class ExecuteException extends RuntimeException {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5786792486475324742L;
+	
 	
 	/**
 	 *

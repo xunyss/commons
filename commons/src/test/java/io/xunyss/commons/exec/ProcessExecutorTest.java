@@ -1,7 +1,6 @@
 package io.xunyss.commons.exec;
 
-import java.util.StringTokenizer;
-
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -10,48 +9,64 @@ import org.junit.Test;
  */
 public class ProcessExecutorTest {
 	
+	@Before
+	public void setup() {
+		
+	}
+	
+	
 	@Test
-	public void consoleapp() throws Exception {
+	public void setWorkingDirectory() throws Exception {
 		ProcessExecutor processExecutor = new ProcessExecutor();
-//		processExecutor.execute1("cmd /c dir");
-		processExecutor.execute1("notepad.exe");
+		processExecutor.setWorkingDirectory(System.getProperty("user.home"));
+		processExecutor.execute("cmd /c dir");
 	}
 	
 	@Test
-	public void openssl() throws Exception {
-		String binName = "C:\\xdev\\git\\commons\\openssl\\target\\classes\\io\\xunyss\\openssl\\binary\\win32\\openssl.exe";
+	public void setEnvironment() throws Exception {
+		Environment environment = new Environment();
+		environment.put("XUNY_ENV", "SONGJUNGHUN");
+		environment.put("XUNY_KEY", "XUNY_VALUE");
 		
 		ProcessExecutor processExecutor = new ProcessExecutor();
-//		processExecutor.execute(binName, "asn1parse", "-genstr", "UTF8:\"hello world\"");
-//		processExecutor.execute(binName, "asn1parse", "-genstr", "UTF8:\"hello", "", "world\"");
-		
-//		processExecutor.execute(binName, "version");
-		
-		processExecutor.execute1("cmd /c dir");
+		processExecutor.setEnvironment(environment);
+		processExecutor.execute("cmd /c set");
 	}
 	
 	@Test
-	public void dir() throws Exception {
-		StreamHandler streamHandler = new StreamHandler();
+	public void setEnvironmentInherit() throws Exception {
+		Environment environment = new Environment(true);
+		environment.put("XUNY_ENV", "SONGJUNGHUN");
+		environment.put("XUNY_KEY", "XUNY_VALUE");
+		
+		ProcessExecutor processExecutor = new ProcessExecutor();
+		processExecutor.setStreamHandler(new StreamHandler(System.out, System.out));
+		processExecutor.setEnvironment(environment);
+		processExecutor.executeCommandLine("set");
+	}
+	
+	@Test
+	public void execAcync() throws Exception {
+		ProcessExecutor processExecutor = new ProcessExecutor();
+		Process p = processExecutor.execute("notepad.exe");
+	}
+	
+	@Test
+	public void execStreamHandle() throws Exception {
+		StreamHandler streamHandler = new StreamHandler(System.out, System.out);
+		streamHandler.setAutoCloseStreams(false);
+		
+//		StreamHandler streamHandler = new FileStreamHandler(new File("C:/downloads/test.log"));
 		
 		ProcessExecutor processExecutor = new ProcessExecutor();
 		processExecutor.setStreamHandler(streamHandler);
-		processExecutor.execute1("cmd", "/C", "dir");
+//		processExecutor.execute("cmd /c ipconfig /all");
+		processExecutor.execute(
+				"C:\\xdev\\git\\commons\\openssl\\target\\classes\\io\\xunyss\\openssl\\binary\\win32\\openssl.exe asn1parse -genstr UTF8:\"hello world\"");
 	}
 	
 	@Test
-	public void notepad() throws Exception {
-		ProcessExecutor processExecutor = new ProcessExecutor();
-		String cmd = "C:\\xdev\\git\\commons\\openssl\\target\\classes\\io\\xunyss\\openssl\\binary\\win32\\openssl.exe asn1parse -genstr UTF8:\"hello world\"";
-//		processExecutor.execute("notepad");
-		processExecutor.execute1(cmd);
-	}
-	
-	@Test
-	public void token() {
-		String cmd = "openssl.exe asn1parse -genstr UTF8:\"hello world\"";
-		System.out.println(cmd.split(" ").length);
-		StringTokenizer stk = new StringTokenizer(cmd);
-		System.out.println(stk.countTokens());
+	public void execCommandLine() throws Exception {
+		
 	}
 }

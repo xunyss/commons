@@ -130,7 +130,7 @@ public class OpenSSLExecutor {
 		System.out.println(ArrayUtils.toString(cmd));
 		try {
 			ProcessExecutor processExecutor = new ProcessExecutor();
-			return processExecutor.execute1(cmd);
+			return processExecutor.execute(cmd).exitValue();
 		}
 		catch (Exception e) {
 			e.printStackTrace();
