@@ -63,8 +63,8 @@ public class OpenSSL {
 	 * @param commands
 	 * @throws IOException
 	 */
-	public void exec(OutputStream outputStream, String... commands) throws IOException {
-		openSSLExecutor.exec(outputStream, commands);
+	public void execute(OutputStream outputStream, String... commands) throws IOException {
+		openSSLExecutor.execute(outputStream, commands);
 	}
 	
 	/**
@@ -72,14 +72,14 @@ public class OpenSSL {
 	 * @param commands
 	 * @throws IOException
 	 */
-	public void exec(String... commands) throws IOException {
-		exec(outputStream, commands);
+	public void execute(String... commands) throws IOException {
+		execute(outputStream, commands);
 	}
 	
 	
 	public String version() {
 		try {
-			openSSLExecutor.exec(System.out, "version");
+			openSSLExecutor.execute(System.out, "version");
 		}
 		catch (Exception e) {
 			e.printStackTrace();

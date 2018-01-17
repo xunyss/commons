@@ -5,13 +5,14 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URL;
 
+import org.xunyss.commons.util.ArchiveUtils;
+import org.xunyss.commons.util.ResourceUtils;
+
 import io.xunyss.commons.exec.ProcessExecutor;
 import io.xunyss.commons.io.FileUtils;
 import io.xunyss.commons.io.NullOutputStream;
 import io.xunyss.commons.lang.ArrayUtils;
 import io.xunyss.commons.lang.SystemUtils;
-import org.xunyss.commons.util.ArchiveUtils;
-import org.xunyss.commons.util.ResourceUtils;
 
 /**
  * https://wiki.openssl.org/index.php/Binaries
@@ -47,6 +48,8 @@ public class OpenSSLExecutor {
 	private String binName = "openssl";		// default executable binary name
 	private boolean initialized = false;	// ..
 	
+	private String binaryVersion;
+	
 	
 	/**
 	 * constructor
@@ -65,7 +68,7 @@ public class OpenSSLExecutor {
 	private boolean selfTest() {
 		try {
 			// openssl version
-			return 0 == exec(NullOutputStream.NULL_OUTPUT_STREAM, "version");
+			return 0 == execute(NullOutputStream.NULL_OUTPUT_STREAM, "version");
 		}
 		catch (IOException ioe) {
 			ioe.printStackTrace();
@@ -117,7 +120,7 @@ public class OpenSSLExecutor {
 	}
 	
 	
-	public int exec(OutputStream outputStream, String... commands) throws IOException {
+	public int execute(OutputStream outputStream, String... commands) throws IOException {
 //		if (!initialized) {
 //			throw new IOException("openSSL is not initialized");
 //		}

@@ -11,13 +11,20 @@ import org.junit.Test;
 public class ProcessExecutorTest {
 	
 	@Test
+	public void consoleapp() throws Exception {
+		ProcessExecutor processExecutor = new ProcessExecutor();
+//		processExecutor.execute1("cmd /c dir");
+		processExecutor.execute1("notepad.exe");
+	}
+	
+	@Test
 	public void openssl() throws Exception {
 		String binName = "C:\\xdev\\git\\commons\\openssl\\target\\classes\\io\\xunyss\\openssl\\binary\\win32\\openssl.exe";
 		
 		ProcessExecutor processExecutor = new ProcessExecutor();
 //		processExecutor.execute(binName, "asn1parse", "-genstr", "UTF8:\"hello world\"");
 //		processExecutor.execute(binName, "asn1parse", "-genstr", "UTF8:\"hello", "", "world\"");
-
+		
 //		processExecutor.execute(binName, "version");
 		
 		processExecutor.execute1("cmd /c dir");

@@ -11,9 +11,9 @@ import org.junit.Test;
 public class OpenSSLTest {
 	
 	@Test
-	public void exec() throws IOException {
+	public void execute() throws IOException {
 		OpenSSL openssl = new OpenSSL(System.out);
-		openssl.exec("version");
+		openssl.execute("version");
 	}
 	
 	@Test
