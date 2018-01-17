@@ -16,6 +16,8 @@ import io.xunyss.commons.lang.SystemUtils;
  * TODO: console cli 수행 전용 메소드
  * TODO: stdout, stderr 같이 나오게
  * TODO: web-app 에서 테스트 해 봐야 함 (VM 종료 안하는 상태에서)
+ * TODO: 여러군데로 output stream 쓰기 (console, 파일, ...)
+ * TODO: process result 처리
  * 
  * @author XUNYSS
  */
@@ -94,7 +96,7 @@ public class ProcessExecutor {
 		return process;
 	}
 	
-	public Process executeCommandLine(final String... arguments) throws IOException, InterruptedException {
+	public Process executeConsole(final String... arguments) throws IOException, InterruptedException {
 		String[] commandArguments; 
 		if (SystemUtils.IS_OS_WINDOWS) {
 			commandArguments = ArrayUtils.add("cmd /c", arguments);

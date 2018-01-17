@@ -10,15 +10,25 @@ import java.util.Map.Entry;
  */
 public class Environment {
 	
+	/**
+	 *
+	 */
 	private Map<String, String> environmentMap = new HashMap<>();
 	
 	
+	/**
+	 *
+	 * @param inherit
+	 */
 	public Environment(boolean inherit) {
 		if (inherit) {
 			environmentMap.putAll(System.getenv());
 		}
 	}
 	
+	/**
+	 *
+	 */
 	public Environment() {
 		this(false);
 	}
@@ -32,6 +42,11 @@ public class Environment {
 	}
 	
 	
+	/**
+	 *
+	 * @param environment
+	 * @return
+	 */
 	public static String[] toStrings(Environment environment) {
 		if (environment == null || environment.environmentMap.isEmpty()) {
 			return null;

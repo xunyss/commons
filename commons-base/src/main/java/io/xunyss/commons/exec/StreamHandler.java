@@ -39,22 +39,22 @@ public class StreamHandler {
 		this(outputStream, null);
 	}
 	
-	public StreamHandler() {
-		
+	protected StreamHandler() {
+
 	}
 	
 	
-//	public void setOutputStream(OutputStream outputStream) {
-//		this.outputStream = outputStream;
-//	}
-//	
-//	public void setErrorStream(OutputStream errorStream) {
-//		this.errorStream = errorStream;
-//	}
-//	
-//	public void setInputStream(InputStream inputStream) {
-//		this.inputStream = inputStream;
-//	}
+	protected void setOutputStream(OutputStream outputStream) {
+		this.outputStream = outputStream;
+	}
+	
+	protected void setErrorStream(OutputStream errorStream) {
+		this.errorStream = errorStream;
+	}
+	
+	protected void setInputStream(InputStream inputStream) {
+		this.inputStream = inputStream;
+	}
 	
 	
 	protected void setProcessInputStream(InputStream processInputStream) {
