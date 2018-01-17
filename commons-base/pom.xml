@@ -65,11 +65,13 @@
 			<!--
 				# command: mvn deploy
 				# add server info to maven settings.xml
+					... <servers> ...
 					<server>
 						<id>[${github.global.server}]</id>
 						<username>[github login id]</username>
 						<password>[PASSWORD]</password>
 					</server>
+					... </servers> ...
 			-->
 			<plugin>
 				<groupId>com.github.github</groupId>
