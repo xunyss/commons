@@ -5,13 +5,13 @@
 	
 	<modelVersion>4.0.0</modelVersion>
 	
-	<groupId>io.xunyss.libs</groupId>
-	<artifactId>libs</artifactId>
+	<groupId>io.xunyss.commons</groupId>
+	<artifactId>commons-ref</artifactId>
 	<version>0.0.1-RELEASE</version>
 	<packaging>jar</packaging>
 	
-	<name>libs</name>
-	<description>libs</description>
+	<name>commons-ref</name>
+	<description>commons-ref</description>
 	
 	<dependencies>
 		<dependency>
