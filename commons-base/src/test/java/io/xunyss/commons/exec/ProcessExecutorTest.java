@@ -51,7 +51,7 @@ public class ProcessExecutorTest {
 		Process p = processExecutor.execute("notepad.exe");
 	}
 	
-	@Test
+	//@Test
 	public void execStreamHandle() throws Exception {
 		StreamHandler streamHandler = new StreamHandler(System.out, System.out);
 		streamHandler.setAutoCloseStreams(false);

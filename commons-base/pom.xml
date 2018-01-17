@@ -7,14 +7,19 @@
 	
 	<groupId>io.xunyss.commons</groupId>
 	<artifactId>commons-base</artifactId>
-	<version>0.5.2-RELEASE</version>
+	<version>0.5.5-RELEASE</version>
 	<packaging>jar</packaging>
 
 	<name>commons-base</name>
 	<description>commons-base</description>
 	
 	<properties>
+		<!-- server's id of setting.xml (for github deploy plugin) -->
 		<github.global.server>github</github.global.server>
+		<!-- github infos -->
+		<deploy.user.name>xunyss</deploy.user.name>
+		<deploy.repo.name>commons</deploy.repo.name>
+		<deploy.branch.name>mvn-repo</deploy.branch.name>
 	</properties>
 	
 	<dependencies>
@@ -30,7 +35,7 @@
 		<repository>
 			<id>internal.repo</id>
 			<name>Temporary Staging Repository</name>
-			<url>file://${project.build.directory}/mvn-repo</url>
+			<url>file://${project.build.directory}/${deploy.branch.name}</url>
 		</repository>
 	</distributionManagement>
 	
@@ -56,20 +61,30 @@
 					</execution>
 				</executions>
 			</plugin>
+			
+			<!--
+				# command: mvn deploy
+				# add server info to maven settings.xml
+					<server>
+						<id>[${github.global.server}]</id>
+						<username>[github login id]</username>
+						<password>[PASSWORD]</password>
+					</server>
+			-->
 			<plugin>
 				<groupId>com.github.github</groupId>
 				<artifactId>site-maven-plugin</artifactId>
 				<configuration>
-					<message>deploy for ${project.version}</message>
+					<message>${project.name}-${project.version} maven deploy</message>
 					<noJekyll>true</noJekyll>
 					<merge>true</merge><!-- true: keep version history -->
-					<outputDirectory>${project.build.directory}/mvn-repo</outputDirectory>
-					<branch>refs/heads/mvn-repo</branch>
+					<outputDirectory>${project.build.directory}/${deploy.branch.name}</outputDirectory><!-- (local directory: pom.xml/distributionManagement/repository/url) -->
+					<branch>refs/heads/${deploy.branch.name}</branch><!-- (github repository branch) -->
 					<includes>
 						<include>**/*</include>
 					</includes>
-					<repositoryOwner>xunyss</repositoryOwner>
-					<repositoryName>commons</repositoryName>
+					<repositoryOwner>${deploy.user.name}</repositoryOwner><!-- github login id -->
+					<repositoryName>${deploy.repo.name}</repositoryName><!-- github repository name -->
 				</configuration>
 				<executions>
 					<execution>
