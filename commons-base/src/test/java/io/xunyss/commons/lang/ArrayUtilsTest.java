@@ -1,5 +1,8 @@
 package io.xunyss.commons.lang;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -50,5 +53,12 @@ public class ArrayUtilsTest {
 	public void toArrayString() {
 		String[] array = {"a", "b", "c", "d"};
 		Assert.assertEquals("[a, b, c, d]", ArrayUtils.toString(array));
+	}
+	
+	
+	@Test
+	public void aaa() {
+		List<String> list1 = new ArrayList<>();  list1.add("hello"); list1.add("world");
+		List<Integer> list2 = new ArrayList<>(); list2.add(1);       list2.add(2);
 	}
 }

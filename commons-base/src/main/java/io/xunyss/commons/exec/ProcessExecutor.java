@@ -110,16 +110,14 @@ public class ProcessExecutor {
 	}
 	
 	/**
-	 * <p>
-	 * 따옴표로 감싸진 공백을 포함한 아규먼트 처리.
-	 * 무조건 " "(공백) 으로 분리하면 Process.exec 메소드가 다 알아서 함
-	 * <p/>
-	 *
-	 * <pre>
-	 * exec({"openssl", "asn1parse", "-genstr", "UTF8:\"hello world\""})    -> 실패
-	 * exec({"openssl", "asn1parse", "-genstr", "UTF8:\"hello", "world\""}) -> 성공
-	 * exec("openssl asn1parse -genstr UTF8:\"hello world\"")               -> 성공
-	 * </pre>
+	 * build command array
+	 * 
+	 * <p> Examples:
+	 * <ul>
+	 *   <li>exec({"openssl", "asn1parse", "-genstr", "UTF8:\"hello world\""}) -> fail</li>
+	 *   <li>exec({"openssl", "asn1parse", "-genstr", "UTF8:\"hello", "world\""}) -> success</li>
+	 *   <li>exec("openssl asn1parse -genstr UTF8:\"hello world\"") -> success</li>
+	 * </ul>
 	 *
 	 * @param arguments argument array
 	 * @return command array
@@ -129,6 +127,10 @@ public class ProcessExecutor {
 	private String[] toCmdArray(String[] arguments) {
 		List<String> cmdList = new ArrayList<>();
 		for (String argument : arguments) {
+			/*
+			 * 따옴표로 감싸진 공백을 포함한 아규먼트 처리
+			 * 무조건 " "(공백) 으로 분리하면 {@code Process.exec} 메소드가 다 알아서 함
+			 */
 			for (String element : argument.split(RegularExpressions.DELIMITER_SPACE)) {
 				cmdList.add(element);
 			}

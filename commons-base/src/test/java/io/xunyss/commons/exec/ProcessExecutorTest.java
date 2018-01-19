@@ -1,15 +1,12 @@
 package io.xunyss.commons.exec;
 
-import io.xunyss.commons.exec.stream.ConsoleWriteStreamHandler;
-import io.xunyss.commons.exec.stream.StringWriteStreamHandler;
-import io.xunyss.commons.lang.SystemUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import sun.nio.cs.ext.EUC_KR;
 
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
+import io.xunyss.commons.exec.stream.ConsoleWriteStreamHandler;
+import io.xunyss.commons.exec.stream.StringWriteStreamHandler;
+import io.xunyss.commons.lang.SystemUtils;
 
 /**
  *

@@ -10,7 +10,7 @@ import io.xunyss.commons.lang.SystemUtils;
  *
  * @author XUNYSS
  */
-public class FileUtils {
+public final class FileUtils {
 	
 	public static final String FILE_SEPARATOR = File.separator;
 	public static final char FILE_SEPARATOR_CHAR = File.separatorChar;
@@ -19,7 +19,10 @@ public class FileUtils {
 	public static final char RESOURCE_PATH_SEPARATOR_CHAR = UNIX_FILE_SEPARATOR_CHAR;
 	
 	
-	public FileUtils() {
+	/**
+	 * constructor
+	 */
+	private FileUtils() {
 		/* cannot create instance */
 	}
 	

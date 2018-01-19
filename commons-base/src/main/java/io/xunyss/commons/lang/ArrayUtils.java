@@ -35,6 +35,7 @@ public class ArrayUtils {
 	 * @param <T> the component type of the array
 	 * @return A new array
 	 */
+	@SafeVarargs
 	public static <T> T[] add(final T[] array1, final T... array2) {
 		int newArrayLength = array1.length + array2.length;
 		@SuppressWarnings("unchecked")
@@ -71,6 +72,7 @@ public class ArrayUtils {
 	 * @param <T> the component type of the array
 	 * @return A new array
 	 */
+	@SafeVarargs
 	public static <T> T[] add(final T element, final T... array) {
 		int arrayLength = array.length;
 		@SuppressWarnings("unchecked")
