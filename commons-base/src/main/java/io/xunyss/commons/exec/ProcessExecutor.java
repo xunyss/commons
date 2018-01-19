@@ -58,9 +58,10 @@ public class ProcessExecutor {
 	}
 	
 	public Process execute(String... arguments) throws IOException, InterruptedException {
+		//
 		final Process process = RUNTIME.exec(
 				toCmdArray(arguments),
-				Environment.toStrings(environment),
+				environment != null ? environment.toEnvironmentStrings() : null,
 				workingDirectory);
 		
 		/*
