@@ -61,7 +61,7 @@ public class ProcessExecutor {
 		//
 		final Process process = RUNTIME.exec(
 				toCmdArray(arguments),
-				environment != null ? environment.toEnvironmentStrings() : null,
+				environment != null ? environment.toStrings() : null,
 				workingDirectory);
 		
 		/*

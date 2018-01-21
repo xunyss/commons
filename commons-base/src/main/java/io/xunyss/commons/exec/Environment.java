@@ -11,61 +11,64 @@ import java.util.Map.Entry;
 public class Environment {
 	
 	/**
+	 *
+	 */
+	private static final Environment currentEnvironment = new Environment(true);
+	
+	
+	/**
 	 * system environment variables
 	 */
 	private Map<String, String> environmentMap = new HashMap<>();
 	
 	
 	/**
-	 * constructor
-	 * 
-	 * @param inherit
+	 * Constructor.
+	 *
+	 * @param inherit whether to inherit current process environment variables (default: false)
 	 */
 	public Environment(boolean inherit) {
-		/*
-		 * 현재 프로세스의 환경변수 상속 여부
-		 */
 		if (inherit) {
 			environmentMap.putAll(System.getenv());
 		}
 	}
 	
 	/**
-	 *
+	 * Constructor.
 	 */
 	public Environment() {
-		/*
-		 * 현재 프로세스의 환경변수 상속 여부
-		 * 기본값 : false
-		 */
 		this(false);
 	}
 	
 	
 	/**
-	 * 
-	 * @param key
-	 * @param value
-	 * @return
+	 * Put environment variable.
+	 *
+	 * @param key key
+	 * @param value value
+	 * @return the previous value
 	 */
 	public String put(String key, String value) {
 		return environmentMap.put(key, value);
 	}
 	
 	/**
-	 * 
-	 * @param key
-	 * @return
+	 * Remove environment variable.
+	 *
+	 * @param key key
+	 * @return the previous value
 	 */
 	public String remove(String key) {
 		return environmentMap.remove(key);
 	}
 	
+	
 	/**
-	 * 
+	 * Get the variable list as an array.
+	 *
 	 * @return
 	 */
-	public String[] toEnvironmentStrings() {
+	public String[] toStrings() {
 		if (/* environmentMap == null || */ environmentMap.isEmpty()) {
 			return null;
 		}
@@ -79,5 +82,15 @@ public class Environment {
 			i++;
 		}
 		return result;
+	}
+	
+	
+	/**
+	 * Returns current process environment.
+	 *
+	 * @return current process environment
+	 */
+	public static Environment currentProcessEnvironment() {
+		return currentEnvironment;
 	}
 }

@@ -2,6 +2,7 @@ package io.xunyss.commons.io;
 
 import java.io.Closeable;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -13,120 +14,141 @@ import java.io.Writer;
 import java.net.URL;
 
 /**
+ * I/O utilities.
  *
  * @author XUNYSS
  */
 public final class IOUtils {
 	
 	/**
-	 * default buffer size
+	 * Default buffer size.
 	 */
-	private static final int DEFAULT_BUFFER_SIZE = 8192;
+	private static final int DEFAULT_BUFFER_SIZE = 1024 * 8;
 	
 	/**
-	 * end of file
+	 * Represents the end-of-file.
 	 */
 	private static final int EOF = -1;
 	
 	
 	/**
-	 * constructor
+	 * Constructor.
 	 */
 	private IOUtils() {
-		/* cannot create instance */
+		// cannot create instance
 	}
 	
 	/**
+	 * Copy contents from an InputStream to an OutputStream.
 	 *
-	 * @param srcInputStream
-	 * @param dstOutputStream
-	 * @throws IOException
+	 * @param srcInputStream input
+	 * @param dstOutputStream output
+	 * @return the number of bytes copied
+	 * @throws IOException if an I/O error occurs
 	 */
-	public static void copy(InputStream srcInputStream, OutputStream dstOutputStream) throws IOException {
+	public static int copy(InputStream srcInputStream, OutputStream dstOutputStream) throws IOException {
+		int count = 0;
 		byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
 		for (int readLen; (readLen = srcInputStream.read(buffer)) > EOF;) {
 			dstOutputStream.write(buffer, 0, readLen);
+			count += readLen;
 		}
 		dstOutputStream.flush();
+		return count;
 	}
 	
 	/**
+	 * Copy contents from an InputStream to a File.
 	 *
-	 * @param srcInputStream
-	 * @param dstFile
-	 * @throws IOException
+	 * @param srcInputStream input
+	 * @param dstFile output
+	 * @return the number of bytes copied
+	 * @throws IOException if an I/O error occurs
 	 */
-	public static void copy(InputStream srcInputStream, File dstFile) throws IOException {
-		OutputStream dstOutputStream = new FileOutputStream(dstFile);
-		copy(srcInputStream, dstOutputStream);
-		closeQuietly(dstOutputStream);
+	public static int copy(InputStream srcInputStream, File dstFile) throws IOException {
+//		OutputStream dstOutputStream = new FileOutputStream(dstFile);
+//		int count = copy(srcInputStream, dstOutputStream);
+//		closeQuietly(dstOutputStream);
+//		return count;
+		
+		// 2018.01.20 XUNYSS
+		// convert above statement to Java7 'try-with-resources' statement
+		try (OutputStream dstOutputStream = new FileOutputStream(dstFile)) {
+			return copy(srcInputStream, dstOutputStream);
+		}
+	}
+	// bad for 'API design'
+//	public static int copy(InputStream srcInputStream, String dstFilePath) throws IOException {
+//		return copy(srcInputStream, new File(dstFilePath));
+//	}
+	
+	/**
+	 * Copy contents from a File to a File.
+	 *
+	 * @param srcFile input
+	 * @param dstFile output
+	 * @return the number of bytes copied
+	 * @throws IOException if an I/O error occurs
+	 */
+	public static int copy(File srcFile, File dstFile) throws IOException {
+		try (InputStream srcInputStream = new FileInputStream(srcFile)) {
+			return IOUtils.copy(srcInputStream, dstFile);
+		}
 	}
 	
 	/**
+	 * Copy contents from a URL to a File.
 	 *
-	 * @param srcInputStream
-	 * @param dstFile
-	 * @throws IOException
+	 * @param url input
+	 * @param file output
+	 * @return the number of bytes copied
+	 * @throws IOException if an I/O error occurs
 	 */
-	public static void copy(InputStream srcInputStream, String dstFile) throws IOException {
-		copy(srcInputStream, new File(dstFile));
+	public static int copy(URL url, File file) throws IOException {
+		try (InputStream inputStream = url.openStream()) {
+			return copy(inputStream, file);
+		}
 	}
 	
 	/**
+	 * Copy contents from a Reader to a Writer.
 	 *
-	 * @param srcReader
-	 * @param dstWriter
-	 * @throws IOException
+	 * @param srcReader input
+	 * @param dstWriter output
+	 * @return the number of characters copied
+	 * @throws IOException if an I/O error occurs
 	 */
-	public static void copy(Reader srcReader, Writer dstWriter) throws IOException {
+	public static int copy(Reader srcReader, Writer dstWriter) throws IOException {
+		int count = 0;
 		char[] buffer = new char[DEFAULT_BUFFER_SIZE];
 		for (int readLen; (readLen = srcReader.read(buffer)) > EOF;) {
 			dstWriter.write(buffer, 0, readLen);
+			count += readLen;
 		}
 		dstWriter.flush();
+		return count;
 	}
 	
 	/**
+	 * Copy contents from a String to a File.
 	 *
-	 * @param srcStr
-	 * @param dstFile
-	 * @throws IOException
+	 * @param srcString input
+	 * @param dstFile output
+	 * @return the number of characters copied
+	 * @throws IOException if an I/O error occurs
 	 */
-	public static void copy(String srcStr, File dstFile) throws IOException {
-		StringReader srcStrReader = new StringReader(srcStr);
-		FileWriter dstFileWriter = new FileWriter(dstFile);
-		copy(srcStrReader, dstFileWriter);
-		
-		closeQuietly(srcStrReader);
-		closeQuietly(dstFileWriter);
+	public static int copy(String srcString, File dstFile) throws IOException {
+		try (StringReader srcStringReader = new StringReader(srcString);
+				FileWriter dstFileWriter = new FileWriter(dstFile)) {
+			return copy(srcStringReader, dstFileWriter);
+		}
 	}
 	
 	/**
+	 * Close a {@code Closeable} unconditionally.
+	 * Recommend using  try-with-resources statement.
 	 *
-	 * @param url
-	 * @param file
-	 * @throws IOException
-	 */
-	public static void copy(URL url, File file) throws IOException {
-		InputStream inputStream = url.openStream();
-		copy(inputStream, file);
-		
-		closeQuietly(inputStream);
-	}
-	
-	/**
-	 *
-	 * @param url
-	 * @param file
-	 * @throws IOException
-	 */
-	public static void copy(URL url, String file) throws IOException {
-		copy(url, new File(file));
-	}
-	
-	/**
-	 *
-	 * @param closeable
+	 * @param closeable closeable resource
 	 */
 	public static void closeQuietly(Closeable closeable) {
 		try {
@@ -134,8 +156,8 @@ public final class IOUtils {
 				closeable.close();
 			}
 		}
-		catch (IOException ignored) {
-			/* ignore exception */
+		catch (IOException ex) {
+			// ignore exception
 		}
 	}
 }

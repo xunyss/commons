@@ -1,6 +1,7 @@
 package io.xunyss.commons.lang;
 
 /**
+ * System utilities.
  *
  * @author XUNYSS
  */
@@ -15,16 +16,16 @@ public final class SystemUtils {
 	
 	
 	/**
-	 * constructor
+	 * Constructor.
 	 */
 	private SystemUtils() {
-		/* cannot create instance */
+		// cannot create instance
 	}
 	
 	/**
 	 *
-	 * @param key
-	 * @return
+	 * @param key key
+	 * @return value
 	 */
 	public static String getSystemProperty(final String key) {
 		return System.getProperty(key);

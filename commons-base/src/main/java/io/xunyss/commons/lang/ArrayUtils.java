@@ -3,20 +3,21 @@ package io.xunyss.commons.lang;
 import java.lang.reflect.Array;
 
 /**
+ * Array utilities.
  *
  * @author XUNYSS
  */
-public class ArrayUtils {
+public final class ArrayUtils {
 	
-	public static final Object[] EMPTY_OBJECT_ARRAY = new Object[0];
+//	public static final Object[] EMPTY_OBJECT_ARRAY = new Object[0];
 	public static final String[] EMPTY_STRING_ARRAY = new String[0];
 	
 	
 	/**
-	 *
+	 * Constructor.
 	 */
 	private ArrayUtils() {
-		/* cannot create instance */
+		// cannot create instance
 	}
 	
 	/**
@@ -52,7 +53,7 @@ public class ArrayUtils {
 	 * @param array array
 	 * @param element the object to add
 	 * @param <T> the component type of the array
-	 * @return A new array
+	 * @return a new array
 	 */
 	public static <T> T[] add(final T[] array, final T element) {
 		int arrayLength = array.length;
@@ -70,7 +71,7 @@ public class ArrayUtils {
 	 * @param element the object to add
 	 * @param array array
 	 * @param <T> the component type of the array
-	 * @return A new array
+	 * @return a new array
 	 */
 	@SafeVarargs
 	public static <T> T[] add(final T element, final T... array) {

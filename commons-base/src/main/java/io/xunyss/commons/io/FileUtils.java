@@ -1,12 +1,12 @@
 package io.xunyss.commons.io;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 
 import io.xunyss.commons.lang.SystemUtils;
 
 /**
+ * File utilities.
  *
  * @author XUNYSS
  */
@@ -20,10 +20,10 @@ public final class FileUtils {
 	
 	
 	/**
-	 * constructor
+	 * Constructor.
 	 */
 	private FileUtils() {
-		/* cannot create instance */
+		// cannot create instance
 	}
 	
 	/**
@@ -70,12 +70,12 @@ public final class FileUtils {
 	public static void makeDirectory(File dir) throws IOException {
 		if (dir.exists()) {
 			if (!dir.isDirectory()) {
-				throw new IOException("directory '" + dir + "' is exist");
+				throw new IOException("Directory '" + dir + "' is exist");
 			}
 		}
 		else {
 			if (!dir.mkdirs()) {
-				throw new IOException("cannot create directory '" + dir + "'");
+				throw new IOException("Cannot create directory '" + dir + "'");
 			}
 		}
 	}
@@ -112,18 +112,6 @@ public final class FileUtils {
 	
 	/**
 	 *
-	 * @param srcFile
-	 * @param dstFile
-	 * @throws IOException
-	 */
-	public static void copy(File srcFile, File dstFile) throws IOException {
-		FileInputStream srcFileInputStream = new FileInputStream(srcFile);
-		IOUtils.copy(srcFileInputStream, dstFile);
-		IOUtils.closeQuietly(srcFileInputStream);
-	}
-	
-	/**
-	 *
 	 * @param srcDir
 	 * @param dstDir
 	 * @throws IOException
@@ -136,10 +124,11 @@ public final class FileUtils {
 		for (File srcFile : srcFiles) {
 			File dstFile = new File(dstDir, srcFile.getName());
 			if (srcFile.isDirectory()) {
+				// recursive
 				copyDirectory(srcFile, dstFile);
 			}
 			else {
-				copy(srcFile, dstFile);
+				IOUtils.copy(srcFile, dstFile);
 			}
 		}
 	}

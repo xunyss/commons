@@ -1,16 +1,17 @@
 package io.xunyss.commons.lang;
 
 /**
+ * String utilities.
  *
  * @author XUNYSS
  */
 public final class StringUtils {
 	
 	/**
-	 * constructor
+	 * Constructor.
 	 */
 	private StringUtils() {
-		/* cannot create instance */
+		// cannot create instance
 	}
 	
 	/**
