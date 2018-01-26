@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
+ * Unit tests for the StringUtils class.
  *
  * @author XUNYSS
  */

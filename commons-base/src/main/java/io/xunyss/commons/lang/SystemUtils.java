@@ -23,9 +23,10 @@ public final class SystemUtils {
 	}
 	
 	/**
+	 * Get a system property.
 	 *
-	 * @param key key
-	 * @return value
+	 * @param key system property key
+	 * @return system property value
 	 */
 	public static String getSystemProperty(final String key) {
 		return System.getProperty(key);

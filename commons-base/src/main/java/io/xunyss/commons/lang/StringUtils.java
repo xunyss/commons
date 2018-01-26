@@ -15,6 +15,7 @@ public final class StringUtils {
 	}
 	
 	/**
+	 * Remove a substring only if it is at the beginning of a source string.
 	 *
 	 * @param str source string
 	 * @param remove remove string
@@ -28,6 +29,7 @@ public final class StringUtils {
 	}
 	
 	/**
+	 * Remove a substring only if it is at the end of a source string.
 	 *
 	 * @param str source string
 	 * @param remove remove string
