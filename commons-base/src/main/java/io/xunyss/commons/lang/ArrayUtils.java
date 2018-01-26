@@ -62,7 +62,7 @@ public final class ArrayUtils {
 	 * @param array1 array1
 	 * @param array2 array2
 	 * @param <T> the component type of the array
-	 * @return A new array
+	 * @return a new array
 	 */
 	@SafeVarargs
 	public static <T> T[] add(final T[] array1, final T... array2) {
@@ -96,16 +96,131 @@ public final class ArrayUtils {
 		return newArray;
 	}
 	
+//	/**
+//	 * Output an array as a String.
+//	 *
+//	 * @param array array
+//	 * @param <T> the component type of the array
+//	 * @return a string representation of the array
+//	 */
+//	public static <T> String toString(final T[] array) {
+//		if (array != null) {
+//			int arrayLength = array.length;
+//			StringBuilder arrayString = new StringBuilder();
+//
+//			arrayString.append('[');
+//			for (int index = 0; index < arrayLength; index++) {
+//				if (index > 0) {
+//					arrayString.append(',').append(' ');
+//				}
+//				arrayString.append(array[index]);
+//			}
+//			return arrayString.append(']')
+//					.toString();
+//		}
+//		return null;
+//	}
+	
 	/**
 	 * Output an array as a String.
 	 *
-	 * @param array array
+	 * @param array object array
 	 * @param <T> the component type of the array
-	 * @return string
+	 * @return a string representation of the array
 	 */
 	public static <T> String toString(final T[] array) {
-		if (array != null) {
-			int arrayLength = array.length;
+		return toStringInternal(array);
+	}
+	
+	/**
+	 * Output an array as a String.
+	 *
+	 * @param array byte array
+	 * @return a string representation of the array
+	 */
+	public static String toString(final byte[] array) {
+		return toStringInternal(array);
+	}
+	
+	/**
+	 * Output an array as a String.
+	 *
+	 * @param array short array
+	 * @return a string representation of the array
+	 */
+	public static String toString(final short[] array) {
+		return toStringInternal(array);
+	}
+	
+	/**
+	 * Output an array as a String.
+	 *
+	 * @param array int array
+	 * @return a string representation of the array
+	 */
+	public static String toString(final int[] array) {
+		return toStringInternal(array);
+	}
+	
+	/**
+	 * Output an array as a String.
+	 *
+	 * @param array long array
+	 * @return a string representation of the array
+	 */
+	public static String toString(final long[] array) {
+		return toStringInternal(array);
+	}
+	
+	/**
+	 * Output an array as a String.
+	 *
+	 * @param array float array
+	 * @return a string representation of the array
+	 */
+	public static String toString(final float[] array) {
+		return toStringInternal(array);
+	}
+	
+	/**
+	 * Output an array as a String.
+	 *
+	 * @param array double array
+	 * @return a string representation of the array
+	 */
+	public static String toString(final double[] array) {
+		return toStringInternal(array);
+	}
+	
+	/**
+	 * Output an array as a String.
+	 *
+	 * @param array char array
+	 * @return a string representation of the array
+	 */
+	public static String toString(final char[] array) {
+		return toStringInternal(array);
+	}
+	
+	/**
+	 * Output an array as a String.
+	 *
+	 * @param array boolean array
+	 * @return a string representation of the array
+	 */
+	public static String toString(final boolean[] array) {
+		return toStringInternal(array);
+	}
+	
+	/**
+	 * Output an array as a String using reflection.
+	 *
+	 * @param object array object
+	 * @return a string representation of the array
+	 */
+	private static String toStringInternal(final Object object) {
+//		if (isArray(object)) {
+			int arrayLength = Array.getLength(object);
 			StringBuilder arrayString = new StringBuilder();
 			
 			arrayString.append('[');
@@ -113,12 +228,11 @@ public final class ArrayUtils {
 				if (index > 0) {
 					arrayString.append(',').append(' ');
 				}
-				arrayString.append(array[index]);
+				arrayString.append(Array.get(object, index));
 			}
 			return arrayString.append(']')
 					.toString();
-		}
-		
-		return null;
+//		}
+//		return null;
 	}
 }
