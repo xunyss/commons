@@ -56,4 +56,10 @@ public class ArrayUtilsTest {
 		String[] array = {"a", "b", "c", "d"};
 		Assert.assertEquals("[a, b, c, d]", ArrayUtils.toString(array));
 	}
+	
+	@Test
+	public void toEmptyArrayString() {
+		Object[] array = ArrayUtils.EMPTY_OBJECT_ARRAY;
+		Assert.assertEquals("[]", ArrayUtils.toString(array));
+	}
 }

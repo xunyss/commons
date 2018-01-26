@@ -9,7 +9,14 @@ import java.lang.reflect.Array;
  */
 public final class ArrayUtils {
 	
-//	public static final Object[] EMPTY_OBJECT_ARRAY = new Object[0];
+	/**
+	 * An empty immutable {@code Object} array.
+	 */
+	public static final Object[] EMPTY_OBJECT_ARRAY = new Object[0];
+	
+	/**
+	 * An empty immutable {@code String} array.
+	 */
 	public static final String[] EMPTY_STRING_ARRAY = new String[0];
 	
 	
@@ -21,6 +28,7 @@ public final class ArrayUtils {
 	}
 	
 	/**
+	 * Determine whether the given object is an array.
 	 *
 	 * @param object object
 	 * @return {@code true} if object is array, {@code false} otherwise
@@ -30,6 +38,26 @@ public final class ArrayUtils {
 	}
 	
 	/**
+	 * Add the given element at the end of the new array.
+	 *
+	 * @param array array
+	 * @param element the object to add
+	 * @param <T> the component type of the array
+	 * @return a new array
+	 */
+	public static <T> T[] add(final T[] array, final T element) {
+		int arrayLength = array.length;
+		@SuppressWarnings("unchecked")
+		final T[] newArray = (T[]) Array.newInstance(array.getClass().getComponentType(), arrayLength + 1);
+		
+		System.arraycopy(array, 0, newArray, 0, arrayLength);
+		newArray[arrayLength] = element;
+		
+		return newArray;
+	}
+	
+	/**
+	 * Add the elements of the given arrays into a new array.
 	 *
 	 * @param array1 array1
 	 * @param array2 array2
@@ -49,24 +77,7 @@ public final class ArrayUtils {
 	}
 	
 	/**
-	 *
-	 * @param array array
-	 * @param element the object to add
-	 * @param <T> the component type of the array
-	 * @return a new array
-	 */
-	public static <T> T[] add(final T[] array, final T element) {
-		int arrayLength = array.length;
-		@SuppressWarnings("unchecked")
-		final T[] newArray = (T[]) Array.newInstance(array.getClass().getComponentType(), arrayLength + 1);
-		
-		System.arraycopy(array, 0, newArray, 0, arrayLength);
-		newArray[arrayLength] = element;
-		
-		return newArray;
-	}
-	
-	/**
+	 * Add the elements of the given arrays into a new array.
 	 *
 	 * @param element the object to add
 	 * @param array array
@@ -86,6 +97,7 @@ public final class ArrayUtils {
 	}
 	
 	/**
+	 * Output an array as a String.
 	 *
 	 * @param array array
 	 * @param <T> the component type of the array
