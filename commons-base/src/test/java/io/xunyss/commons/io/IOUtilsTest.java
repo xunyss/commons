@@ -23,7 +23,7 @@ public class IOUtilsTest {
 	private File tmpRoot = null;
 	
 	@Rule
-	public TemporaryFolder tmpDir = new TemporaryFolder();
+	public final TemporaryFolder tmpDir = new TemporaryFolder();
 	
 	@Before
 	public void setup() {

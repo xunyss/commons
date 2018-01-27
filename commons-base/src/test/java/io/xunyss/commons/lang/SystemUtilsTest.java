@@ -1,5 +1,6 @@
 package io.xunyss.commons.lang;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -11,6 +12,7 @@ public class SystemUtilsTest {
 	
 	@Test
 	public void getSystemProperty() {
-	
+		String userLanguage = SystemUtils.getSystemProperty("user.language");
+		Assert.assertEquals("ko", userLanguage);
 	}
 }
