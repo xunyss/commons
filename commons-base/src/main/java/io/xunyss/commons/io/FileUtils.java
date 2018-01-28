@@ -12,10 +12,25 @@ import io.xunyss.commons.lang.SystemUtils;
  */
 public final class FileUtils {
 	
+	/**
+	 *
+	 */
 	public static final String FILE_SEPARATOR = File.separator;
+	/**
+	 *
+	 */
 	public static final char FILE_SEPARATOR_CHAR = File.separatorChar;
+	/**
+	 *
+	 */
 	public static final char UNIX_FILE_SEPARATOR_CHAR = '/';
+	/**
+	 *
+	 */
 	public static final char WINDOWS_FILE_SEPARATOR_CHAR = '\\';
+	/**
+	 *
+	 */
 	public static final char RESOURCE_PATH_SEPARATOR_CHAR = UNIX_FILE_SEPARATOR_CHAR;
 	
 	
@@ -107,7 +122,10 @@ public final class FileUtils {
 	public static void deleteDirectoryQuietly(File dir) {
 		try {
 			deleteDirectory(dir);
-		} catch (IOException ignored) {}
+		}
+		catch (IOException ignored) {
+			// ignore exception
+		}
 	}
 	
 	/**

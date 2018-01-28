@@ -11,18 +11,30 @@ import org.junit.Test;
 public class StringUtilsTest {
 	
 	@Test
+	public void isEmpty() {
+		Assert.assertTrue(StringUtils.isEmpty(""));
+		Assert.assertTrue(StringUtils.isEmpty(null));
+	}
+	
+	@Test
+	public void isNotEmpty() {
+		Assert.assertFalse(StringUtils.isNotEmpty(""));
+		Assert.assertFalse(StringUtils.isNotEmpty(null));
+	}
+	
+	@Test
 	public void removeStart() {
 		Assert.assertEquals(
-				StringUtils.removeStart("hello", "he"),
-				"llo"
+				"llo",
+				StringUtils.removeStart("hello", "he")
 		);
 	}
 	
 	@Test
 	public void removeEnd() {
 		Assert.assertEquals(
-				StringUtils.removeEnd("hello", "lo"),
-				"hel"
+				"hel",
+				StringUtils.removeEnd("hello", "lo")
 		);
 	}
 }

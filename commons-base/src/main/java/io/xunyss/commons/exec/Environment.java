@@ -8,16 +8,16 @@ import java.util.Map.Entry;
  * 
  * @author XUNYSS
  */
-public class Environment {
+public final class Environment {
 	
 	/**
-	 *
+	 * Current process environment variables.
 	 */
 	private static final Environment currentEnvironment = new Environment(true);
 	
 	
 	/**
-	 * system environment variables
+	 * System environment variables.
 	 */
 	private Map<String, String> environmentMap = new HashMap<>();
 	
@@ -40,7 +40,6 @@ public class Environment {
 		this(false);
 	}
 	
-	
 	/**
 	 * Put environment variable.
 	 *
@@ -62,28 +61,36 @@ public class Environment {
 		return environmentMap.remove(key);
 	}
 	
-	
 	/**
 	 * Get the variable list as an array.
 	 *
-	 * @return
+	 * @return array of key=value assignment strings
 	 */
 	public String[] toStrings() {
 		if (/* environmentMap == null || */ environmentMap.isEmpty()) {
+//			return ArrayUtils.EMPTY_STRING_ARRAY;
 			return null;
 		}
 		
 		final String[] result = new String[environmentMap.size()];
 		int i = 0;
 		for (final Entry<String, String> entry : environmentMap.entrySet()) {
-			final String key  = entry.getKey() == null ? "" : entry.getKey().toString();
-			final String value = entry.getValue() == null ? "" : entry.getValue().toString();
+			final String key = entry.getKey() == null ? "" : entry.getKey()/*.toString()*/;
+			final String value = entry.getValue() == null ? "" : entry.getValue()/*.toString()*/;
+			
 			result[i] = key + "=" + value;
 			i++;
 		}
 		return result;
 	}
 	
+	@Override
+	public String toString() {
+		return environmentMap.toString();
+	}
+	
+	
+	//----------------------------------------------------------------------------------------------
 	
 	/**
 	 * Returns current process environment.

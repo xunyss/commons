@@ -1,0 +1,117 @@
+================================================================================
+= hi
+================================================================================
+/**
+ * PROCESS 실행
+ */
+
+Process process = Runtime.getRuntime().exec(command);
+
+/**
+ * windows 환경에서 WAS 의 thread 내에서
+ * cmd 를 이용하여 exec() 메소드로 프로세스를 실행할 경우. 영원히 block 될 수 있음.
+ * # 아래 세문장으로 block 걸리는거 방지. #
+ * # 아래 세문장이 없으면 waitFor() 에서 영원히 block 상태로 있음 #
+ * # 아래 세문장이 없고 wiatFor() 도 없으면 실제로 메소드는 종료하지만 내부적으로 스레드는 행걸려있음 #
+ *
+ * windows 환경이라도 단일프로세스 안에서 위 문장이 실행되고 (부모)프로세스가 종료하면 block 되지 않음.
+ * 즉, WAS의 EJB스레드안에서는 block, java 배치잡 안에서는 배치잡 종료시 같이 종료.
+ *
+ * UNIX 환경에서는 그런현상 없음.
+ * # 아래 세문장 있어도 되고 없어도 됨. #
+ * # 단, &를 이용하여 백그라운드로 실행할 경우는 아래 세문장을 적으면 안됨 - 백그라운드로 실행안됨. - 쉘에서 & 붙여보면 알겠지만 실제로 stdout 으로 계속 찍혀 나옴. #
+ * # unix에서 백그라운드로 실행하려면 readLine() 하면 안됨. 아래세문장 금지 #
+ */
+BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()));
+while (br.readLine() != null);
+br.close();
+process.waitFor();
+
+/** 아래와 같이하는게 정석이라고 함 */
+/* UNIX 에서 /bin/sh -c 과. "&" 로 백그라운드로 쉘을 실행하는 경우. */
+/* 위와같이 process.getInputStream() 리더를 readLine() 하고 있으면 실제로 백그라운드로 실행하지 않는것과 같이 수행됨 */
+/* 즉, UNIX 백그라운드도 적용하고, Window block도 막을거면 process.getInputStream().close(); 이거 한문장만 넣으면 만세 */
+Process process = Runtime.getRuntime().exec(cmd);
+process.getErrorStream().close();
+process.getInputStream().close();
+process.getOutputStream().close();
+process.waitFor();
+================================================================================
+
+================================================================================
+= ibki
+================================================================================
+windows 에서 Runtime.getRuntime().exec() 사용..
+실행 프로세스는 "cmd.exe" 를 사용한 스크립트(java를 수행하는) 수행
+
+# 독립 java 프로세스 환경.
+  - waitFor() 수행하지 않으면 block되지 않음.
+  - waitFor() 수행하면 waitFor() 문장에서 block.
+  - wiatFor() block은 위와같이 "getInputStream().close();"으로 해결가능.
+
+# WAS의 EJB스레드내의 환경.
+  - Runtime.getRuntime().exec(command);만 수행했을때
+    즉, waitFor() 메소드를 수행하지 않으면. 메소드는 정상적으로 종료되나
+    "command"로 실행된 프로세스는 계속 살아있음.
+    -> WAS-Console의 스레드모니터링에는 해당 EJB스레드가 없음 (현대해상에서 WebLogic11G 에서는 스레드행 상태였던거 같음..;;)
+    -> ProcessExplorer 에서 확인하면 WAS의 자식process로 계속 살아있는걸 확인할 수 있음. (일정시간이 지나면 프로세스가 알아서 죽긴 함)
+  - waitFor() 메소드를 수행하면 waitFor() 문장에서 block.
+  - 결론>>
+    process.getInputStream().close();
+    process.waitFor();
+    이렇게 해주면.. 실제로 프로세스도 죽고, block도 안걸리고.. 물론 스레드행도 없고.. 짱임.
+================================================================================
+
+================================================================================
+= tyli
+================================================================================
+= 또, 결론적으로.. Runtime().exec() 수행할 때.. 대상은 .cmd/.sh 인 콘솔 수행 executable
+================================================================================
+# case "windows"
+  > waitFor() 나 getInputStream().close() 아무것도 수행하지 않으면..
+    : 독립 java프로세스 환경에서는 Runtime.exec() 메소드 수행하고 바로 끝 (block 없음)
+      , 자바코드에 의해 수행된 Process도 정상적으로 종료.
+    : EJB 스레드에서 수행하면 Runtime.exec() 메소드 수행하고 바로 끝 (block 없음) .. 으로 보이나..
+      , 그러나, EJB내 자바코드에 의해 수행된 Process는 EJB인스턴스가 종료되지 않는한(EJB undeploy or redeploy 에 의해 종료되지 않는 한) 종료되지 않음.
+  > waitFor() 메소드만 사용시..
+    : 독립 java프로세스든 EJB든..
+      waitFor() 메소드 수행문장에서 영원히 block 상태.
+  > getInputStream().close() 메소드만 사용시..
+    : 독립 java프로세스든 EJB든..
+      Runtime().exec() 메소드 수행 후, getInputStream().close() 에서도 전혀 block 없이 바로 끝.
+  > getInputStream().close() 수행 후, waitFor() 메소도도 수행할 경우..
+    : 독립 java프로세스든 EJB든..
+      waitFor() 메소드에서 Runtime().exec()에 의해 수행된 Process 종료시 까지 block 하고
+      , Process 수행이 종료되면 즉시 바로 끝. (Process 완료까지 기다리는 상황)
+  > getInputStream() 에서 모두 read() 시..
+    : Process 종료가 되야 inputStream에서 데이터를 모두 read하는것이므로..
+      read()가 모두 끝나지 않으면 다음문장으로 넘어가지 않음.
+      즉, Process 종료시까지 기다려지는 효과 있음 (block 은 read() 메소드에서 발생)
+      , 그 밑에 waitFor() 함수가 수행되더라도 block 은 없음(이미 block 은 위에서 다 함)
+
+# case "unix"
+  > waitFor() 나 getInputStream().close() 아무것도 수행하지 않으면..
+    : 독립 java프로세스 환경에서.. "windows"케이스와 동일한 결과.
+    : EJB 스레드에서 수행되면 Runtime.exec() 메소드 수행하고 바로 끝 (block 없음)
+      , "windows"케이스와 다르게 Process가 종료되지 않는 문제는 없는걸로 보임(99.9%:ps로 검색해 봤을때 없음)
+    : 백그라운드("~ &") 로 실행해도 동일
+  > waitFor() 메소드만 사용시..
+    : waitFor() 메소드에서 Process 종료시 까지 block
+    : 백그라운드("~ &") 로 실행시 block 없이 바로 끝.
+    : 독립 java프로세스, EJB 동일함.
+  > getInputStream().close() 메소드만 사용시..
+    : 백그라운드("~ &")든 그렇지 않든 block 없이 바로 끝.
+    : 독립 java프로세스, EJB 동일함.
+  > getInputStream().close() 수행 후, waitFor() 메소도도 수행할 경우..
+    : waitFor() 메소드에서 Process 종료시 까지 block
+    : 백그라운드("~ &") 로 실행시 block 없이 바로 끝.
+    : 독립 java프로세스, EJB 동일함.
+  > getInputStream() 에서 모두 read() 시..
+    : Process 종료가 되야 inputStream에서 데이터를 모두 read하는것이므로..
+      read()가 모두 끝나지 않으면 다음문장으로 넘어가지 않음.
+      즉, Process 종료시까지 기다려지는 효과 있음 (block 은 read() 메소드에서 발생)
+      , 그 밑에 waitFor() 함수가 수행되더라도 block 은 없음(이미 block 은 위에서 다 함)
+    : 백그라운드("~ &") 로 실행하더라도 동일 함.
+  > "Process Exit Value"(waitFor() 메소드의 리턴값)을 정상적으로 받으려면
+    : 백그라운드("~ &") 로 실행하지 안아야 함 (getInputStream()에서 모두 read()를 하더라도..)
+================================================================================

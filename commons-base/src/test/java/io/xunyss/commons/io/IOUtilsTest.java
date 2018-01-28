@@ -20,10 +20,11 @@ import org.junit.rules.TemporaryFolder;
  */
 public class IOUtilsTest {
 	
-	private File tmpRoot = null;
-	
 	@Rule
 	public final TemporaryFolder tmpDir = new TemporaryFolder();
+	
+	private File tmpRoot = null;
+	
 	
 	@Before
 	public void setup() {

@@ -146,7 +146,7 @@ public final class IOUtils {
 	
 	/**
 	 * Close a {@code Closeable} unconditionally.
-	 * Recommend using  try-with-resources statement.
+	 * Recommend using try-with-resources statement.
 	 *
 	 * @param closeable closeable resource
 	 */

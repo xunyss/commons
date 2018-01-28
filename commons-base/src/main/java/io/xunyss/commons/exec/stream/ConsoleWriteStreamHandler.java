@@ -1,15 +1,15 @@
 package io.xunyss.commons.exec.stream;
 
-import io.xunyss.commons.exec.StreamHandler;
+import io.xunyss.commons.exec.PumpStreamHandler;
 
 /**
  * 
  * @author XUNYSS
  */
-public class ConsoleWriteStreamHandler extends StreamHandler {
+public class ConsoleWriteStreamHandler extends PumpStreamHandler {
 
 	public ConsoleWriteStreamHandler() {
-//		super(System.out, System.err, System.in);
 		super(System.out, System.err);
+		setAutoCloseStreams(false);
 	}
 }

@@ -25,6 +25,16 @@ public final class StringUtils {
 	}
 	
 	/**
+	 * Check if a string is not empty ("") and not {@code null}.
+	 *
+	 * @param str the string to check
+	 * @return {@code true} if the string is not empty and not null
+	 */
+	public static boolean isNotEmpty(final String str) {
+		return !isEmpty(str);
+	}
+	
+	/**
 	 * Remove a substring only if it is at the beginning of a source string.
 	 *
 	 * @param str source string

@@ -95,11 +95,12 @@ public class SimplePatternMatcher {
 				regex.append("?");
 				continue;
 			}
-			regex.append(ch);
+			regex.append(ch);		// other character
 		}
 		
 		// simple pattern string ==> java Pattern object
 		return Pattern.compile(
+				// final regular expression
 				(ignoreCase ? "(?i)" : "") + "^" + regex.toString() + "$"
 		);
 	}

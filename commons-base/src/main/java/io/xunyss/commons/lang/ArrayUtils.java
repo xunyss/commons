@@ -38,6 +38,17 @@ public final class ArrayUtils {
 	}
 	
 	/**
+	 * Create a type-safe generic array.
+	 *
+	 * @param array the varargs array items, null allowed
+	 * @param <T> the array's element type
+	 * @return the array, not null unless a null array is passed in
+	 */
+	public static <T> T[] toArray(final T... array) {
+		return array;
+	}
+	
+	/**
 	 * Add the given element at the end of the new array.
 	 *
 	 * @param array array
