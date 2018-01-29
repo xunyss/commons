@@ -17,12 +17,13 @@ public class PumpStreamHandler extends StreamHandler {
 	private OutputStream errorStream = null;
 	private InputStream inputStream = null;
 	
-	private boolean autoCloseStreams = true;
+	private boolean autoCloseStreams = false;
 	
 	// threads for handle stream
 	private Thread outputThread;
 	private Thread errorThread;
 	private Thread inputThread;
+	private SystemInputPumper systemInputPumper;
 	
 	
 	public PumpStreamHandler(OutputStream outputStream, OutputStream errorStream, InputStream inputStream) {
@@ -39,38 +40,50 @@ public class PumpStreamHandler extends StreamHandler {
 		this(outputStream, null);
 	}
 	
-	public void setAutoCloseStreams(boolean autoCloseStreams) {
-		this.autoCloseStreams = autoCloseStreams;
+	public PumpStreamHandler() {
+		this(System.out, System.err, null);
 	}
+	
+//	public void setAutoCloseStreams(boolean autoCloseStreams) {
+//		this.autoCloseStreams = autoCloseStreams;
+//	}
 	
 	@Override
 	public void start() {
 		if (outputStream != null) {
 			outputThread = startPumpThread(getProcessInputStream(), outputStream);
 		}
+		
 		if (errorStream != null) {
 			errorThread = startPumpThread(getProcessErrorStream(), errorStream);
 		}
+		
 		if (inputStream != null) {
-			inputThread = startPumpThread(inputStream, getProcessOutputStream());
+			inputThread = inputStream == System.in
+					? startSystemInputPumpThread(getProcessOutputStream())
+					: startPumpThread(inputStream, getProcessOutputStream());
+		}
+		else {
+			IOUtils.closeQuietly(getProcessOutputStream());
 		}
 	}
 	
 	@Override
 	public void stop() {
-		//------------------------------------------------------------------------------------------
-		// 이 3개의 thread 에 interrupt 걸어도 thread 에서는 InterruptedException 발생하지 않을 것임
-		//------------------------------------------------------------------------------------------
 		if (outputStream != null) {
 			outputThread.interrupt();
 		}
+		
 		if (errorStream != null) {
 			errorThread.interrupt();
 		}
+		
 		if (inputStream != null) {
+			if (systemInputPumper != null) {	// inputStream == System.in
+				systemInputPumper.stopPump();
+			}
 			inputThread.interrupt();
 		}
-		//------------------------------------------------------------------------------------------
 		
 		if (autoCloseStreams) {
 			IOUtils.closeQuietly(outputStream);
@@ -81,10 +94,18 @@ public class PumpStreamHandler extends StreamHandler {
 	
 	
 	private Thread startPumpThread(InputStream inputStream, OutputStream outputStream) {
-		Thread pump = new Thread(new StreamPumper(inputStream, outputStream), "Process Stream Pumper");
-		pump.setDaemon(true);
-		pump.start();
-		return pump;
+		Thread pumpThread = new Thread(new StreamPumper(inputStream, outputStream), "Process Stream Pumper");
+		pumpThread.setDaemon(true);
+		pumpThread.start();
+		return pumpThread;
+	}
+	
+	private Thread startSystemInputPumpThread(OutputStream outputStream) {
+		systemInputPumper = new SystemInputPumper(outputStream);
+		Thread pumpThread = new Thread(systemInputPumper, "Process System Input Pumper");
+		pumpThread.setDaemon(true);
+		pumpThread.start();
+		return pumpThread;
 	}
 	
 	
@@ -93,12 +114,12 @@ public class PumpStreamHandler extends StreamHandler {
 	/**
 	 * @author XUNYSS
 	 */
-	private class StreamPumper implements Runnable {
+	private static class StreamPumper implements Runnable {
 		
 		private InputStream inputStream;
 		private OutputStream outputStream;
 		
-		public StreamPumper(InputStream inputStream, OutputStream outputStream) {
+		private StreamPumper(InputStream inputStream, OutputStream outputStream) {
 			this.inputStream = inputStream;
 			this.outputStream = outputStream;
 		}
@@ -106,14 +127,71 @@ public class PumpStreamHandler extends StreamHandler {
 		@Override
 		public void run() {
 			try {
-				IOUtils.copy(inputStream, outputStream);
+			//	IOUtils.copy(inputStream, outputStream);
+				// pump stream
+				final int bufferSize = 1024 * 8;
+				byte[] buffer = new byte[bufferSize];
+				
+				int readLength;
+				while ((readLength = inputStream.read(buffer)) > IOUtils.EOF) {
+					outputStream.write(buffer, 0, readLength);
+					
+					// PumpStreamHandler.stop() 메소드가 수행 됨
+					// stream I/O pump 가 모두 수행되기 전까지는 이 부분이 실행되는 상황은 발생하지 않을 것임 (내생각)
+					if (Thread.interrupted()) {
+						break;
+					}
+				}
 			}
 			catch (IOException ex) {
-				// TODO: 에러처리
+				// do nothing
 			}
 			finally {
-				// TODO: 결과처리
+				try {
+					outputStream.flush();
+				}
+				catch (IOException ex) {
+					// do nothing
+				}
 			}
+		}
+	}
+	
+	/**
+	 * @author XUNYSS
+	 */
+	private static class SystemInputPumper implements Runnable {
+		
+		private static final int SLEEPING_TIME = 100;
+		
+		private OutputStream outputStream;
+		private volatile boolean stop;
+		
+		private SystemInputPumper(OutputStream outputStream) {
+			this.outputStream = outputStream;
+			this.stop = false;
+		}
+		
+		@Override
+		public void run() {
+			final InputStream stdin = System.in;
+			try {
+				while (!stop) {
+					while (stdin.available() > 0 && !stop) {
+						outputStream.write(stdin.read());
+					}
+					outputStream.flush();
+					
+					Thread.sleep(SLEEPING_TIME);
+				}
+			}
+			catch (IOException | InterruptedException ex) {
+				// do nothing
+			}
+		}
+		
+		private void stopPump() {
+			stop = true;
 		}
 	}
 }

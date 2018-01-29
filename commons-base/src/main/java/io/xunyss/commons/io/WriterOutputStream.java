@@ -3,6 +3,10 @@ package io.xunyss.commons.io;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Writer;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetDecoder;
 
 /**
  *
@@ -31,8 +35,24 @@ public class WriterOutputStream extends OutputStream {
 	 */
 	@Override
 	public void write(int b) throws IOException {
-		writer.write(b);
+//		writer.write(b);
+		
+		if (buff < 729) {
+			in.put((byte) b);
+			buff++;
+		}
+		if (buff >= 729) {
+			buff = 0;
+			in.flip();
+			CharBuffer out = cd.decode(in);
+			writer.write(out.array());
+			writer.flush();
+			in.compact();
+		}
 	}
+	CharsetDecoder cd = Charset.forName("MS949").newDecoder();
+	ByteBuffer in = ByteBuffer.allocate(729);
+	int buff=0;
 	
 	/**
 	 *

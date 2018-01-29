@@ -22,11 +22,11 @@ public class FileWriteStreamHandler extends PumpStreamHandler {
 	}
 	
 	
-	@Override
-	public void setAutoCloseStreams(boolean autoCloseStreams) {
-		// TODO: 에러처리 - 반드시 true 여야 함
-		if (!autoCloseStreams) {
-			throw new IllegalStateException("Cannot set 'false' autoCloseStreams property");
-		}
-	}
+//	@Override
+//	public void setAutoCloseStreams(boolean autoCloseStreams) {
+//		// TODO: 에러처리 - 반드시 true 여야 함
+//		if (!autoCloseStreams) {
+//			throw new IllegalStateException("Cannot set 'false' autoCloseStreams property");
+//		}
+//	}
 }

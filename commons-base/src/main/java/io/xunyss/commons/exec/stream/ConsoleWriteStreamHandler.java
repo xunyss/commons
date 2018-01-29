@@ -10,6 +10,6 @@ public class ConsoleWriteStreamHandler extends PumpStreamHandler {
 
 	public ConsoleWriteStreamHandler() {
 		super(System.out, System.err);
-		setAutoCloseStreams(false);
+//		setAutoCloseStreams(false);
 	}
 }

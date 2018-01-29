@@ -224,6 +224,8 @@ public class ProcessExecutor {
 	//----------------------------------------------------------------------------------------------
 	
 	/**
+	 * StreamHandler that do nothing.
+	 *
 	 * @author XUNYSS
 	 */
 	private static class NullStreamHandler extends StreamHandler {

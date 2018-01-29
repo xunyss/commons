@@ -21,14 +21,14 @@ import java.net.URL;
 public final class IOUtils {
 	
 	/**
+	 * Represents the end-of-file.
+	 */
+	public static final int EOF = -1;
+	
+	/**
 	 * Default buffer size.
 	 */
 	private static final int DEFAULT_BUFFER_SIZE = 1024 * 8;
-	
-	/**
-	 * Represents the end-of-file.
-	 */
-	private static final int EOF = -1;
 	
 	
 	/**
