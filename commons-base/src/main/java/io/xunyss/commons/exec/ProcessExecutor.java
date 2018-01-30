@@ -157,7 +157,7 @@ public class ProcessExecutor {
 			);
 		}
 		catch (IOException ex) {
-			throw new ExecuteException("Cannot execute process", ex);
+			throw new ExecuteException("Failed to execute process", ex);
 		}
 		//------------------------------------------------------------------------------------------
 		// handle streams
