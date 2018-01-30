@@ -7,6 +7,8 @@ import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
+import java.nio.charset.CoderResult;
+import java.nio.charset.CodingErrorAction;
 
 /**
  *
@@ -14,18 +16,37 @@ import java.nio.charset.CharsetDecoder;
  */
 public class WriterOutputStream extends OutputStream {
 	
+	private static final int BUFFER_CAPACITY = 1024;
+	
 	/**
 	 *
 	 */
 	private final Writer writer;
 	
+	private CharsetDecoder charsetDecoder = null;
+	private ByteBuffer byteBuffer = null;
+	private CharBuffer charBuffer = null;
+	private boolean isLastFlush = false;
+	
+	
+	public WriterOutputStream(final Writer writer, final Charset charset) {
+		this.writer = writer;
+		if (charset != null) {
+			this.charsetDecoder = charset.newDecoder()
+					.onMalformedInput(CodingErrorAction.REPLACE)
+					.onUnmappableCharacter(CodingErrorAction.REPLACE)
+					.replaceWith("?");
+			this.byteBuffer = ByteBuffer.allocate(BUFFER_CAPACITY);
+			this.charBuffer = CharBuffer.allocate(BUFFER_CAPACITY);
+		}
+	}
 	
 	/**
 	 *
 	 * @param writer
 	 */
 	public WriterOutputStream(final Writer writer) {
-		this.writer = writer;
+		this(writer, null);
 	}
 	
 	/**
@@ -35,24 +56,18 @@ public class WriterOutputStream extends OutputStream {
 	 */
 	@Override
 	public void write(int b) throws IOException {
-//		writer.write(b);
-		
-		if (buff < 729) {
-			in.put((byte) b);
-			buff++;
+		if (charsetDecoder != null && byteBuffer != null) {
+			if (byteBuffer.hasRemaining()) {
+				byteBuffer.put((byte) b);
+			}
+			if (!byteBuffer.hasRemaining()) {
+				flush();
+			}
 		}
-		if (buff >= 729) {
-			buff = 0;
-			in.flip();
-			CharBuffer out = cd.decode(in);
-			writer.write(out.array());
-			writer.flush();
-			in.compact();
+		else {
+			writer.write(b);
 		}
 	}
-	CharsetDecoder cd = Charset.forName("MS949").newDecoder();
-	ByteBuffer in = ByteBuffer.allocate(729);
-	int buff=0;
 	
 	/**
 	 *
@@ -60,7 +75,49 @@ public class WriterOutputStream extends OutputStream {
 	 */
 	@Override
 	public void flush() throws IOException {
-		writer.flush();
+		if (charsetDecoder != null && byteBuffer != null) {
+			// byteBuffer 의 capacity 가 stream 의 전체 사이즈 보다 클때만 정상 동작
+//			byteBuffer.flip();
+//			CharBuffer charBuffer = charsetDecoder.decode(byteBuffer);
+//			writer.write(charBuffer.array(), 0, charBuffer.limit());
+//			writer.flush();
+//			byteBuffer.compact();
+			
+			CoderResult coderResult;
+			byteBuffer.flip();
+			while (byteBuffer.hasRemaining()) {
+				// endOfInput 값이 true 일 경우 byteBuffer 끝까지 decode 를 시도 함
+				// endofInput 값이 false 일 경우 byteBuffer decode 가능한 지점까지 decode 함
+				// endOfInput == false 일때의 byteBuffer.position() 값은
+				// endOfInput == true 일때의 byteBuffer.position() 값보다 작거나 같다.
+				coderResult = charsetDecoder.decode(byteBuffer, charBuffer, isLastFlush);
+				// 정상
+				if (coderResult.isOverflow() || coderResult.isUnderflow()) {
+					// write to writer
+					if (charBuffer.position() > 0) {
+						writer.write(charBuffer.array(), 0, charBuffer.position());
+						writer.flush();
+						charBuffer.rewind();
+					}
+					// 출력버퍼(charBuffer) 가 다 참
+					if (coderResult.isOverflow()) {
+						continue;
+					}
+					// 디코딩 처리 완료
+					if (coderResult.isUnderflow()) {
+						break;
+					}
+				}
+				// 그외
+				else {
+					throw new IOException("Unexpected CoderResult: " + coderResult);
+				}
+			}
+			byteBuffer.compact();
+		}
+		else {
+			writer.flush();
+		}
 	}
 	
 	/**
@@ -69,6 +126,10 @@ public class WriterOutputStream extends OutputStream {
 	 */
 	@Override
 	public void close() throws IOException {
+		if (charsetDecoder != null && byteBuffer != null) {
+			isLastFlush = true;
+			flush();
+		}
 		writer.close();
 	}
 }
