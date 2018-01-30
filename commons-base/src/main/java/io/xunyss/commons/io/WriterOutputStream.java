@@ -11,11 +11,15 @@ import java.nio.charset.CoderResult;
 import java.nio.charset.CodingErrorAction;
 
 /**
+ * OutputStream that transforms a byte stream to a character stream.
  *
  * @author XUNYSS
  */
 public class WriterOutputStream extends OutputStream {
 	
+	/**
+	 *
+	 */
 	private static final int BUFFER_CAPACITY = 1024;
 	
 	/**
@@ -29,6 +33,11 @@ public class WriterOutputStream extends OutputStream {
 	private boolean isLastFlush = false;
 	
 	
+	/**
+	 *
+	 * @param writer
+	 * @param charset
+	 */
 	public WriterOutputStream(final Writer writer, final Charset charset) {
 		this.writer = writer;
 		if (charset != null) {
@@ -38,7 +47,17 @@ public class WriterOutputStream extends OutputStream {
 					.replaceWith("?");
 			this.byteBuffer = ByteBuffer.allocate(BUFFER_CAPACITY);
 			this.charBuffer = CharBuffer.allocate(BUFFER_CAPACITY);
+//			this.isLastFlush = false;
 		}
+	}
+	
+	/**
+	 *
+	 * @param writer
+	 * @param charsetName
+	 */
+	public WriterOutputStream(final Writer writer, final String charsetName) {
+		this(writer, Charset.forName(charsetName));
 	}
 	
 	/**
@@ -46,7 +65,7 @@ public class WriterOutputStream extends OutputStream {
 	 * @param writer
 	 */
 	public WriterOutputStream(final Writer writer) {
-		this(writer, null);
+		this(writer, (Charset) null);
 	}
 	
 	/**

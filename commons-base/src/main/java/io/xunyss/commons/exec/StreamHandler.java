@@ -40,7 +40,13 @@ public abstract class StreamHandler {
 	}
 	
 	
+	/**
+	 *
+	 */
 	public abstract void start();
 	
+	/**
+	 *
+	 */
 	public abstract void stop();
 }

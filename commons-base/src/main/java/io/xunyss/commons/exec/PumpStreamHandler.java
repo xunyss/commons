@@ -16,8 +16,7 @@ public class PumpStreamHandler extends StreamHandler {
 	private OutputStream outputStream = null;
 	private OutputStream errorStream = null;
 	private InputStream inputStream = null;
-	
-	private boolean autoCloseStreams = false;
+	private boolean closeStreams = false;
 	
 	// threads for handle stream
 	private Thread outputThread;
@@ -44,9 +43,9 @@ public class PumpStreamHandler extends StreamHandler {
 		this(System.out, System.err, null);
 	}
 	
-//	public void setAutoCloseStreams(boolean autoCloseStreams) {
-//		this.autoCloseStreams = autoCloseStreams;
-//	}
+	public void setCloseStreams(boolean closeStreams) {
+		this.closeStreams = closeStreams;
+	}
 	
 	@Override
 	public void start() {
@@ -85,7 +84,7 @@ public class PumpStreamHandler extends StreamHandler {
 			inputThread.interrupt();
 		}
 		
-		if (autoCloseStreams) {
+		if (closeStreams) {
 			IOUtils.closeQuietly(outputStream);
 			IOUtils.closeQuietly(errorStream);
 			IOUtils.closeQuietly(inputStream);
@@ -127,16 +126,15 @@ public class PumpStreamHandler extends StreamHandler {
 		@Override
 		public void run() {
 			try {
-			//	IOUtils.copy(inputStream, outputStream);
+//				IOUtils.copy(inputStream, outputStream);
 				// pump stream
 				final int bufferSize = 1024 * 8;
-				byte[] buffer = new byte[bufferSize];
-				
+				final byte[] buffer = new byte[bufferSize];
 				int readLength;
 				while ((readLength = inputStream.read(buffer)) > IOUtils.EOF) {
 					outputStream.write(buffer, 0, readLength);
 					
-					// PumpStreamHandler.stop() 메소드가 수행 됨
+					// ProcessExecutor 클래스에서 process.waitFor() 메소드 이후 PumpStreamHandler.stop() 메소드가 수행 됨
 					// stream I/O pump 가 모두 수행되기 전까지는 이 부분이 실행되는 상황은 발생하지 않을 것임 (내생각)
 					if (Thread.interrupted()) {
 						break;
@@ -174,14 +172,13 @@ public class PumpStreamHandler extends StreamHandler {
 		
 		@Override
 		public void run() {
-			final InputStream stdin = System.in;
+			final InputStream stdin = System.in;	// System Standard Input
 			try {
 				while (!stop) {
 					while (stdin.available() > 0 && !stop) {
 						outputStream.write(stdin.read());
 					}
 					outputStream.flush();
-					
 					Thread.sleep(SLEEPING_TIME);
 				}
 			}

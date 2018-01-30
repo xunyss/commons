@@ -7,7 +7,6 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import io.xunyss.commons.exec.stream.ConsoleWriteStreamHandler;
 import io.xunyss.commons.exec.stream.StringWriteStreamHandler;
 import io.xunyss.commons.lang.SystemUtils;
 
@@ -24,7 +23,7 @@ public class ProcessExecutorTest {
 	@Before
 	public void setup() {
 		// 환경변수 조회 명령어
-		environmentCommand = SystemUtils.IS_OS_WINDOWS ? "set" : "env";
+		environmentCommand = SystemUtils.IS_OS_WINDOWS ? "cmd /c set" : "sh -c env";
 	}
 	
 	@Test
@@ -47,9 +46,9 @@ public class ProcessExecutorTest {
 		environment.put("xunyss_key", "xunyss_value");
 		
 		ProcessExecutor processExecutor = new ProcessExecutor();
-		processExecutor.setStreamHandler(new ConsoleWriteStreamHandler());
+		processExecutor.setStreamHandler(new PumpStreamHandler());
 		processExecutor.setEnvironment(environment);
-		processExecutor.execute("cmd /c " + environmentCommand);
+		processExecutor.execute(environmentCommand);
 	}
 	
 	@Test
@@ -59,9 +58,9 @@ public class ProcessExecutorTest {
 		environment.put("xunyss_key", "xunyss_value");
 		
 		ProcessExecutor processExecutor = new ProcessExecutor();
-		processExecutor.setStreamHandler(new ConsoleWriteStreamHandler());
+		processExecutor.setStreamHandler(new PumpStreamHandler());
 		processExecutor.setEnvironment(environment);
-		processExecutor.execute("cmd /c " + environmentCommand);
+		processExecutor.execute(environmentCommand);
 	}
 	
 	@Ignore
@@ -84,7 +83,7 @@ public class ProcessExecutorTest {
 	
 	@Test
 	public void execStreamHandle() throws Exception {
-		StreamHandler streamHandler = new ConsoleWriteStreamHandler();
+		StreamHandler streamHandler = new PumpStreamHandler();
 //		streamHandler.setAutoCloseStreams(false);
 		
 //		StreamHandler streamHandler = new FileStreamHandler(new File("C:/downloads/test.log"));

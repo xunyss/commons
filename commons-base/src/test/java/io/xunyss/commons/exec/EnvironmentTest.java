@@ -11,7 +11,7 @@ import io.xunyss.commons.lang.StringUtils;
  * @author XUNYSS
  */
 public class EnvironmentTest {
-	
+
 	@Test
 	public void put() {
 		Environment environment = new Environment();
