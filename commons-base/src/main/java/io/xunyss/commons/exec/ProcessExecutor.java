@@ -11,19 +11,18 @@ import java.util.List;
 import io.xunyss.commons.io.IOUtils;
 import io.xunyss.commons.lang.ArrayUtils;
 import io.xunyss.commons.lang.RegularExpressions;
+import io.xunyss.commons.lang.StringUtils;
 
 /**
- *
- * TODO: MS949 output --> UTF-8 구현
- * TODO: console cli 수행 전용 메소드
- * TODO: stdout, stderr 같이 나오게
- * TODO: web-app 에서 테스트 해 봐야 함 (VM 종료 안하는 상태에서)
- * TODO: 여러군데로 output stream 쓰기 (console, 파일, ...)
- * TODO: process result 처리
+ * Execute an external process.
  * 
  * @author XUNYSS
  */
 public class ProcessExecutor {
+	
+	// TODO: console cli 수행 전용 메소드
+	// TODO: webapp 상에서 테스트 필요 (VM 종료 안하는 상태 + 멀티스레드 환경)
+	
 	
 	/**
 	 *
@@ -41,9 +40,9 @@ public class ProcessExecutor {
 	public static int EXITVALUE_NORMAL = 0;
 	
 	/**
-	 * TODO: define value
+	 * 
 	 */
-	public static int EXITVALUE_NOT_EXITED = 0xdeadbeef;
+	public static int EXITVALUE_NOT_EXITED = 0xdeadbeef;	// TODO: define value
 	
 	
 	private boolean forceWait = false;
@@ -80,9 +79,17 @@ public class ProcessExecutor {
 	}
 	
 	
-	public int execute(final String... commands) throws ExecuteException {
+	public int execute(final String command, final String... commands) throws ExecuteException {
+		// 2018.01.31 XUNYSS
+		// method signature 변경 - 가변인자 사용하되 적어도 한개 요소는 입력하게 하기 위함
+		// (final String... commands) 에서
+		// (final String command, final String... commands) 로
+		
+		if (StringUtils.isEmpty(command)) {
+			throw new ExecuteException("Execution command must not be empty");
+		}
 		try {
-			Process process = executeInternal(commands,
+			Process process = executeInternal(ArrayUtils.add(command, commands),
 					// stream handler 없이 forceWait 가 true 일 경우 NULL_STREAM_HANDLER 를 사용하여 강제 대기
 					// forceWait 가 false 이고, stream handler 도 null 일 경우
 					// (waitFor 수행하지 않고, process stream close 하지 않을 경우)
@@ -151,9 +158,12 @@ public class ProcessExecutor {
 		final Process process;
 		try {
 			process = RUNTIME.exec(
-					toProcessCommandArray(commands),							// cmdarray
-					environment != null ? environment.toStrings() : null,		// envp
-					workingDirectory											// dir
+					// cmdarray: 명령어 배열
+					toProcessCommandArray(commands),
+					// envp: null 일 경우 현재 프로세스의 환경변수를 상속 받음
+					environment != null ? environment.toStrings() : null,
+					// dir: null 일 경우 현재 디렉토리
+					workingDirectory
 			);
 		}
 		catch (IOException ex) {

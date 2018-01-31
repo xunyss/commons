@@ -1,14 +1,15 @@
 package io.xunyss.commons.exec;
 
 import java.io.File;
+import java.io.IOException;
 
+import io.xunyss.commons.exec.stream.StringOutputHandler;
+import io.xunyss.commons.lang.StringUtils;
+import io.xunyss.commons.lang.SystemUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import io.xunyss.commons.exec.stream.StringWriteStreamHandler;
-import io.xunyss.commons.lang.SystemUtils;
 
 /**
  * Unit tests for the ProcessExecutor class.
@@ -27,28 +28,47 @@ public class ProcessExecutorTest {
 	}
 	
 	@Test
-	public void setWorkingDirectory() throws Exception {
+	public void setWorkingDirectory() throws IOException {
 		String userHome = SystemUtils.getSystemProperty("user.home");
 		
-		StringWriteStreamHandler stringResult = new StringWriteStreamHandler();
+		StringOutputHandler stringOutputHandler = new StringOutputHandler();
 		ProcessExecutor processExecutor = new ProcessExecutor();
 		processExecutor.setWorkingDirectory(new File(userHome));
-		processExecutor.setStreamHandler(stringResult);
+		processExecutor.setStreamHandler(stringOutputHandler);
 		processExecutor.execute("cmd /c dir /w");
 		
-		Assert.assertTrue(stringResult.getOutputString("MS949").contains(userHome));
+		String output = stringOutputHandler.getOutputString("MS949");
+		Assert.assertTrue(output.contains(userHome));
 	}
 	
 	@Test
-	public void setEnvironment() throws Exception {
+	public void notSetEnvironment() throws IOException {
+		StringOutputHandler stringOutputHandler = new StringOutputHandler();
+		ProcessExecutor processExecutor = new ProcessExecutor();
+		processExecutor.setStreamHandler(stringOutputHandler);
+		processExecutor.execute(environmentCommand);
+		
+		Assert.assertEquals(
+				currentProcessDisplayedEnvironmentVariablesCount(),
+				StringUtils.countOccurrence(stringOutputHandler.getOutputString(), "=")
+		);
+	}
+	
+	@Test
+	public void setEnvironment() throws IOException {
 		Environment environment = new Environment();
 		environment.put("xunyss_env", "xunyss_variable");
 		environment.put("xunyss_key", "xunyss_value");
 		
+		StringOutputHandler stringOutputHandler = new StringOutputHandler();
 		ProcessExecutor processExecutor = new ProcessExecutor();
-		processExecutor.setStreamHandler(new PumpStreamHandler());
+		processExecutor.setStreamHandler(stringOutputHandler);
 		processExecutor.setEnvironment(environment);
 		processExecutor.execute(environmentCommand);
+		
+		String output = stringOutputHandler.getOutputString("MS949");
+		Assert.assertTrue(output.contains("xunyss_env=xunyss_variable"));
+		Assert.assertTrue(output.contains("xunyss_key=xunyss_value"));
 	}
 	
 	@Test
@@ -57,10 +77,20 @@ public class ProcessExecutorTest {
 		environment.put("xunyss_env", "xunyss_variable");
 		environment.put("xunyss_key", "xunyss_value");
 		
+		StringOutputHandler stringOutputHandler = new StringOutputHandler();
 		ProcessExecutor processExecutor = new ProcessExecutor();
-		processExecutor.setStreamHandler(new PumpStreamHandler());
+		processExecutor.setStreamHandler(stringOutputHandler);
 		processExecutor.setEnvironment(environment);
 		processExecutor.execute(environmentCommand);
+		
+		String output = stringOutputHandler.getOutputString("MS949");
+		Assert.assertTrue(output.contains("xunyss_env=xunyss_variable"));
+		Assert.assertTrue(output.contains("xunyss_key=xunyss_value"));
+		
+		Assert.assertEquals(
+				currentProcessDisplayedEnvironmentVariablesCount() + 2,
+				StringUtils.countOccurrence(stringOutputHandler.getOutputString(), "=")
+		);
 	}
 	
 	@Ignore
@@ -81,22 +111,15 @@ public class ProcessExecutorTest {
 		Assert.assertEquals(ProcessExecutor.EXITVALUE_NORMAL, exitValue);
 	}
 	
-	@Test
-	public void execStreamHandle() throws Exception {
-		StreamHandler streamHandler = new PumpStreamHandler();
-//		streamHandler.setAutoCloseStreams(false);
-		
-//		StreamHandler streamHandler = new FileStreamHandler(new File("C:/downloads/test.log"));
-		
-		ProcessExecutor processExecutor = new ProcessExecutor();
-		processExecutor.setStreamHandler(streamHandler);
-//		processExecutor.execute("cmd /c ipconfig /all");
-		processExecutor.execute(
-		"D:\\xdev\\git\\commons\\commons-openssl\\target\\classes\\io\\xunyss\\openssl\\binary\\win32\\openssl.exe asn1parse -genstr UTF8:\"hello world\"");
-	}
 	
-	@Test
-	public void execCommandLine() throws Exception {
-		
+	private int currentProcessDisplayedEnvironmentVariablesCount() {
+		String[] envVariables = Environment.currentProcessEnvironment().toStrings();
+		int envVariablesCount = envVariables.length;
+		for (String envVariable: envVariables) {
+			if (envVariable.startsWith("=")) {
+				envVariablesCount--;
+			}
+		}
+		return envVariablesCount;
 	}
 }

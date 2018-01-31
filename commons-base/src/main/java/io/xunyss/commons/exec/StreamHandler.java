@@ -15,15 +15,15 @@ public abstract class StreamHandler {
 	private OutputStream processOutputStream = null;
 	
 	
-	/* default */ void setProcessInputStream(InputStream processInputStream) {
+	void setProcessInputStream(InputStream processInputStream) {
 		this.processInputStream = processInputStream;
 	}
 	
-	/* default */ void setProcessErrorStream(InputStream processErrorStream) {
+	void setProcessErrorStream(InputStream processErrorStream) {
 		this.processErrorStream = processErrorStream;
 	}
 	
-	/* default */ void setProcessOutputStream(OutputStream processOutputStream) {
+	void setProcessOutputStream(OutputStream processOutputStream) {
 		this.processOutputStream = processOutputStream;
 	}
 	
@@ -38,7 +38,6 @@ public abstract class StreamHandler {
 	protected OutputStream getProcessOutputStream() {
 		return processOutputStream;
 	}
-	
 	
 	/**
 	 *

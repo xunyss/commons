@@ -40,6 +40,17 @@ public final class Environment {
 		this(false);
 	}
 	
+	
+	/**
+	 * Get environment variable.
+	 *
+	 * @param key key
+	 * @return value
+	 */
+	public String get(String key) {
+		return environmentMap.get(key);
+	}
+	
 	/**
 	 * Put environment variable.
 	 *

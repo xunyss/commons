@@ -43,9 +43,23 @@ public class PumpStreamHandler extends StreamHandler {
 		this(System.out, System.err, null);
 	}
 	
+	
+	protected final OutputStream getOutputStream() {
+		return outputStream;
+	}
+
+	protected final OutputStream getErrorStream() {
+		return errorStream;
+	}
+	
+	protected final InputStream getInputStream() {
+		return inputStream;
+	}
+	
 	public void setCloseStreams(boolean closeStreams) {
 		this.closeStreams = closeStreams;
 	}
+	
 	
 	@Override
 	public void start() {

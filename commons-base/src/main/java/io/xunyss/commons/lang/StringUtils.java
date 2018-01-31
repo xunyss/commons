@@ -35,6 +35,28 @@ public final class StringUtils {
 	}
 	
 	/**
+	 * Count the occurrences of the substring {@code sub} in string {@code str}.
+	 *
+	 * @param str string to search in
+	 * @param sub string to search for
+	 * @return
+	 */
+	public static int countOccurrence(String str, String sub) {
+		if (isEmpty(str) || isEmpty(sub)) {
+			return 0;
+		}
+		
+		int count = 0;
+		int pos = 0;
+		int idx;
+		while ((idx = str.indexOf(sub, pos)) != -1) {
+			++count;
+			pos = idx + sub.length();
+		}
+		return count;
+	}
+	
+	/**
 	 * Remove a substring only if it is at the beginning of a source string.
 	 *
 	 * @param str source string

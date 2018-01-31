@@ -9,8 +9,6 @@ import java.io.IOException;
 @SuppressWarnings("serial")
 public class ExecuteException extends IOException {
 	
-	private int exitValue;
-	
 	public ExecuteException(String message, Throwable cause) {
 		super(message, cause);
 	}
@@ -21,10 +19,5 @@ public class ExecuteException extends IOException {
 	
 	public ExecuteException(Throwable cause) {
 		super(cause);
-	}
-	
-	
-	public int getExitValue() {
-		return exitValue;
 	}
 }

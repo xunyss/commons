@@ -6,7 +6,15 @@ package io.xunyss.commons.exec;
  */
 public interface ResultHandler {
 	
+	/**
+	 * 
+	 * @param exitValue
+	 */
 	void onProcessComplete(int exitValue);
 	
+	/**
+	 * 
+	 * @param ex
+	 */
 	void onProcessFailed(ExecuteException ex);
 }
