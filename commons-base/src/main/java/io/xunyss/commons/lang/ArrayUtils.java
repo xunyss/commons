@@ -44,6 +44,7 @@ public final class ArrayUtils {
 	 * @param <T> the array's element type
 	 * @return the array, not null unless a null array is passed in
 	 */
+	@SafeVarargs
 	public static <T> T[] toArray(final T... array) {
 		return array;
 	}

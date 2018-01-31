@@ -106,6 +106,12 @@ public class PumpStreamHandler extends StreamHandler {
 	}
 	
 	
+	/**
+	 *
+	 * @param inputStream
+	 * @param outputStream
+	 * @return
+	 */
 	private Thread startPumpThread(InputStream inputStream, OutputStream outputStream) {
 		Thread pumpThread = new Thread(new StreamPumper(inputStream, outputStream), "Process Stream Pumper");
 		pumpThread.setDaemon(true);
@@ -113,6 +119,11 @@ public class PumpStreamHandler extends StreamHandler {
 		return pumpThread;
 	}
 	
+	/**
+	 *
+	 * @param outputStream
+	 * @return
+	 */
 	private Thread startSystemInputPumpThread(OutputStream outputStream) {
 		systemInputPumper = new SystemInputPumper(outputStream);
 		Thread pumpThread = new Thread(systemInputPumper, "Process System Input Pumper");
@@ -129,6 +140,8 @@ public class PumpStreamHandler extends StreamHandler {
 	 */
 	private static class StreamPumper implements Runnable {
 		
+		private static final int PUMP_BUFFER_SIZE = 1024 * 4;
+		
 		private InputStream inputStream;
 		private OutputStream outputStream;
 		
@@ -141,9 +154,9 @@ public class PumpStreamHandler extends StreamHandler {
 		public void run() {
 			try {
 //				IOUtils.copy(inputStream, outputStream);
+				
 				// pump stream
-				final int bufferSize = 1024 * 8;
-				final byte[] buffer = new byte[bufferSize];
+				final byte[] buffer = new byte[PUMP_BUFFER_SIZE];
 				int readLength;
 				while ((readLength = inputStream.read(buffer)) > IOUtils.EOF) {
 					outputStream.write(buffer, 0, readLength);

@@ -21,7 +21,7 @@ import io.xunyss.commons.lang.StringUtils;
 public class ProcessExecutor {
 	
 	// TODO: console cli 수행 전용 메소드
-	// TODO: webapp 상에서 테스트 필요 (VM 종료 안하는 상태 + 멀티스레드 환경)
+	// TODO: WebApp 상에서 테스트 필요 (VM 종료 안하는 상태 + 멀티스레드 환경)
 	
 	
 	/**
@@ -206,9 +206,9 @@ public class ProcessExecutor {
 	 * 
 	 * <p> Examples:
 	 * <ul>
-	 *   <li>exec({"openssl", "asn1parse", "-genstr", "UTF8:\"hello world\""}) -> fail</li>
-	 *   <li>exec({"openssl", "asn1parse", "-genstr", "UTF8:\"hello", "world\""}) -> success</li>
-	 *   <li>exec("openssl asn1parse -genstr UTF8:\"hello world\"") -> success</li>
+	 *   <li>exec({"openssl", "asn1parse", "-genstr", "UTF8:\"hello world\""}) --> fail</li>
+	 *   <li>exec({"openssl", "asn1parse", "-genstr", "UTF8:\"hello", "world\""}) --> success</li>
+	 *   <li>exec("openssl asn1parse -genstr UTF8:\"hello world\"") --> success</li>
 	 * </ul>
 	 *
 	 * @param commands command array
@@ -225,6 +225,7 @@ public class ProcessExecutor {
 //			for (String commandToken : command.split(RegularExpressions.DELIMITER_SPACE)) {
 //				commandList.add(commandToken);
 //			}
+//			==>
 			commandList.addAll(Arrays.asList(command.split(RegularExpressions.DELIMITER_SPACE)));
 		}
 		return commandList.toArray(ArrayUtils.EMPTY_STRING_ARRAY);

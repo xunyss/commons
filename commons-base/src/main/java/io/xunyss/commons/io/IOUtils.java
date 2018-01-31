@@ -70,14 +70,14 @@ public final class IOUtils {
 //		int count = copy(srcInputStream, dstOutputStream);
 //		closeQuietly(dstOutputStream);
 //		return count;
-		
+//		==>
 		// 2018.01.20 XUNYSS
 		// convert above statement to Java7 'try-with-resources' statement
 		try (OutputStream dstOutputStream = new FileOutputStream(dstFile)) {
 			return copy(srcInputStream, dstOutputStream);
 		}
 	}
-	// bad for 'API design'
+	// removed bad 'API design' method
 //	public static int copy(InputStream srcInputStream, String dstFilePath) throws IOException {
 //		return copy(srcInputStream, new File(dstFilePath));
 //	}

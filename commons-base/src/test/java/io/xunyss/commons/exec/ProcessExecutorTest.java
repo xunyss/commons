@@ -74,9 +74,10 @@ public class ProcessExecutorTest {
 	
 	@Test
 	public void setEnvironmentInherit() throws Exception {
+		int addedCount = 0;
 		Environment environment = new Environment(true);
-		environment.put("xunyss_env", "xunyss_variable");
-		environment.put("xunyss_key", "xunyss_value");
+		environment.put("xunyss_env", "xunyss_variable"); addedCount++;
+		environment.put("xunyss_key", "xunyss_value"); addedCount++;
 		
 		StringOutputHandler stringOutputHandler = new StringOutputHandler();
 		ProcessExecutor processExecutor = new ProcessExecutor();
@@ -89,7 +90,7 @@ public class ProcessExecutorTest {
 		Assert.assertTrue(output.contains("xunyss_key=xunyss_value"));
 		
 		Assert.assertEquals(
-				currentProcessDisplayedEnvironmentVariablesCount() + 2,
+				currentProcessDisplayedEnvironmentVariablesCount() + addedCount,
 				StringUtils.countOccurrence(stringOutputHandler.getOutputString(), "=")
 		);
 	}

@@ -86,7 +86,7 @@ public class ReaderInputStream extends InputStream {
 		try {
 			reader.mark(readlimit);
 		}
-		catch (IOException ignored) {
+		catch (IOException ex) {
 			/* ignore exception */
 		}
 	}

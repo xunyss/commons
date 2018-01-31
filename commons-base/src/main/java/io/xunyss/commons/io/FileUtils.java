@@ -45,8 +45,8 @@ public final class FileUtils {
 	 *
 	 * @return
 	 */
-	public static String getTempDirectoryPath() {
-		return SystemUtils.JAVA_IO_TMPDIR;
+	public static File getTempDirectory() {
+		return new File(SystemUtils.JAVA_IO_TMPDIR);
 	}
 	
 	/**
@@ -85,7 +85,7 @@ public final class FileUtils {
 	public static void makeDirectory(File dir) throws IOException {
 		if (dir.exists()) {
 			if (!dir.isDirectory()) {
-				throw new IOException("Directory '" + dir + "' is exist");
+				throw new IOException("File '" + dir + "' is already exist");
 			}
 		}
 		else {
@@ -102,12 +102,13 @@ public final class FileUtils {
 	 */
 	public static void deleteDirectory(File dir) throws IOException {
 		if (!dir.isDirectory()) {
-			throw new IOException("directory '" + dir + "' is not exist");
+			throw new IOException("Directory '" + dir + "' is not exist");
 		}
 		
 		File[] files = dir.listFiles();
 		for (File file : files) {
 			if (file.isDirectory()) {
+				// recursive
 				deleteDirectory(file);
 			}
 			file.delete();
@@ -123,7 +124,7 @@ public final class FileUtils {
 		try {
 			deleteDirectory(dir);
 		}
-		catch (IOException ignored) {
+		catch (IOException ex) {
 			// ignore exception
 		}
 	}
