@@ -2,13 +2,18 @@ package io.xunyss.commons.exec.stream;
 
 import java.io.IOException;
 
-import io.xunyss.commons.exec.ProcessExecutor;
-import org.junit.Ignore;
+import org.junit.Assert;
 import org.junit.Test;
 
+import io.xunyss.commons.exec.ProcessExecutor;
+
+/**
+ * Unit tests for the StringOutputHandler class.
+ * 
+ * @author XUNYSS
+ */
 public class StringOutputHandlerTest {
 	
-	@Ignore
 	@Test
 	public void pumpToStringOutputHandler() throws IOException {
 		StringOutputHandler stringOutputHandler = new StringOutputHandler();
@@ -16,12 +21,12 @@ public class StringOutputHandlerTest {
 		ProcessExecutor processExecutor = new ProcessExecutor();
 		processExecutor.setStreamHandler(stringOutputHandler);
 		
-		processExecutor.execute("cmd /c dir");
-		String out = stringOutputHandler.getOutputString("MS949");
-		System.out.println(out);
+		processExecutor.execute("cmd /c echo hello world");
+		String out1 = stringOutputHandler.getOutputString();
+		Assert.assertEquals("hello world", out1);
 		
-		processExecutor.execute("ipconfig");
-		String out2 = stringOutputHandler.getOutputString("MS949");
-		System.out.println(out2);
+		processExecutor.execute("cmd /c echo hello xunyss");
+		String out2 = stringOutputHandler.getOutputString();
+		Assert.assertEquals("hello xunyss", out2);
 	}
 }

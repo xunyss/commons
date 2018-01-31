@@ -1,6 +1,6 @@
 package io.xunyss.commons.exec;
 
-import org.junit.Ignore;
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -10,23 +10,28 @@ import org.junit.Test;
  */
 public class StreamHandlerTest {
 	
-	private String command = "cmd /c dir";
+	private String startMessage = null;
+	private String stopMessage = null;
 	
 	
-	@Ignore
 	@Test
 	public void streamHandler() throws ExecuteException {
 		ProcessExecutor processExecutor = new ProcessExecutor();
 		processExecutor.setStreamHandler(new StreamHandler() {
 			@Override
 			public void start() {
-				System.out.println("Start handle process streams");
+				Assert.assertNull(stopMessage);
+				startMessage = "started";
 			}
 			@Override
 			public void stop() {
-				System.out.println("Stop handle process streams");
+				Assert.assertNotNull(startMessage);
+				stopMessage = "stopped";
 			}
 		});
-		processExecutor.execute(command);
+		processExecutor.execute("cmd /c dir");
+		
+		Assert.assertEquals("started", startMessage);
+		Assert.assertEquals("stopped", stopMessage);
 	}
 }

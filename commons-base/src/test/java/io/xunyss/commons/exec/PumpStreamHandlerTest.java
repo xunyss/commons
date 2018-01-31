@@ -25,6 +25,7 @@ public class PumpStreamHandlerTest {
 	public final TemporaryFolder tmpDir = new TemporaryFolder();
 	
 	private String command = "cmd /c dir";
+	private String consoleCharset = "MS949";
 	
 	
 	@Ignore
@@ -53,14 +54,14 @@ public class PumpStreamHandlerTest {
 		processExecutor.execute(command);
 		
 		byteArrayOutputStream.close();
-		System.out.println(byteArrayOutputStream.toString("MS949"));
+		System.out.println(byteArrayOutputStream.toString(consoleCharset));
 	}
 	
 	@Ignore
 	@Test
 	public void pumpToStringWriter() throws IOException {
 		StringWriter stringWriter = new StringWriter();
-		WriterOutputStream writerOutputStream = new WriterOutputStream(stringWriter, "MS949");
+		WriterOutputStream writerOutputStream = new WriterOutputStream(stringWriter, consoleCharset);
 		
 		ProcessExecutor processExecutor = new ProcessExecutor();
 		processExecutor.setStreamHandler(new PumpStreamHandler(writerOutputStream));
