@@ -23,10 +23,10 @@ public class StringOutputHandlerTest {
 		
 		processExecutor.execute("cmd /c echo hello world");
 		String out1 = stringOutputHandler.getOutputString();
-		Assert.assertEquals("hello world", out1);
+		Assert.assertEquals("hello world", out1.replaceAll("[\r\n]", ""));
 		
 		processExecutor.execute("cmd /c echo hello xunyss");
 		String out2 = stringOutputHandler.getOutputString();
-		Assert.assertEquals("hello xunyss", out2);
+		Assert.assertEquals("hello xunyss", out2.replaceAll("[\r\n]", ""));
 	}
 }
