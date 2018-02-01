@@ -1,89 +1,36 @@
 package io.xunyss.openssl;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.Writer;
-
-import io.xunyss.commons.io.NullOutputStream;
-import io.xunyss.commons.io.WriterOutputStream;
-
 /**
+ * Proxy.
  * 
  * @author XUNYSS
  */
 public class OpenSSL {
 	
 	/**
-	 * OpenSSL command executor
+	 * 
 	 */
-	private OpenSSLExecutor openSSLExecutor;
-	
-	/**
-	 * OpenSSL command output
-	 */
-	private OutputStream outputStream;
+	private static OpenSSLEngineFactory engineFactory = OpenSSLEngineFactory.getInstance();
 	
 	
 	/**
-	 *
-	 * @param outputStream
+	 * OpenSSL command executor.
 	 */
-	public OpenSSL(OutputStream outputStream) {
-		openSSLExecutor = OpenSSLExecutor.getInstance();
-		setOutputStream(outputStream);
-	}
+	private OpenSSLEngine openSSLEngine;
 	
-	/**
-	 *
-	 * @param writer
-	 */
-	public OpenSSL(Writer writer) {
-		this(new WriterOutputStream(writer));
-	}
 	
-	/**
-	 *
-	 */
 	public OpenSSL() {
-		this(NullOutputStream.NULL_OUTPUT_STREAM);
+		// set Engine
+		openSSLEngine = engineFactory.createEngine();
 	}
 	
-	/**
-	 *
-	 * @param outputStream
-	 */
-	public void setOutputStream(OutputStream outputStream) {
-		this.outputStream = outputStream;
-	}
+//	private static OpenSSL instance = new OpenSSL();
+//	public static OpenSSL getInstance() {
+//		return instance;
+//	}
 	
 	
-	/**
-	 *
-	 * @param outputStream
-	 * @param commands
-	 * @throws IOException
-	 */
-	public void execute(OutputStream outputStream, String... commands) throws IOException {
-		openSSLExecutor.execute(outputStream, commands);
-	}
-	
-	/**
-	 *
-	 * @param commands
-	 * @throws IOException
-	 */
-	public void execute(String... commands) throws IOException {
-		execute(outputStream, commands);
-	}
-	
-	
-	public String version() {
-		try {
-			openSSLExecutor.execute(System.out, "version");
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
+	public void exec(String... commands) {
+		openSSLEngine.execute(commands);
 	}
 }

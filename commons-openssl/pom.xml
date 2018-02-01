@@ -32,7 +32,7 @@
 		<dependency>
 			<groupId>io.xunyss.commons</groupId>
 			<artifactId>commons-base</artifactId>
-			<version>0.5.2-RELEASE</version>
+			<version>0.5.6-RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>

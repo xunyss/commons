@@ -2,17 +2,14 @@ package io.xunyss.openssl;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.URL;
 
 import org.xunyss.commons.util.ArchiveUtils;
 import org.xunyss.commons.util.ResourceUtils;
 
 import io.xunyss.commons.exec.ProcessExecutor;
+import io.xunyss.commons.exec.stream.StringOutputHandler;
 import io.xunyss.commons.io.FileUtils;
-import io.xunyss.commons.io.NullOutputStream;
-import io.xunyss.commons.lang.ArrayUtils;
-import io.xunyss.commons.lang.SystemUtils;
 
 /**
  * https://wiki.openssl.org/index.php/Binaries
@@ -21,21 +18,21 @@ import io.xunyss.commons.lang.SystemUtils;
  * 
  * @author XUNYSS
  */
-public class OpenSSLExecutor {
+public class OpenSSLBinaryEngine implements OpenSSLEngine {
 	
 	/**
-	 *
+	 * 
 	 */
 	private static class SingletonHolder {
 		// singleton object
-		private static final OpenSSLExecutor instance = new OpenSSLExecutor();
+		private static final OpenSSLEngine instance = new OpenSSLBinaryEngine();
 	}
 	
 	/**
 	 *
 	 * @return
 	 */
-	public static OpenSSLExecutor getInstance() {
+	public static OpenSSLEngine getInstance() {
 		return SingletonHolder.instance;
 	}
 	
@@ -52,33 +49,34 @@ public class OpenSSLExecutor {
 	
 	
 	/**
-	 * constructor
+	 * Constructor.
 	 */
-	private OpenSSLExecutor() {
-		if (!(initialized = selfTest())) {
-			if (SystemUtils.IS_OS_WINDOWS) {	// windows
-				temporaryInstall("win32", "openssl.exe");
-			}
-			
-			// TODO Linux, Unix, ...
-			initialized = selfTest();
-		}
+	private OpenSSLBinaryEngine() {
+//		if (!(initialized = selfTest())) {
+//			if (SystemUtils.IS_OS_WINDOWS) {	// windows
+//				temporaryInstall("win32", "openssl.exe");
+//			}
+//			
+//			// TODO Linux, Unix, ...
+//			initialized = selfTest();
+//		}
 	}
 	
 	private boolean selfTest() {
-		try {
+//		try {
 			// openssl version
-			return 0 == execute(NullOutputStream.NULL_OUTPUT_STREAM, "version");
-		}
-		catch (IOException ioe) {
-			ioe.printStackTrace();
-			return false;
-		}
+//			return 0 == execute("version");
+			return true;
+//		}
+//		catch (IOException ioe) {
+//			ioe.printStackTrace();
+//			return false;
+//		}
 	}
 	
 	private void temporaryInstall(String subPackage, String simpleBinaryName) {
 		final String srcResDirPath = RESOURCE_BINARY_PATH + FileUtils.RESOURCE_PATH_SEPARATOR_CHAR + subPackage;
-		final File dstDir = new File(FileUtils.getTempDirectoryPath(), EXTRACT_DIRECTORY);
+		final File dstDir = new File(FileUtils.getTempDirectory(), EXTRACT_DIRECTORY);
 		
 		// real binary file full path
 		binName = dstDir.getPath() + FileUtils.FILE_SEPARATOR + simpleBinaryName;
@@ -120,21 +118,28 @@ public class OpenSSLExecutor {
 	}
 	
 	
-	public int execute(OutputStream outputStream, String... commands) throws IOException {
+	public boolean execute(String... commands) {
 //		if (!initialized) {
 //			throw new IOException("openSSL is not initialized");
 //		}
-		//------------------------------------------------------------------------------------------
-		String[] cmd = ArrayUtils.add(binName, commands);
-		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-		System.out.println(ArrayUtils.toString(cmd));
+		String binName = "/xdev/git/commons/commons-openssl/src/main/resources/io/xunyss/openssl/binary/win32/openssl.exe";
 		try {
-			ProcessExecutor processExecutor = new ProcessExecutor();
-			return processExecutor.execute(cmd).exitValue();
+			StringOutputHandler stringOutputHandler = new StringOutputHandler();
+			ProcessExecutor processExecutor = new ProcessExecutor(true);
+			processExecutor.setStreamHandler(stringOutputHandler);
+			
+			return processExecutor.execute(binName, commands) > 0;
 		}
-		catch (Exception e) {
-			e.printStackTrace();
-			throw new IOException();
+		catch (Exception ex) {
+			ex.printStackTrace();
+//			throw new IOException();
+			return false;
 		}
+	}
+
+	@Override
+	public String version() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
