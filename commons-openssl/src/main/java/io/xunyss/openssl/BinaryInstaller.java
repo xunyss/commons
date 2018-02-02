@@ -8,8 +8,8 @@ import org.xunyss.commons.util.ArchiveUtils;
 import org.xunyss.commons.util.ResourceUtils;
 
 import io.xunyss.commons.exec.ProcessExecutor;
-import io.xunyss.commons.exec.stream.StringOutputHandler;
 import io.xunyss.commons.io.FileUtils;
+import io.xunyss.commons.lang.SystemUtils;
 
 /**
  * https://wiki.openssl.org/index.php/Binaries
@@ -18,21 +18,21 @@ import io.xunyss.commons.io.FileUtils;
  * 
  * @author XUNYSS
  */
-public class OpenSSLBinaryEngine implements OpenSSLEngine {
+public class BinaryInstaller {
 	
 	/**
 	 * 
 	 */
 	private static class SingletonHolder {
 		// singleton object
-		private static final OpenSSLEngine instance = new OpenSSLBinaryEngine();
+		private static final BinaryInstaller instance = new BinaryInstaller();
 	}
 	
 	/**
-	 *
+	 * 
 	 * @return
 	 */
-	public static OpenSSLEngine getInstance() {
+	public static BinaryInstaller getInstance() {
 		return SingletonHolder.instance;
 	}
 	
@@ -42,36 +42,34 @@ public class OpenSSLBinaryEngine implements OpenSSLEngine {
 	private static final String RESOURCE_BINARY_PATH = "/io/xunyss/openssl/binary";
 	private static final String EXTRACT_DIRECTORY = "io_xunyss_openssl_bin";
 	
-	private String binName = "openssl";		// default executable binary name
-	private boolean initialized = false;	// ..
-	
-	private String binaryVersion;
+	private String binaryName = "openssl";		// default executable binary name
+	private boolean initialized = false;
 	
 	
 	/**
 	 * Constructor.
 	 */
-	private OpenSSLBinaryEngine() {
-//		if (!(initialized = selfTest())) {
-//			if (SystemUtils.IS_OS_WINDOWS) {	// windows
-//				temporaryInstall("win32", "openssl.exe");
-//			}
-//			
-//			// TODO Linux, Unix, ...
-//			initialized = selfTest();
-//		}
+	private BinaryInstaller() {
+		if (!(initialized = selfTest())) {
+			if (SystemUtils.IS_OS_WINDOWS) {	// windows
+				temporaryInstall("win32", "openssl.exe");
+			}
+			else {
+				// TODO Linux, Unix, ...
+			}
+			
+			initialized = selfTest();
+		}
 	}
 	
 	private boolean selfTest() {
-//		try {
-			// openssl version
-//			return 0 == execute("version");
-			return true;
-//		}
-//		catch (IOException ioe) {
-//			ioe.printStackTrace();
-//			return false;
-//		}
+		try {
+			ProcessExecutor processExecutor = new ProcessExecutor(true);
+			return 0 == processExecutor.execute(binaryName, "version");
+		}
+		catch (IOException ex) {
+			return false;
+		}
 	}
 	
 	private void temporaryInstall(String subPackage, String simpleBinaryName) {
@@ -79,7 +77,7 @@ public class OpenSSLBinaryEngine implements OpenSSLEngine {
 		final File dstDir = new File(FileUtils.getTempDirectory(), EXTRACT_DIRECTORY);
 		
 		// real binary file full path
-		binName = dstDir.getPath() + FileUtils.FILE_SEPARATOR + simpleBinaryName;
+		binaryName = dstDir.getPath() + FileUtils.FILE_SEPARATOR + simpleBinaryName;
 		
 		try {
 			// extract resource to temporary directory
@@ -117,29 +115,11 @@ public class OpenSSLBinaryEngine implements OpenSSLEngine {
 		}
 	}
 	
-	
-	public boolean execute(String... commands) {
-//		if (!initialized) {
-//			throw new IOException("openSSL is not initialized");
-//		}
-		String binName = "/xdev/git/commons/commons-openssl/src/main/resources/io/xunyss/openssl/binary/win32/openssl.exe";
-		try {
-			StringOutputHandler stringOutputHandler = new StringOutputHandler();
-			ProcessExecutor processExecutor = new ProcessExecutor(true);
-			processExecutor.setStreamHandler(stringOutputHandler);
-			
-			return processExecutor.execute(binName, commands) > 0;
-		}
-		catch (Exception ex) {
-			ex.printStackTrace();
-//			throw new IOException();
-			return false;
-		}
+	String getBinaryName() {
+		return binaryName;
 	}
 
-	@Override
-	public String version() {
-		// TODO Auto-generated method stub
-		return null;
+	boolean isInitialized() {
+		return initialized;
 	}
 }

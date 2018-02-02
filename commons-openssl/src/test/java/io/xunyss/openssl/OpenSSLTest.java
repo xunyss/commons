@@ -13,11 +13,11 @@ public class OpenSSLTest {
 	@Test
 	public void execute() throws IOException {
 		OpenSSL openssl = new OpenSSL();
-		
+		openssl.exec("rsa", "haha");
 	}
 	
 	@Test
 	public void version() {
-	
+		
 	}
 }

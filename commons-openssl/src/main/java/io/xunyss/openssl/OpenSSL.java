@@ -1,36 +1,38 @@
 package io.xunyss.openssl;
 
+import io.xunyss.commons.exec.ProcessExecutor;
+import io.xunyss.commons.exec.stream.StringOutputHandler;
+
 /**
- * Proxy.
  * 
  * @author XUNYSS
  */
 public class OpenSSL {
 	
-	/**
-	 * 
-	 */
-	private static OpenSSLEngineFactory engineFactory = OpenSSLEngineFactory.getInstance();
+	private BinaryInstaller binaryInstaller = BinaryInstaller.getInstance();
 	
-	
-	/**
-	 * OpenSSL command executor.
-	 */
-	private OpenSSLEngine openSSLEngine;
+	private String binaryName;
 	
 	
 	public OpenSSL() {
-		// set Engine
-		openSSLEngine = engineFactory.createEngine();
+		binaryName = binaryInstaller.getBinaryName();
 	}
 	
-//	private static OpenSSL instance = new OpenSSL();
-//	public static OpenSSL getInstance() {
-//		return instance;
-//	}
-	
-	
 	public void exec(String... commands) {
-		openSSLEngine.execute(commands);
+//		if (!initialized) {
+//		throw new IOException("openSSL is not initialized");
+//	}
+		String binName = "/xdev/git/commons/commons-openssl/src/main/resources/io/xunyss/openssl/binary/win32/openssl.exe";
+		try {
+			StringOutputHandler stringOutputHandler = new StringOutputHandler();
+			ProcessExecutor processExecutor = new ProcessExecutor(true);
+			processExecutor.setStreamHandler(stringOutputHandler);
+			
+			processExecutor.execute(binaryName, commands);
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+//			throw new IOException();
+		}
 	}
 }
