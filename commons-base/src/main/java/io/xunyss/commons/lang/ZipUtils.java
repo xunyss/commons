@@ -1,4 +1,4 @@
-package org.xunyss.commons.util;
+package io.xunyss.commons.lang;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -13,16 +13,18 @@ import java.util.zip.ZipInputStream;
 
 import io.xunyss.commons.io.FileUtils;
 import io.xunyss.commons.io.IOUtils;
-import io.xunyss.commons.lang.StringUtils;
 
 /**
  *
  * @author XUNYSS
  */
-public class ArchiveUtils {
-
-	private ArchiveUtils() {
-		/* cannot create instance */
+public final class ZipUtils {
+	
+	/**
+	 * Constructor.
+	 */
+	private ZipUtils() {
+		// cannot create instance
 	}
 
 	/**
@@ -95,7 +97,7 @@ public class ArchiveUtils {
 	 */
 	public static void unjar(JarFile jarFile, String resourcePath, File dstDir) throws IOException {
 		if (!resourcePath.startsWith(ResourceUtils.JAR_RESOURCE_ROOT)) {
-			throw new IOException("resource path must be absolute: " + resourcePath);
+			throw new IOException("Resource path must be absolute");
 		}
 		
 		Enumeration<JarEntry> entries = jarFile.entries();
@@ -113,15 +115,25 @@ public class ArchiveUtils {
 						new File(dstDir, relativePath);									// resourcePath is directory
 				
 				if (jarEntry.isDirectory()) {
-					dstFile.mkdirs();
+					FileUtils.makeDirectory(dstFile);
 				}
 				else {
-					copy(jarFile, jarEntry, dstFile);
+					copyJarEntry(jarFile, jarEntry, dstFile);
 				}
 			}
 		}
 	}
-
+	
+	/**
+	 * 
+	 * @param jarFile
+	 * @param dstDir
+	 * @throws IOException
+	 */
+	public static void unjar(JarFile jarFile, File dstDir) throws IOException {
+		unjar(jarFile, ResourceUtils.JAR_RESOURCE_ROOT, dstDir);
+	}
+	
 	/**
 	 * 
 	 * @param jarFileUrl
@@ -135,16 +147,6 @@ public class ArchiveUtils {
 		IOUtils.closeQuietly(jarFile);
 	}
 	
-	/**
-	 * 
-	 * @param jarFile
-	 * @param dstDir
-	 * @throws IOException
-	 */
-	public static void unjar(JarFile jarFile, File dstDir) throws IOException {
-		unjar(jarFile, ResourceUtils.JAR_RESOURCE_ROOT, dstDir);
-	}
-
 	/**
 	 * 
 	 * @param jarFileUrl
@@ -162,9 +164,9 @@ public class ArchiveUtils {
 	 * @param dstFile
 	 * @throws IOException
 	 */
-	public static void copy(JarFile srcJarFile, JarEntry srcJarEntry, File dstFile) throws IOException {
+	private static void copyJarEntry(JarFile srcJarFile, JarEntry srcJarEntry, File dstFile) throws IOException {
 		if (srcJarEntry.isDirectory()) {
-			throw new IOException("cannot copy jar resource directory");
+			throw new IOException("Cannot copy jar resource directory");
 		}
 		
 		InputStream inputStream = srcJarFile.getInputStream(srcJarEntry);

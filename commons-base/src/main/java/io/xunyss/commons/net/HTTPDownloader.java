@@ -1,4 +1,4 @@
-package org.xunyss.commons.net;
+package io.xunyss.commons.net;
 
 import java.io.File;
 import java.io.IOException;

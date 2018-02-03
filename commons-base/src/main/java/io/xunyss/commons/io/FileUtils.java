@@ -55,14 +55,14 @@ public final class FileUtils {
 	 * @return
 	 */
 	public static String getSimpleFilename(String filePath) {
-		int fileSepIndex = filePath.lastIndexOf(UNIX_FILE_SEPARATOR_CHAR);
-		if (fileSepIndex != -1) {
-			filePath = filePath.substring(fileSepIndex + 1);
+		int fileSeparatorIdx = filePath.lastIndexOf(UNIX_FILE_SEPARATOR_CHAR);
+		if (fileSeparatorIdx != -1) {
+			filePath = filePath.substring(fileSeparatorIdx + 1);
 		}
 		if (UNIX_FILE_SEPARATOR_CHAR != File.separatorChar) {
-			fileSepIndex = filePath.lastIndexOf(File.separatorChar);
-			if (fileSepIndex != -1) {
-				filePath = filePath.substring(fileSepIndex + 1);
+			fileSeparatorIdx = filePath.lastIndexOf(File.separatorChar);
+			if (fileSeparatorIdx != -1) {
+				filePath = filePath.substring(fileSeparatorIdx + 1);
 			}
 		}
 		return filePath;

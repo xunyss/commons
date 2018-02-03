@@ -4,12 +4,11 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
-import org.xunyss.commons.util.ArchiveUtils;
-import org.xunyss.commons.util.ResourceUtils;
-
 import io.xunyss.commons.exec.ProcessExecutor;
 import io.xunyss.commons.io.FileUtils;
+import io.xunyss.commons.lang.ResourceUtils;
 import io.xunyss.commons.lang.SystemUtils;
+import io.xunyss.commons.lang.ZipUtils;
 
 /**
  * https://wiki.openssl.org/index.php/Binaries
@@ -42,8 +41,8 @@ public class BinaryInstaller {
 	private static final String RESOURCE_BINARY_PATH = "/io/xunyss/openssl/binary";
 	private static final String EXTRACT_DIRECTORY = "io_xunyss_openssl_bin";
 	
-	private String binaryName = "openssl";		// default executable binary name
 	private boolean initialized = false;
+	private String binaryName = "openssl";	// default executable binary name
 	
 	
 	/**
@@ -62,6 +61,10 @@ public class BinaryInstaller {
 		}
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	private boolean selfTest() {
 		try {
 			ProcessExecutor processExecutor = new ProcessExecutor(true);
@@ -72,54 +75,83 @@ public class BinaryInstaller {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param subPackage
+	 * @param simpleBinaryName
+	 */
 	private void temporaryInstall(String subPackage, String simpleBinaryName) {
-		final String srcResDirPath = RESOURCE_BINARY_PATH + FileUtils.RESOURCE_PATH_SEPARATOR_CHAR + subPackage;
-		final File dstDir = new File(FileUtils.getTempDirectory(), EXTRACT_DIRECTORY);
+		final String srcResourceLocation = RESOURCE_BINARY_PATH + FileUtils.RESOURCE_PATH_SEPARATOR_CHAR + subPackage;
+		final File dstDirectory = new File(FileUtils.getTempDirectory(), EXTRACT_DIRECTORY);
 		
 		// real binary file full path
-		binaryName = dstDir.getPath() + FileUtils.FILE_SEPARATOR + simpleBinaryName;
+		binaryName = dstDirectory.getPath() + FileUtils.FILE_SEPARATOR + simpleBinaryName;
 		
 		try {
 			// extract resource to temporary directory
-			extractResources(srcResDirPath, dstDir);
+			extractResources(srcResourceLocation, dstDirectory);
 		}
-		catch (IOException ioe) {
+		catch (IOException ex) {
 			// not not throw any exception
 			return;
 		}
 		finally {
 			// remove temporary binaries when system exit
-			Runtime.getRuntime().addShutdownHook(new Thread() {
-				@Override
-				public void run() {
-					FileUtils.deleteDirectoryQuietly(dstDir);
-				}
-			});
+			registerShutdownHook(dstDirectory);
 		}
 	}
 	
-	private void extractResources(String srcResDirPath, File dstDir) throws IOException {
-		final URL srcResDirUrl = getClass().getResource(srcResDirPath);
+	/**
+	 * 
+	 * @param srcResourceLocation
+	 * @param dstDirectory
+	 * @throws IOException
+	 */
+	private void extractResources(String srcResourceLocation, File dstDirectory) throws IOException {
+		final URL srcResourceUrl = getClass().getResource(srcResourceLocation);
 		
 		// when this is running at '.class'
-		if (ResourceUtils.isFileURL(srcResDirUrl)) {
-			FileUtils.copyDirectory(new File(srcResDirUrl.getFile()), dstDir);
+		if (ResourceUtils.isFileURL(srcResourceUrl)) {
+			// copy resources
+			FileUtils.copyDirectory(new File(srcResourceUrl.getFile()), dstDirectory);
 		}
 		// when this is running in '.jar'
-		else if (ResourceUtils.isJarURL(srcResDirUrl)) {
-			ArchiveUtils.unjar(ResourceUtils.getJarFileURL(srcResDirUrl), srcResDirPath, dstDir);
+		else if (ResourceUtils.isJarURL(srcResourceUrl)) {
+			// extract resources
+			ZipUtils.unjar(ResourceUtils.getJarFileURL(srcResourceUrl), srcResourceLocation, dstDirectory);
 		}
 		// other
 		else {
-			throw new IOException("bad URL: " + srcResDirPath);
+			throw new IOException("Unable to extract resource: " + srcResourceLocation);
 		}
 	}
 	
-	String getBinaryName() {
-		return binaryName;
+	/**
+	 * 
+	 * @param dstDirectory
+	 */
+	private void registerShutdownHook(final File dstDirectory) {
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			@Override
+			public void run() {
+				FileUtils.deleteDirectoryQuietly(dstDirectory);
+			}
+		});
 	}
-
+	
+	/**
+	 * 
+	 * @return
+	 */
 	boolean isInitialized() {
 		return initialized;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	String getBinaryName() {
+		return binaryName;
 	}
 }

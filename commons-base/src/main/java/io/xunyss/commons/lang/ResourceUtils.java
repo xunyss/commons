@@ -1,4 +1,4 @@
-package org.xunyss.commons.util;
+package io.xunyss.commons.lang;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -7,15 +7,31 @@ import java.net.URL;
  * 
  * @author XUNYSS
  */
-public class ResourceUtils {
+public final class ResourceUtils {
 	
+	/**
+	 * 
+	 */
 	public static final String URL_PROTOCOL_FILE      = "file";
+	/**
+	 * 
+	 */
 	public static final String URL_PROTOCOL_JAR       = "jar";
+	/**
+	 * 
+	 */
 	public static final String JAR_RESOURCE_ROOT      = "/";
+	/**
+	 * 
+	 */
 	public static final String JAR_RESOURCE_SEPARATOR = "!/";
 	
+	
+	/**
+	 * Constructor.
+	 */
 	private ResourceUtils() {
-		/* cannot create instance */
+		// cannot create instance
 	}
 	
 	/**
@@ -43,10 +59,10 @@ public class ResourceUtils {
 	 * @throws MalformedURLException
 	 */
 	public static URL getJarFileURL(URL jarResourceUrl) throws MalformedURLException {
-		String resourcePath = jarResourceUrl.getFile();
-		int sepIndex = resourcePath.indexOf(JAR_RESOURCE_SEPARATOR);
-		if (sepIndex != -1) {
-			return new URL(resourcePath.substring(0, sepIndex));
+		String resourcePath = jarResourceUrl.getPath();
+		int separatorIdx = resourcePath.indexOf(JAR_RESOURCE_SEPARATOR);
+		if (separatorIdx != -1) {
+			return new URL(resourcePath.substring(0, separatorIdx));
 		}
 		else {
 			return jarResourceUrl;

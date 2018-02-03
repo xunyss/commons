@@ -2,6 +2,7 @@ package io.xunyss.openssl;
 
 import java.io.IOException;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -11,13 +12,9 @@ import org.junit.Test;
 public class OpenSSLTest {
 	
 	@Test
-	public void execute() throws IOException {
+	public void exec() throws IOException {
 		OpenSSL openssl = new OpenSSL();
-		openssl.exec("rsa", "haha");
-	}
-	
-	@Test
-	public void version() {
-		
+		openssl.exec("version");
+		Assert.assertEquals("OpenSSL 1.0.2g  1 Mar 2016" + "\r\n", openssl.getOutput());
 	}
 }
