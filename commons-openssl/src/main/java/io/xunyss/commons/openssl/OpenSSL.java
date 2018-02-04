@@ -1,4 +1,4 @@
-package io.xunyss.openssl;
+package io.xunyss.commons.openssl;
 
 import java.io.IOException;
 
@@ -31,8 +31,6 @@ public class OpenSSL {
 			processExecutor = new ProcessExecutor(true);
 			processExecutor.setStreamHandler(stringOutputHandler);
 		}
-		
-		System.out.println(binaryName);
 	}
 	
 	/**

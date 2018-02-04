@@ -1,9 +1,11 @@
-package io.xunyss.openssl;
+package io.xunyss.commons.openssl;
 
 import java.io.IOException;
 
 import org.junit.Assert;
 import org.junit.Test;
+
+import io.xunyss.commons.openssl.OpenSSL;
 
 /**
  *

@@ -1,4 +1,4 @@
-package io.xunyss.openssl;
+package io.xunyss.commons.openssl;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,8 +41,8 @@ public class BinaryInstaller {
 	private static final String RESOURCE_BINARY_PATH = "/io/xunyss/openssl/binary";
 	private static final String EXTRACT_DIRECTORY = "io_xunyss_openssl_bin";
 	
-	private boolean initialized = false;
 	private String binaryName = "openssl";	// default executable binary name
+	private boolean initialized;
 	
 	
 	/**
@@ -143,15 +143,15 @@ public class BinaryInstaller {
 	 * 
 	 * @return
 	 */
-	boolean isInitialized() {
-		return initialized;
+	String getBinaryName() {
+		return binaryName;
 	}
 	
 	/**
-	 * 
+	 *
 	 * @return
 	 */
-	String getBinaryName() {
-		return binaryName;
+	boolean isInitialized() {
+		return initialized;
 	}
 }

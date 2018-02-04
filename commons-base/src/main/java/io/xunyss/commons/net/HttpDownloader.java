@@ -14,13 +14,25 @@ import io.xunyss.commons.io.IOUtils;
  * 
  * @author XUNYSS
  */
-public class HTTPDownloader {
+public class HttpDownloader {
 	
-	private static final int SC_OK = 200;
+	/**
+	 * TODO: listener 지원
+	 * TODO: https 프로토콜 지원
+	 */
 	
 	private File downloadPath = new File(".");
-	public Proxy proxy = Proxy.NO_PROXY;
-
+	private Proxy proxy;
+	
+	
+	public HttpDownloader(Proxy.Type proxyType, String ipAddress, int port) {
+		proxy = new Proxy(proxyType, new InetSocketAddress(ipAddress, port));
+	}
+	
+	public HttpDownloader() {
+		proxy = Proxy.NO_PROXY;
+	}
+	
 	
 	public void setDownloadPath(File path) {
 		downloadPath = path;
@@ -31,19 +43,16 @@ public class HTTPDownloader {
 		setDownloadPath(new File(path));
 	}
 	
-	public void setProxy(String proxyType, String ipAddress, int port) {
-		proxy = new Proxy(Proxy.Type.valueOf(proxyType.toUpperCase()),
-				new InetSocketAddress(ipAddress, port));
-	}
 	
 	public String download(String downloadUrl, String fileName) throws IOException {
 		HttpURLConnection httpConn = openConnection(downloadUrl);
-		httpConn.setRequestMethod("GET");
+		httpConn.setRequestMethod(HttpMethod.GET.name());
 		httpConn.setDoInput(true);
 		httpConn.setDoOutput(false);
+		httpConn.setUseCaches(false);
 
 		int responseCode = httpConn.getResponseCode();
-		if (responseCode == SC_OK) {
+		if (responseCode == HttpURLConnection.HTTP_OK) {
 			InputStream httpInputStream = httpConn.getInputStream();
 			File downFile = new File(downloadPath, fileName);
 			
@@ -60,18 +69,20 @@ public class HTTPDownloader {
 	}
 	
 	public String download(String downloadUrl) throws IOException {
-		return download(downloadUrl, getFileName(downloadUrl));
+		return download(downloadUrl, detectFileName(downloadUrl));
 	}
+	
 	
 	private HttpURLConnection openConnection(String downloadUrl) throws IOException {
 		URL url = new URL(downloadUrl);
-		HttpURLConnection httpConn = (HttpURLConnection)
-				(proxy == Proxy.NO_PROXY ? url.openConnection() : url.openConnection(proxy));
-		
-		return httpConn;
+		String protocol = url.getProtocol();
+		if ("https".equals(protocol)) {
+			// TODO: https 프로토콜 지원
+		}
+		return (HttpURLConnection) (proxy == Proxy.NO_PROXY ? url.openConnection() : url.openConnection(proxy));
 	}
 	
-	private static String getFileName(String url) {
+	private static String detectFileName(String url) {
 		if (url.endsWith("/")) {
 			url = url.substring(0, url.length() - 1);
 		}
