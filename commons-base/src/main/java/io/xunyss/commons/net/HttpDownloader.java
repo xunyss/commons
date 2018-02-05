@@ -8,6 +8,7 @@ import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.URL;
 
+import io.xunyss.commons.io.FileUtils;
 import io.xunyss.commons.io.IOUtils;
 
 /**
@@ -21,7 +22,7 @@ public class HttpDownloader {
 	 * TODO: https 프로토콜 지원
 	 */
 	
-	private File downloadPath = new File(".");
+	private File downloadDir = new File(".");
 	private Proxy proxy;
 	
 	
@@ -34,13 +35,22 @@ public class HttpDownloader {
 	}
 	
 	
-	public void setDownloadPath(File path) {
-		downloadPath = path;
-		downloadPath.mkdirs();
+	public void setDownloadPath(File path) throws IOException {
+		FileUtils.makeDirectory(path);
+		downloadDir = path;
 	}
 	
-	public void setDownloadPath(String path) {
+	public void setDownloadPath(String path) throws IOException {
 		setDownloadPath(new File(path));
+	}
+	
+	public String getDownloadPath() {
+		try {
+			return downloadDir.getCanonicalPath();
+		}
+		catch (IOException ex) {
+			return downloadDir.getAbsolutePath();
+		}
 	}
 	
 	
@@ -54,7 +64,7 @@ public class HttpDownloader {
 		int responseCode = httpConn.getResponseCode();
 		if (responseCode == HttpURLConnection.HTTP_OK) {
 			InputStream httpInputStream = httpConn.getInputStream();
-			File downFile = new File(downloadPath, fileName);
+			File downFile = new File(downloadDir, fileName);
 			
 			try {
 				IOUtils.copy(httpInputStream, downFile);
@@ -79,6 +89,7 @@ public class HttpDownloader {
 		if ("https".equals(protocol)) {
 			// TODO: https 프로토콜 지원
 		}
+		// HTTP
 		return (HttpURLConnection) (proxy == Proxy.NO_PROXY ? url.openConnection() : url.openConnection(proxy));
 	}
 	

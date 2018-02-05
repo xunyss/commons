@@ -1,4 +1,4 @@
-package io.xunyss.commons.reflect;
+package io.xunyss.commons.lang;
 
 import java.io.Closeable;
 import java.io.File;
@@ -39,24 +39,26 @@ public class JarClassLoader extends ClassLoader implements Closeable {
 	 */
 	private JarFile jarFile = null;
 	
-	public JarClassLoader(File jarFile) throws IOException {
-		setJarFile(jarFile);
-	}
-
+	
 	public JarClassLoader(File jarFile, ClassLoader parent) throws IOException {
 		super(parent);
 		setJarFile(jarFile);
 	}
 	
-	public JarClassLoader(String jarPath) throws IOException {
-		setJarFile(jarPath);
+	public JarClassLoader(File jarFile) throws IOException {
+		setJarFile(jarFile);
 	}
 	
 	public JarClassLoader(String jarPath, ClassLoader parent) throws IOException {
 		super(parent);
 		setJarFile(jarPath);
 	}
-
+	
+	public JarClassLoader(String jarPath) throws IOException {
+		setJarFile(jarPath);
+	}
+	
+	
 	private void setJarFile(File jarFile) throws IOException {
 		this.jarFile = new JarFile(jarFile);
 	}
@@ -76,7 +78,6 @@ public class JarClassLoader extends ClassLoader implements Closeable {
 		
 		try {
 			JarEntry jarEntry = getClassJarEntry(name);
-			
 			if (jarEntry != null) {
 				byte[] classData = new byte[(int) jarEntry.getSize()];
 				classInputStream = jarFile.getInputStream(jarEntry);
@@ -102,8 +103,7 @@ public class JarClassLoader extends ClassLoader implements Closeable {
 		while (jarEntries.hasMoreElements()) {
 			jarEntry = jarEntries.nextElement();
 			
-			if (jarEntry.getName().endsWith(".class")
-					&& className.equals(getClassName(jarEntry))) {
+			if (jarEntry.getName().endsWith(".class") && className.equals(getClassName(jarEntry))) {
 				return jarEntry;
 			}
 		}

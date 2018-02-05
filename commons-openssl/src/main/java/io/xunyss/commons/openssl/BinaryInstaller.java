@@ -6,7 +6,7 @@ import java.net.URL;
 
 import io.xunyss.commons.exec.ProcessExecutor;
 import io.xunyss.commons.io.FileUtils;
-import io.xunyss.commons.lang.ResourceUtils;
+import io.xunyss.commons.io.ResourceUtils;
 import io.xunyss.commons.lang.SystemUtils;
 import io.xunyss.commons.lang.ZipUtils;
 
@@ -108,7 +108,7 @@ public class BinaryInstaller {
 	 * @throws IOException
 	 */
 	private void extractResources(String srcResourceLocation, File dstDirectory) throws IOException {
-		final URL srcResourceUrl = getClass().getResource(srcResourceLocation);
+		final URL srcResourceUrl = ResourceUtils.getResource(srcResourceLocation);
 		
 		// when this is running at '.class'
 		if (ResourceUtils.isFileURL(srcResourceUrl)) {

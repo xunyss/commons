@@ -1,0 +1,30 @@
+package libs;
+
+import java.io.IOException;
+import java.net.URL;
+
+import org.apache.commons.io.IOUtils;
+import org.junit.Test;
+import org.springframework.util.ResourceUtils;
+
+import io.xunyss.commons.ref.Ref;
+
+public class LibsTest {
+
+	@Test
+	public void test() throws IOException {
+		URL url1 = IOUtils.resourceToURL("/empty");
+		System.out.println(url1);
+		
+		URL url2 = IOUtils.resourceToURL("empty", ClassLoader.getSystemClassLoader());
+		System.out.println(url2);
+		
+		URL url3 = IOUtils.resourceToURL("empty", Ref.class.getClassLoader());
+		System.out.println(url3);
+		
+		URL url4 = new Ref().getClass().getResource("/empty");
+		System.out.println(url4);
+		
+		System.out.println(ResourceUtils.getURL("/empty"));
+	}
+}

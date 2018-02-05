@@ -12,8 +12,8 @@ import java.net.URLClassLoader;
  */
 public class ClassPathUtils {
 	
-	private static final URLClassLoader systemClassLoader =
-			(URLClassLoader) ClassLoader.getSystemClassLoader();
+	private static final URLClassLoader systemClassLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
+	
 	
 	public static void add(URL url) {
 		try {
@@ -23,14 +23,18 @@ public class ClassPathUtils {
 			method.setAccessible(true);
 			method.invoke(systemClassLoader, url);
 		}
-		catch (Exception ignored) {}
+		catch (Exception ex) {
+			// // ignore exception
+		}
 	}
 	
 	public static void add(File file) {
 		try {
 			add(file.toURI().toURL());
 		}
-		catch (Exception ignored) {}
+		catch (Exception ex) {
+			// ignore exception
+		}
 	}
 	
 	public static void addDirectory(File directory) {
@@ -38,8 +42,7 @@ public class ClassPathUtils {
 			File[] jars = directory.listFiles(new FileFilter() {
 				@Override
 				public boolean accept(File pathname) {
-					return pathname.isFile()
-							&& pathname.getName().endsWith(".jar");
+					return pathname.isFile() && pathname.getName().endsWith(".jar");
 				}
 			});
 			

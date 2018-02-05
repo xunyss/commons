@@ -13,6 +13,7 @@ import java.util.zip.ZipInputStream;
 
 import io.xunyss.commons.io.FileUtils;
 import io.xunyss.commons.io.IOUtils;
+import io.xunyss.commons.io.ResourceUtils;
 
 /**
  *
@@ -96,7 +97,7 @@ public final class ZipUtils {
 	 * @throws IOException
 	 */
 	public static void unjar(JarFile jarFile, String resourcePath, File dstDir) throws IOException {
-		if (!resourcePath.startsWith(ResourceUtils.JAR_RESOURCE_ROOT)) {
+		if (!resourcePath.startsWith(ResourceUtils.RESOURCE_ROOT)) {
 			throw new IOException("Resource path must be absolute");
 		}
 		
@@ -106,7 +107,7 @@ public final class ZipUtils {
 		
 		while (entries.hasMoreElements()) {
 			jarEntry = entries.nextElement();
-			jarResource = ResourceUtils.JAR_RESOURCE_ROOT + jarEntry.getName();
+			jarResource = ResourceUtils.RESOURCE_ROOT + jarEntry.getName();
 			
 			if (jarResource.startsWith(resourcePath)) {
 				String relativePath = StringUtils.removeStart(jarResource, resourcePath);
@@ -131,7 +132,7 @@ public final class ZipUtils {
 	 * @throws IOException
 	 */
 	public static void unjar(JarFile jarFile, File dstDir) throws IOException {
-		unjar(jarFile, ResourceUtils.JAR_RESOURCE_ROOT, dstDir);
+		unjar(jarFile, ResourceUtils.RESOURCE_ROOT, dstDir);
 	}
 	
 	/**
@@ -154,7 +155,7 @@ public final class ZipUtils {
 	 * @throws IOException
 	 */
 	public static void unjar(URL jarFileUrl, File dstDir) throws IOException {
-		unjar(jarFileUrl, ResourceUtils.JAR_RESOURCE_ROOT, dstDir);
+		unjar(jarFileUrl, ResourceUtils.RESOURCE_ROOT, dstDir);
 	}
 	
 	/**
