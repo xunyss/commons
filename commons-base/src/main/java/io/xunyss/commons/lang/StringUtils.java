@@ -7,6 +7,9 @@ package io.xunyss.commons.lang;
  */
 public final class StringUtils {
 	
+	public static final String EMPTY = "";
+	public static final String SPACE = " ";
+	
 	/**
 	 * Constructor.
 	 */

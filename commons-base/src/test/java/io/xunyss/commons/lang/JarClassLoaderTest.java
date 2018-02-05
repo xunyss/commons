@@ -34,7 +34,7 @@ public class JarClassLoaderTest {
 	
 	@Test
 	public void load1() throws Exception {
-		File jarFile = ResourceUtils.getResourceFile("/io/xunyss/commons/lang/javax.servlet-api-3.1.0.jar");
+		File jarFile = ResourceUtils.getResourceAsFile("/io/xunyss/commons/lang/javax.servlet-api-3.1.0.jar");
 		try (JarClassLoader jarClassLoader = new JarClassLoader(jarFile)) {
 			Class<?> clazz = jarClassLoader.loadClass("javax.servlet.Servlet");
 			System.out.println(clazz.getName());

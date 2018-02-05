@@ -1,6 +1,7 @@
 package io.xunyss.commons.io;
 
 import java.io.File;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -81,12 +82,50 @@ public final class ResourceUtils {
 		return ResourceUtils.class.getResource(name);
 	}
 	
+	/**
+	 * 
+	 * @param name
+	 * @param classLoader
+	 * @return
+	 */
+	public static InputStream getResourceAsStream(String name, ClassLoader classLoader) {
+		return classLoader.getResourceAsStream(name);
+	}
+	
+	/**
+	 * 
+	 * @param name
+	 * @return
+	 */
+	public static InputStream getResourceAsStream(String name) {
+		return ResourceUtils.class.getResourceAsStream(name);
+	}
+	
 	/*
 	 * getResource(String name)
 	 * TODO:
 	 * name 이 '/'로 시작하는지 그렇지 않을지를 확인하여 CLASSPATH '/'(root) 에서 부터 자동으로 찾아주는 메소드가 필요 없는지 확인
 	 * ClassLoader.getResource() 는 name 이 '/'로 시작하면 안되기 때문
 	 */
+	
+	/**
+	 * 
+	 * @param name
+	 * @param classLoader
+	 * @return
+	 */
+	public static File getResourceAsFile(String name, ClassLoader classLoader) {
+		return getFile(getResource(name, classLoader));
+	}
+	
+	/**
+	 * 
+	 * @param name
+	 * @return
+	 */
+	public static File getResourceAsFile(String name) {
+		return getFile(getResource(name));
+	}
 	
 	/**
 	 * 
@@ -100,15 +139,6 @@ public final class ResourceUtils {
 		catch (URISyntaxException ex) {
 			return new File(resourceUrl.getFile());
 		}
-	}
-	
-	/**
-	 * 
-	 * @param name
-	 * @return
-	 */
-	public static File getResourceFile(String name) {
-		return getFile(getResource(name));
 	}
 	
 	/**
