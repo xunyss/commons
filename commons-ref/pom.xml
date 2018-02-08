@@ -13,6 +13,17 @@
 	<name>commons-ref</name>
 	<description>commons-ref</description>
 	
+	<repositories>
+		<!--<repository>
+			<id>atlassian</id>
+			<url>https://maven.atlassian.com/content/repositories/atlassian-public/</url>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+			</snapshots>
+		</repository>-->
+	</repositories>
+	
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
@@ -54,6 +65,11 @@
 			<artifactId>guava</artifactId>
 			<version>23.6-jre</version>
 		</dependency>
+		<!--dependency>
+			<groupId>com.atlassian.localtunnel</groupId>
+			<artifactId>localtunnel-java-client</artifactId>
+			<version>0.4</version>
+		</dependency-->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
