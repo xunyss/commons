@@ -5,6 +5,12 @@
 	
 	<modelVersion>4.0.0</modelVersion>
 	
+	<parent>
+		<groupId>io.xunyss.pom</groupId>
+		<artifactId>pom-github</artifactId>
+		<version>1.0.0-RELEASE</version>
+	</parent>
+	
 	<groupId>io.xunyss.commons</groupId>
 	<artifactId>commons-base</artifactId>
 	<version>0.5.6-RELEASE</version>
@@ -14,12 +20,7 @@
 	<description>commons-base</description>
 	
 	<properties>
-		<!-- server's id of setting.xml (for github deploy plugin) -->
-		<github.global.server>github</github.global.server>
-		<!-- github infos -->
-		<deploy.user.name>xunyss</deploy.user.name>
 		<deploy.repo.name>commons</deploy.repo.name>
-		<deploy.branch.name>mvn-repo</deploy.branch.name>
 	</properties>
 	
 	<dependencies>
@@ -30,14 +31,6 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-	
-	<distributionManagement>
-		<repository>
-			<id>internal.repo</id>
-			<name>Temporary Staging Repository</name>
-			<url>file://${project.build.directory}/${deploy.branch.name}</url>
-		</repository>
-	</distributionManagement>
 	
 	<build>
 		<plugins>
@@ -52,50 +45,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>attach-sources</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			
-			<!--
-				# command: mvn deploy
-				# add server info to maven settings.xml
-					... <servers> ...
-					<server>
-						<id>[${github.global.server}]</id>
-						<username>[github login id]</username>
-						<password>[PASSWORD]</password>
-					</server>
-					... </servers> ...
-			-->
-			<plugin>
-				<groupId>com.github.github</groupId>
-				<artifactId>site-maven-plugin</artifactId>
-				<configuration>
-					<message>${project.name}-${project.version} maven deploy</message>
-					<noJekyll>true</noJekyll>
-					<merge>true</merge><!-- true: keep version history -->
-					<outputDirectory>${project.build.directory}/${deploy.branch.name}</outputDirectory><!-- (local directory: pom.xml/distributionManagement/repository/url) -->
-					<branch>refs/heads/${deploy.branch.name}</branch><!-- (github repository branch) -->
-					<includes>
-						<include>**/*</include>
-					</includes>
-					<repositoryOwner>${deploy.user.name}</repositoryOwner><!-- github login id -->
-					<repositoryName>${deploy.repo.name}</repositoryName><!-- github repository name -->
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>site</goal>
-						</goals>
-						<phase>deploy</phase>
-					</execution>
-				</executions>
 			</plugin>
 		</plugins>
 	</build>
