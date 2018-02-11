@@ -4,7 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.ServerSocket;
+import java.net.ConnectException;
 import java.net.Socket;
 import java.net.URL;
 import java.security.cert.CertificateException;
@@ -19,6 +19,7 @@ import javax.net.ssl.X509TrustManager;
 import com.google.gson.Gson;
 
 // https://github.com/mukatee/java-tcp-tunnel
+// localtunnel 서버에서 http 요청시 localserver 로 가는 http hreader Connection: close 로 바꿈
 public class LocalTunnel {
 	
 	static Gson gson = new Gson();
@@ -58,7 +59,7 @@ public class LocalTunnel {
 			this.localPort = localPort;
 		}
 		
-		void open(String subdomain) {
+		void open(String subdomain) throws Exception {
 			setup(subdomain);
 			establish();
 		}
@@ -99,122 +100,70 @@ public class LocalTunnel {
 			}
 		}
 		
-		void establish() {
+		void establish() throws Exception {
 			Conn conn = new Conn(this);
 			conn.open();
-//			for (int i = 0; i < this.maxConn; i++) {
-//				Conn conn = new Conn(this);
-//				conn.open();
-//			}
 		}
 	}
 	
-	class Conn {
+	static class Conn {
 		
 		Tunnel tunnel;
+		Socket rs = null;
+		Socket ls;
 		
-		Conn(Tunnel tunnel) {
+		Conn(Tunnel tunnel) throws Exception {
 			this.tunnel = tunnel;
+			rs = new Socket(tunnel.remoteHost, tunnel.remotePort);
+			ls = new Socket(tunnel.localHost, tunnel.localPort);
 		}
 		
 		void open() {
-			try {
-				ServerSocket serverSocket = new ServerSocket();
-				
-				final Socket rs = new Socket(tunnel.remoteHost, tunnel.remotePort);
-				final Socket ls = new Socket(tunnel.localHost, tunnel.localPort);
-				
-				rs.setKeepAlive(true);
-				ls.setKeepAlive(true);
-				
-				final InputStream rsin = rs.getInputStream();
-				final InputStream lsin = ls.getInputStream();
-				final OutputStream rsout = rs.getOutputStream();
-				final OutputStream lsout = ls.getOutputStream();
-				
-				new Thread(new Runnable() {
-					@Override
-					public void run() {
-						System.out.println("start copy remote -> local");
-						try {
-							byte[] bf = new byte[512];
-							int len;
-							while (true) {
-								len = rsin.read(bf);
-								lsout.write(bf, 0, len);
-								lsout.flush();
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					System.out.println("start copy remote -> local");
+					try {
+						byte[] bf = new byte[512];
+						int len;
+						while (true) {
+							System.out.println("remote input read...");
+							len = rs.getInputStream().read(bf); System.out.println("remote input readed: " + len);
+							if (len == -1) {
+								break;
 							}
+							ls.getOutputStream().write(bf, 0, len);
+							ls.getOutputStream().flush();
 						}
-						catch (IOException ioe) {
-							ioe.printStackTrace();
-						}
-						finally {
-							System.err.println("end copy remote -> local");
-//							try {
-//								rsin.close();
-//							}
-//							catch (IOException ioe) {
-//								ioe.printStackTrace();
-//							}
-//							try {
-//								lsout.close();
-//							}
-//							catch (IOException ioe) {
-//								ioe.printStackTrace();
-//							}
-//							try {
-//								rs.close();
-//							}
-//							catch (IOException ioe) {
-//								ioe.printStackTrace();
-//							}
-						}
+						System.out.println("end copy remote -> local");
 					}
-				}).start();
-				
-				new Thread(new Runnable() {
-					@Override
-					public void run() {
-						System.out.println("start copy local -> remote");
-						try {
-							byte[] bf = new byte[512];
-							int len;
-							while (true) {
-								len = lsin.read(bf);
-								rsout.write(bf, 0, len);
-								rsout.flush();
+					catch (IOException ioe) { ioe.printStackTrace(); }
+				//	finally { try { rs.close(); } catch (Exception e) { e.printStackTrace(); } }
+				}
+			}).start();
+			
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					System.out.println("start copy local -> remote");
+					try {
+						byte[] bf = new byte[512];
+						int len;
+						while (true) {
+							System.out.println("local input read...");
+							len = ls.getInputStream().read(bf); System.out.println("local input readed: " + len);
+							if (len == -1) {
+								break;
 							}
+							rs.getOutputStream().write(bf, 0, len);
+							rs.getOutputStream().flush();
 						}
-						catch (IOException ioe) {
-							ioe.printStackTrace();
-						}
-						finally {
-							System.err.println("end copy local -> remote");
-//							try {
-//								lsin.close();
-//							}
-//							catch (IOException ioe) {
-//								ioe.printStackTrace();
-//							}
-//							try {
-//								rsout.close();
-//							}
-//							catch (IOException ioe) {
-//								ioe.printStackTrace();
-//							}
-//							try {
-//								ls.close();
-//							}
-//							catch (IOException ioe) {
-//								ioe.printStackTrace();
-//							}
-						}
+						System.out.println("end copy local -> remote");
 					}
-				}).start();
-			}
-			catch (IOException ex) {
-				ex.printStackTrace();
-			}
+					catch (IOException ioe) { ioe.printStackTrace(); }
+					finally { try { ls.close(); rs.close(); tunnel.establish(); } catch (Exception e) { e.printStackTrace(); } }
+				}
+			}).start();
 		}
 	}
 	
@@ -242,7 +191,13 @@ public class LocalTunnel {
 	
 	
 	
-	
+	static final String response = "HTTP/1.1 200 OK\r\n" + 
+			"Date: Sat, 10 Feb 2018 14:10:16 GMT\r\n" + 
+			"Content-Type: text/xml; charset=UTF-8\r\n" + 
+			"Connection: close\r\n" + 
+			"Server: Jetty(9.2.z-SNAPSHOT)\r\n" + 
+			"\r\n" + 
+			"<ReleaseTicketResponse><responseCode>OK</responseCode></ReleaseTicketResponse>\r\n";
 	
 	
 	
