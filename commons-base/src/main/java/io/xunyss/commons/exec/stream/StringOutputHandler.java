@@ -47,10 +47,10 @@ public class StringOutputHandler extends PumpStreamHandler {
 	
 	
 	private ByteArrayOutputStream getOut() {
-		return ((ByteArrayOutputStream) getOutputStream());
+		return (ByteArrayOutputStream) getOutputStream();
 	}
 	
 	private ByteArrayOutputStream getErr() {
-		return ((ByteArrayOutputStream) getErrorStream());
+		return (ByteArrayOutputStream) getErrorStream();
 	}
 }
