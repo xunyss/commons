@@ -1,4 +1,4 @@
-package libs;
+package org.apache.commons.exec.test;
 
 
 import org.apache.commons.exec.CommandLine;

@@ -14,6 +14,7 @@
 	<description>commons-ref</description>
 	
 	<repositories>
+		<!--
 		<repository>
 			<id>atlassian</id>
 			<url>https://maven.atlassian.com/content/repositories/atlassian-public/</url>
@@ -22,6 +23,7 @@
 				<updatePolicy>always</updatePolicy>
 			</snapshots>
 		</repository>
+		-->
 	</repositories>
 	
 	<dependencies>
@@ -70,11 +72,13 @@
 			<artifactId>gson</artifactId>
 			<version>2.8.2</version>
 		</dependency>
+		<!--
 		<dependency>
 			<groupId>com.atlassian.localtunnel</groupId>
 			<artifactId>localtunnel-java-client</artifactId>
 			<version>0.4</version>
 		</dependency>
+		-->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
