@@ -23,6 +23,17 @@
 		<deploy.repo.name>commons</deploy.repo.name>
 	</properties>
 	
+	<repositories>
+		<repository>
+			<id>github-home-mvn-repo</id>
+			<url>https://raw.github.com/xunyss/home/mvn-repo/</url>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+			</snapshots>
+		</repository>
+	</repositories>
+	
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
