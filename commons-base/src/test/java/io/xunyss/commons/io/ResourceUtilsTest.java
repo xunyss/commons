@@ -1,5 +1,8 @@
 package io.xunyss.commons.io;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -12,6 +15,29 @@ import org.junit.Test;
  * @author XUNYSS
  */
 public class ResourceUtilsTest {
+	
+	@Test
+	public void getResource() {
+		String resName = "/io/xunyss/commons/lang/javax.servlet-api-3.1.0.jar";
+		
+		URL url = ResourceUtils.getResource(resName);
+		Assert.assertEquals("javax.servlet-api-3.1.0.jar", FileUtils.getSimpleFilename(url.getPath()));
+	}
+	
+	@Test
+	public void getResourceAsFile() throws IOException {
+		String resName = "/io/xunyss/commons/lang/javax.servlet-api-3.1.0.jar";
+		
+		URL url = ResourceUtils.getResource(resName);
+		File file = ResourceUtils.getResourceAsFile(resName);
+		
+		int resSize = 0;
+		try (InputStream resStream = url.openStream()) {
+			resSize = IOUtils.copy(resStream, NullOutputStream.NULL_OUTPUT_STREAM);
+		}
+		
+		Assert.assertEquals(resSize, file.length());
+	}
 	
 	@Test
 	public void getJarFileURL() throws MalformedURLException {
