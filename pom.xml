@@ -24,14 +24,14 @@
 	</properties>
 	
 	<repositories>
-		<!--<repository>
+		<repository>
 			<id>github-mvn-repo</id>
 			<url>https://raw.github.com/xunyss/pom/mvn-repo/</url>
 			<snapshots>
 				<enabled>true</enabled>
 				<updatePolicy>always</updatePolicy>
 			</snapshots>
-		</repository>-->
+		</repository>
 	</repositories>
 	
 	<dependencies>
