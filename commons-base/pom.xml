@@ -6,58 +6,20 @@
 	<modelVersion>4.0.0</modelVersion>
 	
 	<parent>
-		<groupId>io.xunyss.pom</groupId>
-		<artifactId>pom-github</artifactId>
-		<version>1.0.0-RELEASE</version>
+		<groupId>io.xunyss.commons</groupId>
+		<artifactId>commons</artifactId>
+		<version>0.9.1-RELEASE</version>
 	</parent>
-	
-	<groupId>io.xunyss.commons</groupId>
 	<artifactId>commons-base</artifactId>
-	<version>0.5.6-RELEASE</version>
 	<packaging>jar</packaging>
 
 	<name>commons-base</name>
 	<description>commons-base</description>
 	
 	<properties>
-		<deploy.repo.name>commons</deploy.repo.name>
 	</properties>
 	
-	<repositories>
-		<repository>
-			<id>github-home-mvn-repo</id>
-			<url>https://raw.github.com/xunyss/home/mvn-repo/</url>
-			<snapshots>
-				<enabled>true</enabled>
-				<updatePolicy>always</updatePolicy>
-			</snapshots>
-		</repository>
-	</repositories>
-	
 	<dependencies>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.12</version>
-			<scope>test</scope>
-		</dependency>
 	</dependencies>
-	
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>1.7</source>
-					<target>1.7</target>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
 	
 </project>

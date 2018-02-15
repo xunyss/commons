@@ -5,26 +5,19 @@
 	
 	<modelVersion>4.0.0</modelVersion>
 	
-	<groupId>io.xunyss.commons</groupId>
+	<parent>
+		<groupId>io.xunyss.commons</groupId>
+		<artifactId>commons</artifactId>
+		<version>0.9.1-RELEASE</version>
+	</parent>
 	<artifactId>commons-ref</artifactId>
-	<version>0.0.1-RELEASE</version>
 	<packaging>jar</packaging>
 	
 	<name>commons-ref</name>
 	<description>commons-ref</description>
 	
-	<repositories>
-		<!--
-		<repository>
-			<id>atlassian</id>
-			<url>https://maven.atlassian.com/content/repositories/atlassian-public/</url>
-			<snapshots>
-				<enabled>true</enabled>
-				<updatePolicy>always</updatePolicy>
-			</snapshots>
-		</repository>
-		-->
-	</repositories>
+	<properties>
+	</properties>
 	
 	<dependencies>
 		<dependency>
@@ -79,37 +72,6 @@
 			<version>0.4</version>
 		</dependency>
 		-->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.12</version>
-			<scope>test</scope>
-		</dependency>
 	</dependencies>
-	
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>1.7</source>
-					<target>1.7</target>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>attach-sources</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
 	
 </project>
