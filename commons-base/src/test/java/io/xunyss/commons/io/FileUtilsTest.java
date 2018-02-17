@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.URL;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -22,6 +23,14 @@ public class FileUtilsTest {
 	private File tmpRoot = null;
 	
 	
+	@Before
+	public void setup() {
+		// always tmpRoot is 'true'
+		if (tmpRoot == null) {
+			tmpRoot = tmpDir.getRoot();
+		}
+	}
+	
 	@Test
 	public void getTempDirectory() {
 		File tempDir = FileUtils.getTempDirectory();
@@ -31,7 +40,7 @@ public class FileUtilsTest {
 	@Test
 	public void copyFromURLToFile() throws IOException {
 		URL src = getClass().getResource("/io/xunyss/commons/io/FileUtilsTestData.txt");
-		File dst = new File(tmpRoot, "FileUtils_Test_Out.dat");
+		File dst = new File(tmpRoot, "FileUtils_URL_Out.txt");
 		
 		int size = FileUtils.copy(src, dst);
 		Assert.assertTrue("Destination file is not created", dst.isFile());
@@ -42,7 +51,7 @@ public class FileUtilsTest {
 	@Test
 	public void copyFromStringToFile() throws IOException {
 		String src = "This string will be saved as a file";
-		File dst = new File(tmpRoot, "FileUtils_Test_Out.txt");
+		File dst = new File(tmpRoot, "FileUtils_String_Out.txt");
 		
 		int size = FileUtils.copy(src, dst);
 		Assert.assertTrue("Destination file is not created", dst.isFile());
