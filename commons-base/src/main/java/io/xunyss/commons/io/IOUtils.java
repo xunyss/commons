@@ -1,17 +1,14 @@
 package io.xunyss.commons.io;
 
 import java.io.Closeable;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.Reader;
-import java.io.StringReader;
+import java.io.StringWriter;
 import java.io.Writer;
-import java.net.URL;
 
 /**
  * I/O utilities.
@@ -58,59 +55,6 @@ public final class IOUtils {
 	}
 	
 	/**
-	 * Copy contents from an InputStream to a File.
-	 *
-	 * @param srcInputStream input
-	 * @param dstFile output
-	 * @return the number of bytes copied
-	 * @throws IOException if an I/O error occurs
-	 */
-	public static int copy(InputStream srcInputStream, File dstFile) throws IOException {
-//		OutputStream dstOutputStream = new FileOutputStream(dstFile);
-//		int count = copy(srcInputStream, dstOutputStream);
-//		closeQuietly(dstOutputStream);
-//		return count;
-//		==>
-		// 2018.01.20 XUNYSS
-		// convert above statement to Java7 'try-with-resources' statement
-		try (OutputStream dstOutputStream = new FileOutputStream(dstFile)) {
-			return copy(srcInputStream, dstOutputStream);
-		}
-	}
-	// removed bad 'API design' method
-//	public static int copy(InputStream srcInputStream, String dstFilePath) throws IOException {
-//		return copy(srcInputStream, new File(dstFilePath));
-//	}
-	
-	/**
-	 * Copy contents from a File to a File.
-	 *
-	 * @param srcFile input
-	 * @param dstFile output
-	 * @return the number of bytes copied
-	 * @throws IOException if an I/O error occurs
-	 */
-	public static int copy(File srcFile, File dstFile) throws IOException {
-		try (InputStream srcInputStream = new FileInputStream(srcFile)) {
-			return IOUtils.copy(srcInputStream, dstFile);
-		}
-	}
-	
-	/**
-	 * Copy contents from a URL to a File.
-	 *
-	 * @param url input
-	 * @param file output
-	 * @return the number of bytes copied
-	 * @throws IOException if an I/O error occurs
-	 */
-	public static int copy(URL url, File file) throws IOException {
-		try (InputStream inputStream = url.openStream()) {
-			return copy(inputStream, file);
-		}
-	}
-	
-	/**
 	 * Copy contents from a Reader to a Writer.
 	 *
 	 * @param srcReader input
@@ -130,18 +74,52 @@ public final class IOUtils {
 	}
 	
 	/**
-	 * Copy contents from a String to a File.
-	 *
-	 * @param srcString input
-	 * @param dstFile output
+	 * Copy contents from an InputStream to an Writer.
+	 * 
+	 * @param srcInputStream input
+	 * @param dstWriter output
 	 * @return the number of characters copied
 	 * @throws IOException if an I/O error occurs
 	 */
-	public static int copy(String srcString, File dstFile) throws IOException {
-		try (StringReader srcStringReader = new StringReader(srcString);
-				FileWriter dstFileWriter = new FileWriter(dstFile)) {
-			return copy(srcStringReader, dstFileWriter);
+	public static int copy(InputStream srcInputStream, Writer dstWriter) throws IOException {
+		return copy(new InputStreamReader(srcInputStream), dstWriter);
+	}
+	
+	/**
+	 * Copy contents from an Reader to an OutputStream.
+	 * 
+	 * @param srcReader input
+	 * @param dstOutputStream output
+	 * @return the number of characters copied
+	 * @throws IOException if an I/O error occurs
+	 */
+	public static int copy(Reader srcReader, OutputStream dstOutputStream) throws IOException {
+		return copy(srcReader, new OutputStreamWriter(dstOutputStream));
+	}
+	
+	/**
+	 * Get the contents of a {@code Reader} as a String.
+	 * 
+	 * @param srcReader
+	 * @return
+	 * @throws IOException
+	 */
+	public static String toString(Reader srcReader) throws IOException {
+		try (Writer writer = new StringWriter()) {
+			copy(srcReader, writer);
+			return writer.toString();
 		}
+	}
+	
+	/**
+	 * Get the contents of a {@code InputStream} as a String.
+	 * 
+	 * @param srcInputStream
+	 * @return
+	 * @throws IOException
+	 */
+	public static String toString(InputStream srcInputStream) throws IOException {
+		return toString(new InputStreamReader(srcInputStream));
 	}
 	
 	/**

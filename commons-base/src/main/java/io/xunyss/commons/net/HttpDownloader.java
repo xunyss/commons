@@ -56,7 +56,7 @@ public class HttpDownloader {
 	
 	public String download(String downloadUrl, String fileName) throws IOException {
 		HttpURLConnection httpConn = openConnection(downloadUrl);
-		httpConn.setRequestMethod(HttpMethod.GET.name());
+		httpConn.setRequestMethod(HttpMethod.GET);
 		httpConn.setDoInput(true);
 		httpConn.setDoOutput(false);
 		httpConn.setUseCaches(false);
@@ -67,7 +67,7 @@ public class HttpDownloader {
 			File downFile = new File(downloadDir, fileName);
 			
 			try {
-				IOUtils.copy(httpInputStream, downFile);
+				FileUtils.copy(httpInputStream, downFile);
 				return downFile.getPath();
 			}
 			finally {
@@ -85,12 +85,12 @@ public class HttpDownloader {
 	
 	private HttpURLConnection openConnection(String downloadUrl) throws IOException {
 		URL url = new URL(downloadUrl);
-		String protocol = url.getProtocol();
-		if ("https".equals(protocol)) {
-			// TODO: https 프로토콜 지원
+		HttpURLConnection httpConnection = (HttpURLConnection) (proxy == Proxy.NO_PROXY ? url.openConnection() : url.openConnection(proxy));
+		
+		if (Protocol.HTTPS.equals(url.getProtocol())) {
+			TrustAllCerts.setToConnection(httpConnection);
 		}
-		// HTTP
-		return (HttpURLConnection) (proxy == Proxy.NO_PROXY ? url.openConnection() : url.openConnection(proxy));
+		return httpConnection;
 	}
 	
 	private static String detectFileName(String url) {

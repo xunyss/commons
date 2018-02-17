@@ -24,7 +24,7 @@ public class ClassPathUtils {
 			method.invoke(systemClassLoader, url);
 		}
 		catch (Exception ex) {
-			// // ignore exception
+			// ignore exception
 		}
 	}
 	

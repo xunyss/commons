@@ -7,6 +7,7 @@ import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
+import java.nio.charset.CoderResult;
 import java.nio.charset.CodingErrorAction;
 
 /**
@@ -19,11 +20,20 @@ public class ReaderInputStream extends InputStream {
 	/**
 	 *
 	 */
+	private static final int BYTE_BUFFER_CAPACITY = 512;
+	private static final int CHAR_BUFFER_CAPACITY = 1024;
+	
+	/**
+	 *
+	 */
 	private final Reader reader;
 	
 	private CharsetEncoder charsetEncoder = null;
-	private CharBuffer charBuffer = null;
 	private ByteBuffer byteBuffer = null;
+	private CharBuffer charBuffer = null;
+	
+	private boolean readerEndOfInput = false;
+	private CoderResult coderResult = null;
 	
 	
 	public ReaderInputStream(final Reader reader, final Charset charset) {
@@ -32,6 +42,10 @@ public class ReaderInputStream extends InputStream {
 			this.charsetEncoder = charset.newEncoder()
 					.onMalformedInput(CodingErrorAction.REPLACE)
 					.onUnmappableCharacter(CodingErrorAction.REPLACE);
+			this.byteBuffer = ByteBuffer.allocate(BYTE_BUFFER_CAPACITY);
+			this.charBuffer = CharBuffer.allocate(CHAR_BUFFER_CAPACITY);
+			this.byteBuffer.flip();
+			this.charBuffer.flip();
 		}
 	}
 	
@@ -54,18 +68,52 @@ public class ReaderInputStream extends InputStream {
 	 */
 	@Override
 	public int read() throws IOException {
-		return reader.read();
+		if (charsetEncoder != null && byteBuffer != null) {
+			while (true) {
+				if (byteBuffer.hasRemaining()) {
+					return byteBuffer.get();
+				}
+				// fill buffer
+				fillBuffer();
+				if (readerEndOfInput && !byteBuffer.hasRemaining()) {
+					return (byte) IOUtils.EOF;
+				}
+			}
+		}
+		else {
+			return (byte) reader.read();
+		}
 	}
 	
 	/**
-	 *
-	 * @param n
-	 * @return
+	 * Fills the internal char buffer from the reader.
+	 * 
 	 * @throws IOException
 	 */
-	@Override
-	public long skip(long n) throws IOException {
-		return reader.skip(n);
+	private void fillBuffer() throws IOException {
+		if (!readerEndOfInput && (coderResult == null || coderResult.isUnderflow())) {
+			// compact input char buffer
+			charBuffer.compact();
+			
+			// using char-array read instead CharBuffer read
+			// because it is more efficient 
+//			int readLength = reader.read(charBuffer);
+			int readLength = reader.read(charBuffer.array(), charBuffer.position(), charBuffer.remaining());
+			if (readLength == IOUtils.EOF) {
+				readerEndOfInput = true;
+			}
+			else {
+				// set char buffer position
+				charBuffer.position(charBuffer.position() + readLength);
+			}
+			
+			// flip input char buffer
+			charBuffer.flip();
+		}
+		
+		byteBuffer.compact();
+		coderResult = charsetEncoder.encode(charBuffer, byteBuffer, readerEndOfInput);
+		byteBuffer.flip();
 	}
 	
 	/**
@@ -74,38 +122,9 @@ public class ReaderInputStream extends InputStream {
 	 */
 	@Override
 	public void close() throws IOException {
+		if (charsetEncoder != null && byteBuffer != null) {
+			//
+		}
 		reader.close();
-	}
-	
-	/**
-	 *
-	 * @param readlimit
-	 */
-	@Override
-	public synchronized void mark(int readlimit) {
-		try {
-			reader.mark(readlimit);
-		}
-		catch (IOException ex) {
-			// ignore exception
-		}
-	}
-	
-	/**
-	 *
-	 * @throws IOException
-	 */
-	@Override
-	public synchronized void reset() throws IOException {
-		reader.reset();
-	}
-	
-	/**
-	 *
-	 * @return
-	 */
-	@Override
-	public boolean markSupported() {
-		return reader.markSupported();
 	}
 }

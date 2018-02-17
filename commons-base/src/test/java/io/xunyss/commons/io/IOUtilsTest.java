@@ -6,7 +6,6 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.net.URL;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -43,27 +42,5 @@ public class IOUtilsTest {
 		
 		int size = IOUtils.copy(src, dst);
 		Assert.assertEquals(content.length(), size);
-	}
-	
-	@Test
-	public void copyFromStringToFile() throws IOException {
-		String src = "This string will be saved as a file";
-		File dst = new File(tmpRoot, "IOUtils_Test_Out.txt");
-		
-		int size = IOUtils.copy(src, dst);
-		Assert.assertTrue("Destination file is not created", dst.isFile());
-		Assert.assertEquals(src.length(), size);
-		Assert.assertEquals(size, dst.length());
-	}
-	
-	@Test
-	public void copyFromURLToFile() throws IOException {
-		URL src = getClass().getResource("/io/xunyss/commons/io/IOUtilsTestDataFile.dat");
-		File dst = new File(tmpRoot, "IOUtils_Test_Out.dat");
-		
-		int size = IOUtils.copy(src, dst);
-		Assert.assertTrue("Destination file is not created", dst.isFile());
-		Assert.assertEquals(new File(src.getPath()).length(), size);
-		Assert.assertEquals(size, dst.length());
 	}
 }

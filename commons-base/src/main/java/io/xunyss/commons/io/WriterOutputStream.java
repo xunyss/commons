@@ -20,7 +20,8 @@ public class WriterOutputStream extends OutputStream {
 	/**
 	 *
 	 */
-	private static final int BUFFER_CAPACITY = 1024;
+	private static final int BYTE_BUFFER_CAPACITY = 512;
+	private static final int CHAR_BUFFER_CAPACITY = 1024;
 	
 	/**
 	 *
@@ -30,6 +31,7 @@ public class WriterOutputStream extends OutputStream {
 	private CharsetDecoder charsetDecoder = null;
 	private ByteBuffer byteBuffer = null;
 	private CharBuffer charBuffer = null;
+	
 	private boolean isLastFlush = false;
 	
 	
@@ -45,8 +47,8 @@ public class WriterOutputStream extends OutputStream {
 					.onMalformedInput(CodingErrorAction.REPLACE)
 					.onUnmappableCharacter(CodingErrorAction.REPLACE)
 					.replaceWith("?");
-			this.byteBuffer = ByteBuffer.allocate(BUFFER_CAPACITY);
-			this.charBuffer = CharBuffer.allocate(BUFFER_CAPACITY);
+			this.byteBuffer = ByteBuffer.allocate(BYTE_BUFFER_CAPACITY);
+			this.charBuffer = CharBuffer.allocate(CHAR_BUFFER_CAPACITY);
 //			this.isLastFlush = false;
 		}
 	}
@@ -102,8 +104,10 @@ public class WriterOutputStream extends OutputStream {
 //			writer.flush();
 //			byteBuffer.compact();
 			
-			CoderResult coderResult;
+			// flip input byte buffer
 			byteBuffer.flip();
+			
+			CoderResult coderResult;
 			while (byteBuffer.hasRemaining()) {
 				// endOfInput 값이 true 일 경우 byteBuffer 끝까지 decode 를 시도 함
 				// endofInput 값이 false 일 경우 byteBuffer decode 가능한 지점까지 decode 함
@@ -132,6 +136,7 @@ public class WriterOutputStream extends OutputStream {
 					throw new IOException("Unexpected CoderResult: " + coderResult);
 				}
 			}
+			// compact input byte buffer
 			byteBuffer.compact();
 		}
 		else {

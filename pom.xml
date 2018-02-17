@@ -15,6 +15,9 @@
 	<version>0.9.1-RELEASE</version>
 	<packaging>pom</packaging>
 	
+	<name>commons</name>
+	<description>commons</description>
+	
 	<modules>
 		<module>commons-base</module>
 		<!--module>commons-ref</module-->

@@ -50,7 +50,7 @@ public final class ZipUtils {
 				}
 				else {
 					entryFile.getParentFile().mkdirs();
-					IOUtils.copy(zipInputStream, entryFile);
+					FileUtils.copy(zipInputStream, entryFile);
 				}
 			}
 		}
@@ -170,8 +170,8 @@ public final class ZipUtils {
 			throw new IOException("Cannot copy jar resource directory");
 		}
 		
-		InputStream inputStream = srcJarFile.getInputStream(srcJarEntry);
-		IOUtils.copy(inputStream, dstFile);
-		IOUtils.closeQuietly(inputStream);
+		try (InputStream inputStream = srcJarFile.getInputStream(srcJarEntry)) {
+			FileUtils.copy(inputStream, dstFile);			
+		}
 	}
 }
