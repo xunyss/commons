@@ -12,6 +12,8 @@ public final class SystemUtils {
 	public static final String OS_NAME = getSystemProperty("os.name");
 	public static final String JAVA_IO_TMPDIR = getSystemProperty("java.io.tmpdir");
 	
+	public static final String USER_DIR = getSystemProperty("user.dir");
+	
 	public static final boolean IS_OS_WINDOWS = OS_NAME.startsWith(OS_NAME_WINDOWS_PREFIX);
 	
 	
