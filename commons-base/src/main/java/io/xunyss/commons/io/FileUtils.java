@@ -110,16 +110,30 @@ public final class FileUtils {
 //	}
 	
 	/**
-	 * Copy contents from a URL to a File.
-	 *
-	 * @param url input
-	 * @param file output
+	 * Copy contents from an File to a OutputStream.
+	 * 
+	 * @param srcFile input
+	 * @param dstOutputStream output
 	 * @return the number of bytes copied
 	 * @throws IOException if an I/O error occurs
 	 */
-	public static int copy(URL url, File file) throws IOException {
-		try (InputStream inputStream = url.openStream()) {
-			return copy(inputStream, file);
+	public static int copy(File srcFile, OutputStream dstOutputStream) throws IOException {
+		try (InputStream inputStream = new FileInputStream(srcFile)) {
+			return IOUtils.copy(inputStream, dstOutputStream);
+		}
+	}
+	
+	/**
+	 * Copy contents from a URL to a File.
+	 *
+	 * @param srcUrl input
+	 * @param dstFile output
+	 * @return the number of bytes copied
+	 * @throws IOException if an I/O error occurs
+	 */
+	public static int copy(URL srcUrl, File dstFile) throws IOException {
+		try (InputStream inputStream = srcUrl.openStream()) {
+			return copy(inputStream, dstFile);
 		}
 	}
 	
@@ -132,6 +146,7 @@ public final class FileUtils {
 	 * @throws IOException if an I/O error occurs
 	 */
 	public static int copy(File srcFile, File dstFile) throws IOException {
+		// TODO: using java.nio channel
 		try (InputStream srcInputStream = new FileInputStream(srcFile)) {
 			return copy(srcInputStream, dstFile);
 		}
