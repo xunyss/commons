@@ -3,6 +3,7 @@ package io.xunyss.commons.io;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -164,6 +165,19 @@ public final class FileUtils {
 		try (StringReader srcStringReader = new StringReader(srcString);
 				FileWriter dstFileWriter = new FileWriter(dstFile)) {
 			return IOUtils.copy(srcStringReader, dstFileWriter);
+		}
+	}
+	
+	/**
+	 * Get the contents of a {@code File} as a String.
+	 *
+	 * @param srcFile input
+	 * @return the output string
+	 * @throws IOException if an I/O error occurs
+	 */
+	public static String toString(File srcFile) throws IOException {
+		try (FileReader srcFileReader = new FileReader(srcFile)) {
+			return IOUtils.toString(srcFileReader);
 		}
 	}
 	

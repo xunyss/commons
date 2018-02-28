@@ -100,9 +100,9 @@ public final class IOUtils {
 	/**
 	 * Get the contents of a {@code Reader} as a String.
 	 * 
-	 * @param srcReader
-	 * @return
-	 * @throws IOException
+	 * @param srcReader input
+	 * @return the output string
+	 * @throws IOException if an I/O error occurs
 	 */
 	public static String toString(Reader srcReader) throws IOException {
 		try (Writer writer = new StringWriter()) {
@@ -114,9 +114,9 @@ public final class IOUtils {
 	/**
 	 * Get the contents of a {@code InputStream} as a String.
 	 * 
-	 * @param srcInputStream
-	 * @return
-	 * @throws IOException
+	 * @param srcInputStream input
+	 * @return the output string
+	 * @throws IOException if an I/O error occurs
 	 */
 	public static String toString(InputStream srcInputStream) throws IOException {
 		return toString(new InputStreamReader(srcInputStream));
