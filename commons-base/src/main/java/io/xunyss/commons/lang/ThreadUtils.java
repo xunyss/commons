@@ -27,4 +27,19 @@ public final class ThreadUtils {
 			throw new RuntimeException(ex);
 		}
 	}
+	
+	/**
+	 *
+	 * @param millis
+	 * @param nanos
+	 * @throws RuntimeException
+	 */
+	public static void sleep(long millis, int nanos) throws RuntimeException {
+		try {
+			Thread.sleep(millis, nanos);
+		}
+		catch (InterruptedException ex) {
+			throw new RuntimeException(ex);
+		}
+	}
 }
