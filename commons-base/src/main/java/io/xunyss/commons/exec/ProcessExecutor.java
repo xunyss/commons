@@ -11,7 +11,6 @@ import java.util.List;
 import io.xunyss.commons.io.IOUtils;
 import io.xunyss.commons.lang.ArrayUtils;
 import io.xunyss.commons.lang.RegularExpressions;
-import io.xunyss.commons.lang.StringUtils;
 
 /**
  * Execute an external process.
@@ -79,17 +78,13 @@ public class ProcessExecutor {
 	}
 	
 	
-	public int execute(final String command, final String... commands) throws ExecuteException {
-		// 2018.01.31 XUNYSS
-		// method signature 변경 - 가변인자 사용하되 적어도 한개 요소는 입력하게 하기 위함
-		// (final String... commands) 에서
-		// (final String command, final String... commands) 로
-		
-		if (StringUtils.isEmpty(command)) {
+	public int execute(final String[] commands) throws ExecuteException {
+		if (commands.length == 0) {
 			throw new ExecuteException("Execution command must not be empty");
 		}
+		
 		try {
-			Process process = executeInternal(ArrayUtils.add(command, commands),
+			Process process = executeInternal(commands,
 					// stream handler 없이 forceWait 가 true 일 경우 NULL_STREAM_HANDLER 를 사용하여 강제 대기
 					// forceWait 가 false 이고, stream handler 도 null 일 경우
 					// (waitFor 수행하지 않고, process stream close 하지 않을 경우)
@@ -107,6 +102,15 @@ public class ProcessExecutor {
 //		catch (ExecuteException ex) {
 //			throw ex;
 //		}
+	}
+	
+	public int execute(final String command, final String... commands) throws ExecuteException {
+		// 2018.01.31 XUNYSS
+		// method signature 변경 - 가변인자 사용하되 적어도 한개 요소는 입력하게 하기 위함
+		// (final String... commands) 에서
+		// (final String command, final String... commands) 로
+		
+		return execute(ArrayUtils.add(command, commands));
 	}
 	
 	public void execute(final String[] commands, final ResultHandler resultHandler) throws ExecuteException {

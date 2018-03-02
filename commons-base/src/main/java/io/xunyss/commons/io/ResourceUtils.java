@@ -133,6 +133,10 @@ public final class ResourceUtils {
 	 * @return
 	 */
 	public static File getFile(URL resourceUrl) {
+		/*
+		 * resourceUrl "jar:file:" 라면 error 발생
+		 * TODO: 관련 처리 필요
+		 */
 		try {
 			return new File(resourceUrl.toURI());
 		}

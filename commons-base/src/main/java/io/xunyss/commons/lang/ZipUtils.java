@@ -27,29 +27,29 @@ public final class ZipUtils {
 	private ZipUtils() {
 		// cannot create instance
 	}
-
+	
 	/**
 	 * 
-	 * @param zipFile
+	 * @param srcInputStream
 	 * @param dstDir
 	 * @throws IOException
 	 */
-	public static void unzip(File zipFile, File dstDir) throws IOException {
+	public static void unzip(InputStream srcInputStream, File dstDir) throws IOException {
 		ZipInputStream zipInputStream = null;
 		ZipEntry zipEntry;
 
 		try {
-			zipInputStream = new ZipInputStream(new FileInputStream(zipFile));
+			zipInputStream = new ZipInputStream(srcInputStream);
 
 			while ((zipEntry = zipInputStream.getNextEntry()) != null) {
 				String filename = zipEntry.getName();
 				File entryFile = new File(dstDir, filename);
 
 				if (zipEntry.isDirectory()) {
-					entryFile.mkdirs();
+					FileUtils.makeDirectory(entryFile);
 				}
 				else {
-					entryFile.getParentFile().mkdirs();
+					FileUtils.makeDirectory(entryFile.getParentFile());
 					FileUtils.copy(zipInputStream, entryFile);
 				}
 			}
@@ -58,35 +58,15 @@ public final class ZipUtils {
 			IOUtils.closeQuietly(zipInputStream);
 		}
 	}
-
+	
 	/**
 	 * 
 	 * @param zipFile
 	 * @param dstDir
 	 * @throws IOException
 	 */
-	public static void unzip(File zipFile, String dstDir) throws IOException {
-		unzip(zipFile, new File(dstDir));
-	}
-
-	/**
-	 * 
-	 * @param zipFile
-	 * @param dstDir
-	 * @throws IOException
-	 */
-	public static void unzip(String zipFile, File dstDir) throws IOException {
-		unzip(new File(zipFile), dstDir);
-	}
-
-	/**
-	 * 
-	 * @param zipFile
-	 * @param dstDir
-	 * @throws IOException
-	 */
-	public static void unzip(String zipFile, String dstDir) throws IOException {
-		unzip(new File(zipFile), new File(dstDir));
+	public static void unzip(File zipFile, File dstDir) throws IOException {
+		unzip(new FileInputStream(zipFile), dstDir);
 	}
 
 	/**

@@ -74,7 +74,7 @@ public final class IOUtils {
 	}
 	
 	/**
-	 * Copy contents from an InputStream to an Writer.
+	 * Copy contents from an InputStream to a Writer.
 	 * 
 	 * @param srcInputStream input
 	 * @param dstWriter output
@@ -86,7 +86,7 @@ public final class IOUtils {
 	}
 	
 	/**
-	 * Copy contents from an Reader to an OutputStream.
+	 * Copy contents from a Reader to an OutputStream.
 	 * 
 	 * @param srcReader input
 	 * @param dstOutputStream output
@@ -95,6 +95,17 @@ public final class IOUtils {
 	 */
 	public static int copy(Reader srcReader, OutputStream dstOutputStream) throws IOException {
 		return copy(srcReader, new OutputStreamWriter(dstOutputStream));
+	}
+	
+	/**
+	 * Get the contents of an {@code InputStream} as a String.
+	 *
+	 * @param srcInputStream input
+	 * @return the output string
+	 * @throws IOException if an I/O error occurs
+	 */
+	public static String toString(InputStream srcInputStream) throws IOException {
+		return toString(new InputStreamReader(srcInputStream));
 	}
 	
 	/**
@@ -112,14 +123,25 @@ public final class IOUtils {
 	}
 	
 	/**
-	 * Get the contents of a {@code InputStream} as a String.
-	 * 
-	 * @param srcInputStream input
-	 * @return the output string
+	 * Write a String data to an OutputStream.
+	 *
+	 * @param outputStream output
+	 * @param data input data
 	 * @throws IOException if an I/O error occurs
 	 */
-	public static String toString(InputStream srcInputStream) throws IOException {
-		return toString(new InputStreamReader(srcInputStream));
+	public static void write(OutputStream outputStream, String data) throws IOException {
+		outputStream.write(data.getBytes());
+	}
+	
+	/**
+	 * Write a String data to a Writer.
+	 *
+	 * @param writer output
+	 * @param data input data
+	 * @throws IOException if an I/O error occurs
+	 */
+	public static void write(Writer writer, String data) throws IOException {
+		writer.write(data);
 	}
 	
 	/**

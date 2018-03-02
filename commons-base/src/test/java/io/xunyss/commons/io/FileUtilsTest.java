@@ -39,7 +39,7 @@ public class FileUtilsTest {
 	
 	@Test
 	public void copyFromURLToFile() throws IOException {
-		URL src = getClass().getResource("/io/xunyss/commons/io/FileUtilsTestData.txt");
+		URL src = ResourceUtils.getResource("/io/xunyss/commons/io/FileUtilsTestData.txt");
 		File dst = new File(tmpRoot, "FileUtils_URL_Out.txt");
 		
 		int size = FileUtils.copy(src, dst);
@@ -49,13 +49,24 @@ public class FileUtilsTest {
 	}
 	
 	@Test
-	public void copyFromStringToFile() throws IOException {
-		String src = "This string will be saved as a file";
-		File dst = new File(tmpRoot, "FileUtils_String_Out.txt");
+	public void readToString() throws IOException {
+		File file;
+		FileUtils.copy(
+				ResourceUtils.getResource("/io/xunyss/commons/io/FileUtilsTestData.txt"),
+				file = new File(tmpRoot, "FileUtils_URL_Out.txt")
+		);
 		
-		int size = FileUtils.copy(src, dst);
-		Assert.assertTrue("Destination file is not created", dst.isFile());
-		Assert.assertEquals(src.length(), size);
-		Assert.assertEquals(size, dst.length());
+		String data = FileUtils.readToString(file);
+		Assert.assertEquals(file.length(), data.length());
+	}
+	
+	@Test
+	public void writeString() throws IOException {
+		String data = "This string will be saved as a file";
+		File file = new File(tmpRoot, "FileUtils_String_Out.txt");
+		
+		FileUtils.writeString(file, data);
+		Assert.assertTrue("Destination file is not created", file.isFile());
+		Assert.assertEquals(data.length(), file.length());
 	}
 }

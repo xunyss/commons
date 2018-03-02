@@ -8,7 +8,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.StringReader;
 import java.net.URL;
 
 import io.xunyss.commons.lang.SystemUtils;
@@ -154,30 +153,28 @@ public final class FileUtils {
 	}
 	
 	/**
-	 * Copy contents from a String to a File.
+	 * Read the contents of a File into a String.
 	 *
-	 * @param srcString input
-	 * @param dstFile output
-	 * @return the number of characters copied
+	 * @param file input file
+	 * @return the output string
 	 * @throws IOException if an I/O error occurs
 	 */
-	public static int copy(String srcString, File dstFile) throws IOException {
-		try (StringReader srcStringReader = new StringReader(srcString);
-				FileWriter dstFileWriter = new FileWriter(dstFile)) {
-			return IOUtils.copy(srcStringReader, dstFileWriter);
+	public static String readToString(File file) throws IOException {
+		try (FileReader fileReader = new FileReader(file)) {
+			return IOUtils.toString(fileReader);
 		}
 	}
 	
 	/**
-	 * Get the contents of a {@code File} as a String.
+	 * Write a String to a File.
 	 *
-	 * @param srcFile input
-	 * @return the output string
+	 * @param file output file
+	 * @param data input string
 	 * @throws IOException if an I/O error occurs
 	 */
-	public static String toString(File srcFile) throws IOException {
-		try (FileReader srcFileReader = new FileReader(srcFile)) {
-			return IOUtils.toString(srcFileReader);
+	public static void writeString(File file, String data) throws IOException {
+		try (FileWriter fileWriter = new FileWriter(file)) {
+			IOUtils.write(fileWriter, data);
 		}
 	}
 	
