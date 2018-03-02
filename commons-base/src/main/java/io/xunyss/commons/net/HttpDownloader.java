@@ -9,7 +9,6 @@ import java.net.Proxy;
 import java.net.URL;
 
 import io.xunyss.commons.io.FileUtils;
-import io.xunyss.commons.io.IOUtils;
 
 /**
  * 
@@ -63,15 +62,21 @@ public class HttpDownloader {
 
 		int responseCode = httpConn.getResponseCode();
 		if (responseCode == HttpURLConnection.HTTP_OK) {
-			InputStream httpInputStream = httpConn.getInputStream();
 			File downFile = new File(downloadDir, fileName);
-			
-			try {
+//			InputStream httpInputStream = httpConn.getInputStream();
+//			try {
+//				FileUtils.copy(httpInputStream, downFile);
+//				return downFile.getPath();
+//			}
+//			finally {
+//				IOUtils.closeQuietly(httpInputStream);
+//			}
+			// 2018.03.02 XUNYSS
+			// convert above statement to Java7 'try-with-resources' statement
+			try (InputStream httpInputStream = httpConn.getInputStream()) {
 				FileUtils.copy(httpInputStream, downFile);
 				return downFile.getPath();
-			}
-			finally {
-				IOUtils.closeQuietly(httpInputStream);
+				
 			}
 		}
 		
