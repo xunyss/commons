@@ -9,6 +9,7 @@ public final class SystemUtils {
 	
 	private static final String OS_NAME_WINDOWS_PREFIX = "Windows";
 	
+	public static final String OS_ARCH = getSystemProperty("os.arch");
 	public static final String OS_NAME = getSystemProperty("os.name");
 	public static final String JAVA_IO_TMPDIR = getSystemProperty("java.io.tmpdir");
 	
