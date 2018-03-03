@@ -7,7 +7,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import io.xunyss.commons.exec.stream.StringOutputHandler;
+import io.xunyss.commons.exec.support.StringOutputHandler;
 import io.xunyss.commons.lang.StringUtils;
 import io.xunyss.commons.lang.SystemUtils;
 
