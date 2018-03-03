@@ -184,19 +184,19 @@ public class ProcessExecutor {
 		// start watchdog
 		//------------------------------------------------------------------------------------------
 		if (watchdog != null) {
-			watchdog.startMonitoring(process);
+			watchdog.startMonitoring(process);	// TODO: RuntimeException 발생 대비
 		}
 		
 		//------------------------------------------------------------------------------------------
 		// handle streams
 		//------------------------------------------------------------------------------------------
 		if (streamHandler != null) {
-			// set process streams
+			// set process streams	// TODO: RuntimeException 발생 대비
 			streamHandler.setProcessInputStream(process.getInputStream());
 			streamHandler.setProcessErrorStream(process.getErrorStream());
 			streamHandler.setProcessOutputStream(process.getOutputStream());
 			
-			// start handle streams
+			// start handle streams	// TODO: RuntimeException 발생 대비
 			streamHandler.start();
 			
 			try {
@@ -208,7 +208,7 @@ public class ProcessExecutor {
 			}
 			
 			// stop handle streams
-			streamHandler.stop();
+			streamHandler.stop();	// TODO: RuntimeException 발생 대비
 			
 			// close process streams
 			IOUtils.closeQuietly(process.getInputStream());
@@ -220,7 +220,7 @@ public class ProcessExecutor {
 		// stop watchdog
 		//------------------------------------------------------------------------------------------
 		if (watchdog != null) {
-			watchdog.stopMonitoring();
+			watchdog.stopMonitoring();	// TODO: RuntimeException 발생 대비
 		}
 		
 		//------------------------------------------------------------------------------------------
