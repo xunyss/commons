@@ -40,7 +40,17 @@ public abstract class Watchdog {
 	}
 	
 	
+	/**
+	 * Start.
+	 * 가급적 스레드를 생성해서 시작하는 방식으로 구현
+	 * RuntimeException 이 던져지지 않도록 구현해야 함
+	 */
 	abstract protected void start();
 	
+	/**
+	 * Stop.
+	 * Watchdog 객체를 초기화 하는 로직 구현
+	 * RuntimeException 이 던져지지 않도록 구현해야 함
+	 */
 	abstract protected void stop();
 }

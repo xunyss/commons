@@ -40,12 +40,14 @@ public abstract class StreamHandler {
 	}
 	
 	/**
-	 *
+	 * Start.
+	 * RuntimeException 이 던져지지 않도록 구현해야 함
 	 */
 	public abstract void start();
 	
 	/**
-	 *
+	 * Stop.
+	 * RuntimeException 이 던져지지 않도록 구현해야 함
 	 */
 	public abstract void stop();
 }
