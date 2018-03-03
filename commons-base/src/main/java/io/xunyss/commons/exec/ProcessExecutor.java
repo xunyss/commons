@@ -52,7 +52,7 @@ public class ProcessExecutor {
 	
 	private StreamHandler streamHandler = null;
 	
-	private WatchDog watchDog = null;
+	private Watchdog watchdog = null;
 	
 	
 	public ProcessExecutor(boolean forceWait) {
@@ -79,8 +79,8 @@ public class ProcessExecutor {
 		this.streamHandler = streamHandler;
 	}
 	
-	public void setWatchDog(WatchDog watchDog) {
-		this.watchDog = watchDog;
+	public void setWatchdog(Watchdog watchdog) {
+		this.watchdog = watchdog;
 	}
 	
 	
@@ -183,8 +183,8 @@ public class ProcessExecutor {
 		//------------------------------------------------------------------------------------------
 		// start watchdog
 		//------------------------------------------------------------------------------------------
-		if (watchDog != null) {
-			watchDog.startMonitoring(process);
+		if (watchdog != null) {
+			watchdog.startMonitoring(process);
 		}
 		
 		//------------------------------------------------------------------------------------------
@@ -219,8 +219,8 @@ public class ProcessExecutor {
 		//------------------------------------------------------------------------------------------
 		// stop watchdog
 		//------------------------------------------------------------------------------------------
-		if (watchDog != null) {
-			watchDog.stopMonitoring();
+		if (watchdog != null) {
+			watchdog.stopMonitoring();
 		}
 		
 		//------------------------------------------------------------------------------------------

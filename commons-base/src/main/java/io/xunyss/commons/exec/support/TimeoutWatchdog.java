@@ -1,18 +1,18 @@
 package io.xunyss.commons.exec.support;
 
-import io.xunyss.commons.exec.WatchDog;
+import io.xunyss.commons.exec.Watchdog;
 
 /**
  *
  * @author XUNYSS
  */
-public class TimeoutWatchDoc extends WatchDog {
+public class TimeoutWatchdog extends Watchdog {
 	
 	private long timeout;
 	private long startTime;
 	
 	
-	public TimeoutWatchDoc(long timeout) {
+	public TimeoutWatchdog(long timeout) {
 		this.timeout = timeout;
 	}
 	

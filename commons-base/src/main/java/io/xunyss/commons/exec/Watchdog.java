@@ -4,10 +4,11 @@ package io.xunyss.commons.exec;
  *
  * @author XUNYSS
  */
-public abstract class WatchDog {
+public abstract class Watchdog {
 	
 	private Process process = null;
 	private boolean processRunning = false;
+	
 	
 	void startMonitoring(Process process) {
 		this.process = process;
