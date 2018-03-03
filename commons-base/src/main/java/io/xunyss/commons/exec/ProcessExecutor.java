@@ -52,6 +52,8 @@ public class ProcessExecutor {
 	
 	private StreamHandler streamHandler = null;
 	
+	private WatchDog watchDog = null;
+	
 	
 	public ProcessExecutor(boolean forceWait) {
 		// 1. launcher thread 미동작시 (ResultHandler 미사용)
@@ -75,6 +77,10 @@ public class ProcessExecutor {
 	
 	public void setStreamHandler(StreamHandler streamHandler) {
 		this.streamHandler = streamHandler;
+	}
+	
+	public void setWatchDog(WatchDog watchDog) {
+		this.watchDog = watchDog;
 	}
 	
 	
@@ -173,6 +179,14 @@ public class ProcessExecutor {
 		catch (IOException ex) {
 			throw new ExecuteException("Failed to execute process: " + ArrayUtils.toString(commands), ex);
 		}
+		
+		//------------------------------------------------------------------------------------------
+		// start watchdog
+		//------------------------------------------------------------------------------------------
+		if (watchDog != null) {
+			watchDog.startMonitoring(process);
+		}
+		
 		//------------------------------------------------------------------------------------------
 		// handle streams
 		//------------------------------------------------------------------------------------------
@@ -202,6 +216,16 @@ public class ProcessExecutor {
 			IOUtils.closeQuietly(process.getOutputStream());
 		}
 		
+		//------------------------------------------------------------------------------------------
+		// stop watchdog
+		//------------------------------------------------------------------------------------------
+		if (watchDog != null) {
+			watchDog.stopMonitoring();
+		}
+		
+		//------------------------------------------------------------------------------------------
+		// return process
+		//------------------------------------------------------------------------------------------
 		return process;
 	}
 	
