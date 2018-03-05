@@ -146,7 +146,7 @@ public final class FileUtils {
 	 * @throws IOException if an I/O error occurs
 	 */
 	public static int copy(File srcFile, File dstFile) throws IOException {
-		// TODO: using java.nio channel
+		// FIXME: using java.nio channel
 		try (InputStream srcInputStream = new FileInputStream(srcFile)) {
 			return copy(srcInputStream, dstFile);
 		}

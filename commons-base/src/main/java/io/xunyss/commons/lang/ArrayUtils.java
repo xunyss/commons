@@ -50,6 +50,30 @@ public final class ArrayUtils {
 	}
 	
 	/**
+	 *
+	 * @param array
+	 * @return
+	 */
+	public static Object[] nullToEmpty(final Object[] array) {
+		if (getLength(array) == 0) {
+			return EMPTY_OBJECT_ARRAY;
+		}
+		return array;
+	}
+	
+	/**
+	 *
+	 * @param array
+	 * @return
+	 */
+	public static String[] nullToEmpty(final String[] array) {
+		if (getLength(array) == 0) {
+			return EMPTY_STRING_ARRAY;
+		}
+		return array;
+	}
+	
+	/**
 	 * Add the given element at the end of the new array.
 	 *
 	 * @param array array
@@ -106,6 +130,19 @@ public final class ArrayUtils {
 		System.arraycopy(array, 0, newArray, 1, arrayLength);
 		
 		return newArray;
+	}
+	
+	/**
+	 * Return the length of the specified array.
+	 *
+	 * @param array the array to retrieve the length from
+	 * @return the length of the array, or {@code 0} if the array is {@code null}
+	 */
+	public static int getLength(final Object array) {
+		if (array == null) {
+			return 0;
+		}
+		return Array.getLength(array);
 	}
 	
 //	/**
