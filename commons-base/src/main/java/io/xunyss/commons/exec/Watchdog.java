@@ -48,7 +48,7 @@ public abstract class Watchdog {
 	abstract protected void start();
 	
 	/**
-	 * Stop.
+	 * Stop. (외부 로직에서 호출될 수 있음)
 	 * Watchdog 객체를 초기화 하는 로직 구현
 	 * RuntimeException 이 던져지지 않도록 구현해야 함
 	 */
