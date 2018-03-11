@@ -35,4 +35,15 @@ public final class SystemUtils {
 	public static String getSystemProperty(final String key) {
 		return System.getProperty(key);
 	}
+	
+	/**
+	 * Get a system property.
+	 *
+	 * @param key system property key
+	 * @param def a default value
+	 * @return system property value
+	 */
+	public static String getSystemProperty(final String key, final String def) {
+		return System.getProperty(key, def);
+	}
 }
