@@ -163,6 +163,13 @@ public class ProcessExecutor {
 	
 	private Process executeInternal(String[] commands, StreamHandler streamHandler) throws ExecuteException {
 		//------------------------------------------------------------------------------------------
+		// ready watchdog
+		//------------------------------------------------------------------------------------------
+		if (watchdog != null) {
+			watchdog.ready();
+		}
+		
+		//------------------------------------------------------------------------------------------
 		// execute using Runtime.getRuntime().exec()
 		//------------------------------------------------------------------------------------------
 		final Process process;
@@ -177,7 +184,18 @@ public class ProcessExecutor {
 			);
 		}
 		catch (IOException ex) {
-			throw new ExecuteException("Failed to execute process: " + ArrayUtils.toString(commands), ex);
+			ExecuteException executeException =
+					new ExecuteException("Failed to execute process: " + ArrayUtils.toString(commands), ex);
+			
+			//--------------------------------------------------------------------------------------
+			// signal error to watchdog
+			//--------------------------------------------------------------------------------------
+			if (watchdog != null) {
+				watchdog.errorMonitoring(executeException);
+			}
+			
+			// throw exception
+			throw executeException;
 		}
 		
 		//------------------------------------------------------------------------------------------
