@@ -209,29 +209,34 @@ public class ProcessExecutor {
 		// handle streams
 		//------------------------------------------------------------------------------------------
 		if (streamHandler != null) {
-			// set process streams	// TODO: RuntimeException 발생 대비
-			streamHandler.setProcessInputStream(process.getInputStream());
-			streamHandler.setProcessErrorStream(process.getErrorStream());
-			streamHandler.setProcessOutputStream(process.getOutputStream());
-			
-			// start handle streams	// TODO: RuntimeException 발생 대비
-			streamHandler.start();
-			
 			try {
-				// 스트림을 핸들링 할 경우 process 가 종료할 때 까지 기다림
-				process.waitFor();
+				// set process streams	// TODO: RuntimeException 발생 대비
+				streamHandler.setProcessInputStream(process.getInputStream());
+				streamHandler.setProcessErrorStream(process.getErrorStream());
+				streamHandler.setProcessOutputStream(process.getOutputStream());
+				
+				// start handle streams	// TODO: RuntimeException 발생 대비
+				streamHandler.start();
+				
+				try {
+					// 스트림을 핸들링 할 경우 process 가 종료할 때 까지 기다림
+					process.waitFor();
+				}
+				catch (InterruptedException ex) {
+					process.destroy();
+				}
+				
+				// stop handle streams
+				streamHandler.stop();	// TODO: RuntimeException 발생 대비
 			}
-			catch (InterruptedException ex) {
-				process.destroy();
+			finally {
+				// 2018.03.12 XUNYSS
+				// move 'closing process stream' to finally block
+				// close process streams
+				IOUtils.closeQuietly(process.getInputStream());
+				IOUtils.closeQuietly(process.getErrorStream());
+				IOUtils.closeQuietly(process.getOutputStream());
 			}
-			
-			// stop handle streams
-			streamHandler.stop();	// TODO: RuntimeException 발생 대비
-			
-			// close process streams
-			IOUtils.closeQuietly(process.getInputStream());
-			IOUtils.closeQuietly(process.getErrorStream());
-			IOUtils.closeQuietly(process.getOutputStream());
 		}
 		
 		//------------------------------------------------------------------------------------------
