@@ -202,7 +202,7 @@ public class ProcessExecutor {
 		// start watchdog
 		//------------------------------------------------------------------------------------------
 		if (watchdog != null) {
-			watchdog.startMonitoring(process);	// TODO: RuntimeException 발생 대비
+			watchdog.startMonitoring(process, commands);	// TODO: RuntimeException 발생 대비
 		}
 		
 		//------------------------------------------------------------------------------------------

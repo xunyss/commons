@@ -1,5 +1,7 @@
 package io.xunyss.commons.exec;
 
+import io.xunyss.commons.lang.ArrayUtils;
+
 /**
  *
  * @author XUNYSS
@@ -21,6 +23,7 @@ public abstract class Watchdog {
 	 *
 	 */
 	private Process process = null;
+	private String[] commands = null;
 	
 	/**
 	 *
@@ -51,9 +54,15 @@ public abstract class Watchdog {
 	/**
 	 *
 	 * @param process
+	 * @param commands
 	 */
-	void startMonitoring(Process process) {
+	void startMonitoring(Process process, String[] commands) {
+		/*
+		 * 2018.03.16 XUNYSS
+		 * add argument "commands" to identify process
+		 */
 		this.process = process;
+		this.commands = commands;
 		this.status = STATUS.STARTED;
 		
 		synchronized (this) {
@@ -133,4 +142,13 @@ public abstract class Watchdog {
 	 * RuntimeException 이 던져지지 않도록 구현해야 함
 	 */
 	abstract protected void stop();
+	
+	
+	/**
+	 *
+	 * @return
+	 */
+	public String getProcessCommands() {
+		return ArrayUtils.toString(commands);
+	}
 }
