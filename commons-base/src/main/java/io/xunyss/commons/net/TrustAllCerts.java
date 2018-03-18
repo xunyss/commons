@@ -7,7 +7,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -85,6 +84,11 @@ public class TrustAllCerts {
 	}
 	
 	/**
+	 *
+	 */
+	public static final SSLSocketFactory SSL_SOCKET_FACTORY = SSL_CONTEXT.getSocketFactory();
+	
+	/**
 	 * 
 	 */
 	public static final HostnameVerifier HOSTNAME_VERIFIER = new HostnameVerifier() {
@@ -113,7 +117,7 @@ public class TrustAllCerts {
 	 * 
 	 */
 	public static final void setDefaultSSLSocketFactory() {
-		HttpsURLConnection.setDefaultSSLSocketFactory(SSL_CONTEXT.getSocketFactory());
+		HttpsURLConnection.setDefaultSSLSocketFactory(SSL_SOCKET_FACTORY);
 	}
 	
 	/**
@@ -132,7 +136,7 @@ public class TrustAllCerts {
 			URL url = connection.getURL();
 			if (PROTOCOL_HTTPS.equals(url.getProtocol())) {
 				HttpsURLConnection httpsConn = (HttpsURLConnection) connection;
-				httpsConn.setSSLSocketFactory(SSL_CONTEXT.getSocketFactory());
+				httpsConn.setSSLSocketFactory(SSL_SOCKET_FACTORY);
 				httpsConn.setHostnameVerifier(HOSTNAME_VERIFIER);
 			}
 		}
