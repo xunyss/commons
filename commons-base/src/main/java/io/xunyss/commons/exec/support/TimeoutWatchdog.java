@@ -12,7 +12,7 @@ public class TimeoutWatchdog extends Watchdog {
 	private long startTime;
 	private boolean isWatching;
 	
-	private final Object thisWatchdog;
+	private final Object thisWatchdog;	// FIXME: 얘를 왜 만들었지?
 	
 	
 	public TimeoutWatchdog(long timeout) {
