@@ -1,5 +1,10 @@
 package io.xunyss.commons.exec;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -33,5 +38,40 @@ public class StreamHandlerTest {
 		
 		Assert.assertEquals("started", startMessage);
 		Assert.assertEquals("stopped", stopMessage);
+	}
+	
+	@Test
+	public void test() throws Exception {
+		ProcessExecutor processExecutor = new ProcessExecutor();
+		processExecutor.setStreamHandler(new MyHandler());
+		processExecutor.execute("cmd /c dir");
+	}
+	
+	////////////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////////
+	class MyHandler extends StreamHandler {
+		InputStream is;
+		
+		@Override
+		public void start() {
+			is = getProcessInputStream();
+			BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+			
+			String line;
+			try {
+				while ((line = reader.readLine()) != null) {
+					System.out.println(line);
+				}
+			}
+			catch (IOException ex) {
+				ex.printStackTrace();
+			}
+		}
+		
+		@Override
+		public void stop() {
+		
+		}
 	}
 }
