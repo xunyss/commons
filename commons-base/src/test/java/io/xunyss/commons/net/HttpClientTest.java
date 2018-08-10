@@ -12,5 +12,6 @@ public class HttpClientTest {
 	@Test
 	public void curl() {
 		HttpClient httpClient = new HttpClient();
+		httpClient.toString();
 	}
 }
