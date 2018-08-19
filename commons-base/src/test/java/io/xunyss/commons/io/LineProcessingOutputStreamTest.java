@@ -36,6 +36,6 @@ public class LineProcessingOutputStreamTest {
 	}
 	
 	private static final String data =
-			"11111111111111111111111\r\n" +
+			"11111\r\n" +
 			"2222";
 }
