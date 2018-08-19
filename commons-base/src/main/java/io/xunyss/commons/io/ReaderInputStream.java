@@ -86,6 +86,32 @@ public class ReaderInputStream extends InputStream {
 	}
 	
 	/**
+	 *
+	 * @param b
+	 * @return
+	 * @throws IOException
+	 */
+	@Override
+	public int read(byte[] b) throws IOException {
+		// TODO: implement this method
+		return super.read(b);
+	}
+	
+	/**
+	 *
+	 * @param b
+	 * @param off
+	 * @param len
+	 * @return
+	 * @throws IOException
+	 */
+	@Override
+	public int read(byte[] b, int off, int len) throws IOException {
+		// TODO: implement this method
+		return super.read(b, off, len);
+	}
+	
+	/**
 	 * Fills the internal char buffer from the reader.
 	 * 
 	 * @throws IOException

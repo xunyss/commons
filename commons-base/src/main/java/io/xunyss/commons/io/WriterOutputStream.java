@@ -92,6 +92,30 @@ public class WriterOutputStream extends OutputStream {
 	
 	/**
 	 *
+	 * @param b
+	 * @throws IOException
+	 */
+	@Override
+	public void write(byte[] b) throws IOException {
+		// TODO: implement this method
+		super.write(b);
+	}
+	
+	/**
+	 *
+	 * @param b
+	 * @param off
+	 * @param len
+	 * @throws IOException
+	 */
+	@Override
+	public void write(byte[] b, int off, int len) throws IOException {
+		// TODO: implement this method
+		super.write(b, off, len);
+	}
+	
+	/**
+	 *
 	 * @throws IOException
 	 */
 	@Override

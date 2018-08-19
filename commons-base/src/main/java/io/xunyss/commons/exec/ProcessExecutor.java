@@ -277,7 +277,11 @@ public class ProcessExecutor {
 //				commandList.add(commandToken);
 //			}
 //			==>
-			commandList.addAll(Arrays.asList(command.split(RegularExpressions.DELIMITER_SPACE)));
+			commandList.addAll(
+					Arrays.asList(
+							command.split(RegularExpressions.DELIMITER_SPACE)
+					)
+			);
 		}
 		return commandList.toArray(ArrayUtils.EMPTY_STRING_ARRAY);
 	}

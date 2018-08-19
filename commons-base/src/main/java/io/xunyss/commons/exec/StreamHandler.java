@@ -41,13 +41,13 @@ public abstract class StreamHandler {
 	
 	/**
 	 * Start.
-	 * RuntimeException 이 던져지지 않도록 구현해야 함
+	 * RuntimeException 이 던져지지 않도록 구현해야 함 => TODO: internalStart 메소드 이용
 	 */
 	public abstract void start();
 	
 	/**
 	 * Stop.
-	 * RuntimeException 이 던져지지 않도록 구현해야 함
+	 * RuntimeException 이 던져지지 않도록 구현해야 함 => TODO: internalStop 메소드 이용
 	 */
 	public abstract void stop();
 }

@@ -7,7 +7,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import io.xunyss.commons.exec.support.StringOutputHandler;
+import io.xunyss.commons.exec.support.ToStringStreamHandler;
 import io.xunyss.commons.lang.StringUtils;
 import io.xunyss.commons.lang.SystemUtils;
 
@@ -32,26 +32,26 @@ public class ProcessExecutorTest {
 	public void setWorkingDirectory() throws IOException {
 		String userHome = SystemUtils.getSystemProperty("user.home");
 		
-		StringOutputHandler stringOutputHandler = new StringOutputHandler();
+		ToStringStreamHandler toStringStreamHandler = new ToStringStreamHandler();
 		ProcessExecutor processExecutor = new ProcessExecutor();
 		processExecutor.setWorkingDirectory(new File(userHome));
-		processExecutor.setStreamHandler(stringOutputHandler);
+		processExecutor.setStreamHandler(toStringStreamHandler);
 		processExecutor.execute("cmd /c dir /w");
 		
-		String output = stringOutputHandler.getOutputString(consoleCharset);
+		String output = toStringStreamHandler.getOutputString(consoleCharset);
 		Assert.assertTrue(output.contains(userHome));
 	}
 	
 	@Test
 	public void notSetEnvironment() throws IOException {
-		StringOutputHandler stringOutputHandler = new StringOutputHandler();
+		ToStringStreamHandler toStringStreamHandler = new ToStringStreamHandler();
 		ProcessExecutor processExecutor = new ProcessExecutor();
-		processExecutor.setStreamHandler(stringOutputHandler);
+		processExecutor.setStreamHandler(toStringStreamHandler);
 		processExecutor.execute(environmentCommand);
 		
 		Assert.assertEquals(
 				currentProcessDisplayedEnvironmentVariablesCount(),
-				StringUtils.countOccurrence(stringOutputHandler.getOutputString(), "=")
+				StringUtils.countOccurrence(toStringStreamHandler.getOutputString(), "=")
 		);
 	}
 	
@@ -61,13 +61,13 @@ public class ProcessExecutorTest {
 		environment.put("xunyss_env", "xunyss_variable");
 		environment.put("xunyss_key", "xunyss_value");
 		
-		StringOutputHandler stringOutputHandler = new StringOutputHandler();
+		ToStringStreamHandler toStringStreamHandler = new ToStringStreamHandler();
 		ProcessExecutor processExecutor = new ProcessExecutor();
-		processExecutor.setStreamHandler(stringOutputHandler);
+		processExecutor.setStreamHandler(toStringStreamHandler);
 		processExecutor.setEnvironment(environment);
 		processExecutor.execute(environmentCommand);
 		
-		String output = stringOutputHandler.getOutputString(consoleCharset);
+		String output = toStringStreamHandler.getOutputString(consoleCharset);
 		Assert.assertTrue(output.contains("xunyss_env=xunyss_variable"));
 		Assert.assertTrue(output.contains("xunyss_key=xunyss_value"));
 	}
@@ -79,19 +79,19 @@ public class ProcessExecutorTest {
 		environment.put("xunyss_env", "xunyss_variable"); addedCount++;
 		environment.put("xunyss_key", "xunyss_value"); addedCount++;
 		
-		StringOutputHandler stringOutputHandler = new StringOutputHandler();
+		ToStringStreamHandler toStringStreamHandler = new ToStringStreamHandler();
 		ProcessExecutor processExecutor = new ProcessExecutor();
-		processExecutor.setStreamHandler(stringOutputHandler);
+		processExecutor.setStreamHandler(toStringStreamHandler);
 		processExecutor.setEnvironment(environment);
 		processExecutor.execute(environmentCommand);
 		
-		String output = stringOutputHandler.getOutputString(consoleCharset);
+		String output = toStringStreamHandler.getOutputString(consoleCharset);
 		Assert.assertTrue(output.contains("xunyss_env=xunyss_variable"));
 		Assert.assertTrue(output.contains("xunyss_key=xunyss_value"));
 		
 		Assert.assertEquals(
 				currentProcessDisplayedEnvironmentVariablesCount() + addedCount,
-				StringUtils.countOccurrence(stringOutputHandler.getOutputString(), "=")
+				StringUtils.countOccurrence(toStringStreamHandler.getOutputString(), "=")
 		);
 	}
 	

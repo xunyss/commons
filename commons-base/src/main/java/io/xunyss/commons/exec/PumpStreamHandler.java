@@ -13,9 +13,9 @@ import io.xunyss.commons.io.IOUtils;
 public class PumpStreamHandler extends StreamHandler {
 	
 	// handler streams
-	private OutputStream outputStream = null;
-	private OutputStream errorStream = null;
-	private InputStream inputStream = null;
+	private OutputStream outputStream;
+	private OutputStream errorStream;
+	private InputStream inputStream;
 	private boolean closeStreams = false;
 	
 	// threads for handle stream
@@ -25,20 +25,38 @@ public class PumpStreamHandler extends StreamHandler {
 	private SystemInputPumper systemInputPumper;
 	
 	
+	/**
+	 *
+	 * @param outputStream
+	 * @param errorStream
+	 * @param inputStream
+	 */
 	public PumpStreamHandler(OutputStream outputStream, OutputStream errorStream, InputStream inputStream) {
 		this.outputStream = outputStream;
 		this.errorStream = errorStream;
 		this.inputStream = inputStream;
 	}
 	
+	/**
+	 *
+	 * @param outputStream
+	 * @param errorStream
+	 */
 	public PumpStreamHandler(OutputStream outputStream, OutputStream errorStream) {
 		this(outputStream, errorStream, null);
 	}
 	
+	/**
+	 *
+	 * @param outputStream
+	 */
 	public PumpStreamHandler(OutputStream outputStream) {
 		this(outputStream, null);
 	}
 	
+	/**
+	 *
+	 */
 	public PumpStreamHandler() {
 		this(System.out, System.err, null);
 	}
@@ -145,6 +163,12 @@ public class PumpStreamHandler extends StreamHandler {
 		private InputStream inputStream;
 		private OutputStream outputStream;
 		
+		
+		/**
+		 *
+		 * @param inputStream
+		 * @param outputStream
+		 */
 		private StreamPumper(InputStream inputStream, OutputStream outputStream) {
 			this.inputStream = inputStream;
 			this.outputStream = outputStream;
@@ -192,6 +216,11 @@ public class PumpStreamHandler extends StreamHandler {
 		private OutputStream outputStream;
 		private volatile boolean stop;
 		
+		
+		/**
+		 *
+		 * @param outputStream
+		 */
 		private SystemInputPumper(OutputStream outputStream) {
 			this.outputStream = outputStream;
 			this.stop = false;
