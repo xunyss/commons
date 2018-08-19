@@ -54,11 +54,27 @@ public abstract class LineProcessingOutputStream extends OutputStream {
 	
 	@Override
 	public void write(byte[] b, int off, int len) throws IOException {
-		// TODO: implement this method
 //		super.write(b, off, len);
-		buffer.write(b, off, len);
-		
-		
+//		buffer.write(b, off, len);
+		// TODOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+		// TODOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+		// TODOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+		int begin = off;
+		int size = len;
+		int cpos;
+
+		for (int i = 0; i < len; i++) {
+			cpos = off + i;
+			size = cpos - begin + 1;
+			
+			if (b[cpos] == '\r' || b[cpos] == '\n') {
+				buffer.write(b, begin, size - 1);
+				write(b[cpos]);
+
+				begin = cpos + 1;
+			}
+		}
+		buffer.write(b, begin, size - 1);
 	}
 	
 	@Override
