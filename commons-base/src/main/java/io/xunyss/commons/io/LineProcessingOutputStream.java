@@ -11,11 +11,16 @@ import java.io.UnsupportedEncodingException;
  */
 public abstract class LineProcessingOutputStream extends OutputStream {
 	
+	private static final char CR = '\r';
+	
+	private static final char LF = '\n';
+	
+	
 	private ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 	
 	private String charsetName = null;
 	
-	private boolean preCr = false;
+	private boolean isPrevCR = false;
 	
 	
 	public LineProcessingOutputStream(final String charsetName) {
@@ -33,48 +38,44 @@ public abstract class LineProcessingOutputStream extends OutputStream {
 		//   Windows     - CR+LF
 		//   Linux       - LF
 		//   Classic Mac - CR
-		if (b == '\r') {
+		if (b == CR) {
 			processBuffer();
 		}
-		else if (b == '\n') {
-			if (!preCr) {
+		else if (b == LF) {
+			if (!isPrevCR) {
 				processBuffer();
 			}
 		}
 		else {
 			buffer.write(b);
 		}
-		preCr = b == '\r';
+		isPrevCR = b == CR;
 	}
 	
-	@Override
-	public void write(byte[] b) throws IOException {
-		write(b, 0, b.length);
-	}
+//	@Override
+//	public void write(byte[] b) throws IOException {
+//		write(b, 0, b.length);
+//	}
 	
 	@Override
 	public void write(byte[] b, int off, int len) throws IOException {
-//		super.write(b, off, len);
-//		buffer.write(b, off, len);
-		// TODOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
-		// TODOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
-		// TODOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
-		int begin = off;
-		int size = len;
-		int cpos;
+		final int limit = off + len;	// last offset + 1
+		int head = off;					// start offset of line
 
-		for (int i = 0; i < len; i++) {
-			cpos = off + i;
-			size = cpos - begin + 1;
-			
-			if (b[cpos] == '\r' || b[cpos] == '\n') {
-				buffer.write(b, begin, size - 1);
-				write(b[cpos]);
-
-				begin = cpos + 1;
+		while (off < limit) {
+			while (off < limit && (b[off] != CR && b[off] != LF)) {
+				off++;
 			}
+			if (off > head) {
+				buffer.write(b, head, off - head);
+				isPrevCR = false;
+			}
+			while (off < limit && (b[off] == CR || b[off] == LF)) {
+				write(b[off]);
+				off++;
+			}
+			head = off;
 		}
-		buffer.write(b, begin, size - 1);
 	}
 	
 	@Override
@@ -102,5 +103,5 @@ public abstract class LineProcessingOutputStream extends OutputStream {
 	 *
 	 * @param line
 	 */
-	protected abstract void processLine(final String line);
+	protected abstract void processLine(String line);
 }

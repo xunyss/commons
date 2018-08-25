@@ -8,7 +8,7 @@ import org.junit.Test;
 public class LogOutputStreamTest {
 	
 	@Test
-	public void test2() throws Exception {
+	public void processLine() throws Exception {
 		OutputStream outputStream = new LogOutputStream() {
 			@Override
 			protected void processLine(String line, int level) {
@@ -20,6 +20,9 @@ public class LogOutputStreamTest {
 	}
 	
 	private static final String data =
-			"11111\r\n" +
-			"2222";
+			"12345\r" +
+			"54321\r" +
+			"67890\n" +
+			"HELLO\r\n" +
+			"WORLD";
 }

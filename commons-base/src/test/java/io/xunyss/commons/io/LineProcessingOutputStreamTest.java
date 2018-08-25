@@ -10,7 +10,7 @@ import io.xunyss.commons.exec.PumpStreamHandler;
 public class LineProcessingOutputStreamTest {
 	
 	@Test
-	public void test() throws Exception {
+	public void processDirResult() throws Exception {
 		ProcessExecutor processExecutor = new ProcessExecutor();
 		processExecutor.setStreamHandler(new PumpStreamHandler(new LineProcessingOutputStream("MS949") {
 			@Override
@@ -24,7 +24,7 @@ public class LineProcessingOutputStreamTest {
 	}
 	
 	@Test
-	public void test2() throws Exception {
+	public void processLine() throws Exception {
 		OutputStream outputStream = new LineProcessingOutputStream("MS949") {
 			@Override
 			protected void processLine(String line) {
@@ -36,6 +36,9 @@ public class LineProcessingOutputStreamTest {
 	}
 	
 	private static final String data =
-			"11111\r\n" +
-			"2222";
+			"12345\r" +
+			"54321\r" +
+			"67890\n" +
+			"HELLO\r\n" +
+			"WORLD";
 }
