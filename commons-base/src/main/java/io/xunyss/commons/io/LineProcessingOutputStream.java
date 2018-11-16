@@ -38,10 +38,21 @@ public abstract class LineProcessingOutputStream extends OutputStream {
 		//   Windows     - CR+LF
 		//   Linux       - LF
 		//   Classic Mac - CR
-		if (b == CR) {
-			processBuffer();
-		}
-		else if (b == LF) {
+//		if (b == CR) {
+//			processBuffer();
+//		}
+//		else if (b == LF) {
+//			if (!isPrevCR) {
+//				processBuffer();
+//			}
+//		}
+		
+		// 2018.11.17 XUNYSS
+		// Line Separators
+		//   Windows     - CR+LF or CR+CR+LF
+		//   Linux       - LF
+		//   Classic Mac - CR
+		if (b == CR || b == LF) {
 			if (!isPrevCR) {
 				processBuffer();
 			}
@@ -49,6 +60,7 @@ public abstract class LineProcessingOutputStream extends OutputStream {
 		else {
 			buffer.write(b);
 		}
+		
 		isPrevCR = b == CR;
 	}
 	
