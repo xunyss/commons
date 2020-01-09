@@ -12,7 +12,7 @@ public class ResourceTest {
 	@Test
 	public void test() throws IOException {
 		
-		System.out.println("test");
+		System.out.println("test2");
 		
 		URL url1 = IOUtils.resourceToURL("/empty");
 		System.out.println(url1);
