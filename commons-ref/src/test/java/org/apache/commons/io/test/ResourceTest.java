@@ -11,6 +11,9 @@ public class ResourceTest {
 
 	@Test
 	public void test() throws IOException {
+		
+		System.out.println("test");
+		
 		URL url1 = IOUtils.resourceToURL("/empty");
 		System.out.println(url1);
 		
