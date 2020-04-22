@@ -7,9 +7,9 @@
 	<modelVersion>4.0.0</modelVersion>
 	
 	<parent>
-		<groupId>io.xunyss.pom</groupId>
-		<artifactId>pom</artifactId>
-		<version>1.0.0</version>
+		<groupId>io.xunyss.poms</groupId>
+		<artifactId>poms</artifactId>
+		<version>1</version>
 	</parent>
 	<groupId>io.xunyss.commons</groupId>
 	<artifactId>commons</artifactId>
