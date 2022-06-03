@@ -12,7 +12,7 @@ import io.xunyss.commons.lang.StringUtils;
  */
 public class EnvironmentTest {
 
-	@Test
+//	@Test
 	public void put() {
 		Environment environment = new Environment();
 		String oldValue = environment.put("ENV_LANG", "ko");
@@ -23,7 +23,7 @@ public class EnvironmentTest {
 		Assert.assertEquals(1, envStrings.length);
 	}
 	
-	@Test
+//	@Test
 	public void remove() {
 		Environment environment = new Environment();
 		environment.put("ENV_LANG", "ko");
@@ -37,7 +37,7 @@ public class EnvironmentTest {
 		Assert.assertEquals("{ENV_LANGUAGE=ko}", environment.toString());
 	}
 	
-	@Test
+//	@Test
 	public void currentProcessEnvironment() {
 		Environment environment = Environment.currentProcessEnvironment();
 		String[] envStrings = environment.toStrings();

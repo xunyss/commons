@@ -14,7 +14,7 @@ public class StreamHandlerTest {
 	private String stopMessage = null;
 	
 	
-	@Test
+//	@Test
 	public void streamHandler() throws ExecuteException {
 		ProcessExecutor processExecutor = new ProcessExecutor();
 		processExecutor.setStreamHandler(new StreamHandler() {

@@ -9,7 +9,7 @@ import io.xunyss.commons.exec.PumpStreamHandler;
 
 public class LineProcessingOutputStreamTest {
 	
-	@Test
+//	@Test
 	public void processDirResult() throws Exception {
 		ProcessExecutor processExecutor = new ProcessExecutor();
 		processExecutor.setStreamHandler(new PumpStreamHandler(new LineProcessingOutputStream("MS949") {
@@ -23,7 +23,7 @@ public class LineProcessingOutputStreamTest {
 		System.out.println("@");
 	}
 	
-	@Test
+//	@Test
 	public void processLine() throws Exception {
 		OutputStream outputStream = new LineProcessingOutputStream("MS949") {
 			@Override

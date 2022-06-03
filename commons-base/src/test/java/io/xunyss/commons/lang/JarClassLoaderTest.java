@@ -15,20 +15,20 @@ import io.xunyss.commons.io.ResourceUtils;
  */
 public class JarClassLoaderTest {
 	
-	@Test(expected = ExceptionInInitializerError.class)
+//	@Test(expected = ExceptionInInitializerError.class)
 	public void classLoadByForName() throws ClassNotFoundException {
 		String className = "io.xunyss.commons.lang.ClassLoadingTestClass";
 		Class.forName(className);
 	}
 	
-	@Test
+//	@Test
 	public void classLoadByLoadClass() throws ClassNotFoundException {
 		String className = "io.xunyss.commons.lang.ClassLoadingTestClass";
 		ClassLoader classLoader = getClass().getClassLoader();
 		classLoader.loadClass(className);
 	}
 	
-	@Test
+//	@Test
 	public void classLoaders() {
 		Assert.assertEquals("sun.misc.Launcher$AppClassLoader", getClass().getClassLoader()  .getClass().getName());
 		Assert.assertEquals("sun.misc.Launcher$AppClassLoader", ClassLoader.getSystemClassLoader()  .getClass().getName());
@@ -41,7 +41,7 @@ public class JarClassLoaderTest {
 		Assert.assertNotEquals(getClass().getClassLoader(), getClass().getClassLoader().getParent());
 	}
 	
-	@Test
+//	@Test
 	public void loadClass() throws IOException, ClassNotFoundException {
 		File file = ResourceUtils.getResourceAsFile("/io/xunyss/commons/lang/javax.servlet-api-3.1.0.jar");
 		
@@ -53,7 +53,7 @@ public class JarClassLoaderTest {
 		Assert.assertEquals("javax.servlet.Servlet", clazz.getName());
 	}
 	
-	@Test
+//	@Test
 	public void loadClassMultiFiles() throws IOException, ClassNotFoundException {
 		File file1 = ResourceUtils.getResourceAsFile("/io/xunyss/commons/lang/javax.servlet-api-3.1.0.jar");
 		File file2 = ResourceUtils.getResourceAsFile("/io/xunyss/commons/lang/javax.servlet.jsp-api-2.3.1.jar");
@@ -68,7 +68,7 @@ public class JarClassLoaderTest {
 		Assert.assertEquals("javax.servlet.jsp.JspContext", clazz2.getName());
 	}
 	
-	@Test
+//	@Test
 	public void addFile() throws IOException, ClassNotFoundException {
 		Class<?> clazz1, clazz2;
 		try (JarClassLoader jarClassLoader = new JarClassLoader()) {
@@ -83,7 +83,7 @@ public class JarClassLoaderTest {
 		Assert.assertEquals("javax.servlet.jsp.JspContext", clazz2.getName());
 	}
 	
-	@Test
+//	@Test
 	public void addURL() throws IOException, ClassNotFoundException {
 		Class<?> clazz1, clazz2;
 		try (JarClassLoader jarClassLoader = new JarClassLoader()) {

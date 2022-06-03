@@ -14,7 +14,7 @@ import io.xunyss.commons.exec.ProcessExecutor;
  */
 public class ToStringStreamHandlerTest {
 	
-	@Test
+//	@Test
 	public void pumpToStringOutputHandler() throws IOException {
 		ToStringStreamHandler toStringStreamHandler = new ToStringStreamHandler();
 		

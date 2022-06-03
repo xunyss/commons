@@ -11,12 +11,12 @@ import org.junit.Test;
 
 public class CommonExecTest {
 	
-	@After
+//	@After
 	public void finish() throws InterruptedException {
 		Thread.sleep(10000);
 	}
 	
-	@Test
+//	@Test
 	public void execAsync() throws Exception {
 		Executor executor = new DefaultExecutor();
 		executor.execute(CommandLine.parse("notepad.exe"), new ExecuteResultHandler() {
