@@ -30,6 +30,6 @@ public class CommonExecTest {
 				e.printStackTrace();
 			}
 		});
-		System.out.println(22);
+		System.out.println("end");
 	}
 }

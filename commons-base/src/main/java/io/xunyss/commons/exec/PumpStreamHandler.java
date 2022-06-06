@@ -1,10 +1,10 @@
 package io.xunyss.commons.exec;
 
+import io.xunyss.commons.io.IOUtils;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
-import io.xunyss.commons.io.IOUtils;
 
 /**
  *
@@ -102,18 +102,18 @@ public class PumpStreamHandler extends StreamHandler {
 	@Override
 	public void stop() {
 		if (outputStream != null) {
-			outputThread.interrupt();
+			stopPumpThread(outputThread);
 		}
 		
 		if (errorStream != null) {
-			errorThread.interrupt();
+			stopPumpThread(errorThread);
 		}
 		
 		if (inputStream != null) {
 			if (systemInputPumper != null) {	// inputStream == System.in
 				systemInputPumper.stopPump();
 			}
-			inputThread.interrupt();
+			stopPumpThread(inputThread);
 		}
 		
 		if (closeStreams) {
@@ -148,6 +148,19 @@ public class PumpStreamHandler extends StreamHandler {
 		pumpThread.setDaemon(true);
 		pumpThread.start();
 		return pumpThread;
+	}
+
+	/**
+	 *
+	 * @param thread
+	 */
+	private void stopPumpThread(Thread thread) {
+		try {
+			thread.join();
+		}
+		catch (InterruptedException ex) {
+			thread.interrupt();
+		}
 	}
 	
 	

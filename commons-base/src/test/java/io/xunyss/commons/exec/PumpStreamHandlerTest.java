@@ -1,18 +1,14 @@
 package io.xunyss.commons.exec;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.StringWriter;
-
+import io.xunyss.commons.io.WriterOutputStream;
+import io.xunyss.commons.lang.SystemUtils;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Ignore;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-import io.xunyss.commons.io.WriterOutputStream;
+import java.io.*;
 
 /**
  * Unit tests for the PumpStreamHandler class.
@@ -26,7 +22,13 @@ public class PumpStreamHandlerTest {
 	
 	private String command = "cmd /c dir";
 	private String consoleCharset = "MS949";
-	
+
+
+	@Before
+	public void setup() {
+		command = SystemUtils.IS_OS_WINDOWS ? "cmd /c dir" : "/bin/sh -c ls -la";
+		consoleCharset = SystemUtils.IS_OS_WINDOWS ? "MS949" : "UTF8";
+	}
 	
 	@Ignore
 //	@Test
@@ -45,7 +47,7 @@ public class PumpStreamHandlerTest {
 	}
 	
 	@Ignore
-//	@Test
+	@Test
 	public void pumpToByteArrayOutputStream() throws IOException {
 		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 		

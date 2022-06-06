@@ -1,6 +1,8 @@
 package io.xunyss.commons;
 
 import java.io.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * 시스템 함수에 관한 유틸
@@ -13,39 +15,31 @@ public class LFSystemUtil {
 
 	private String execCommand(String[] cmd, boolean isWait) throws Exception {
 		String result = "";
-		Process process = null;
 
 		try {
-			process = Runtime.getRuntime().exec(cmd);
-
-			StringWriter stdout = new StringWriter();
-			StringWriter stderr = new StringWriter();
-
-			StreamHandler outHandler = new StreamHandler(process.getInputStream(), stdout);
-			StreamHandler errHandler = new StreamHandler(process.getErrorStream(), stderr);
-
-			outHandler.setDaemon(true);
-			errHandler.setDaemon(true);
-
-			outHandler.start();
-			errHandler.start();
-
+			Process process = Runtime.getRuntime().exec(cmd);
 			if (isWait) {
-				int retVal = process.waitFor();
-				int exitValue = process.exitValue();
+				ByteArrayOutputStream out = new ByteArrayOutputStream();
+				ByteArrayOutputStream err = new ByteArrayOutputStream();
+				StreamHandler streamHandler = new StreamHandler(process.getInputStream(), process.getErrorStream(), out, err);
 
-				if (retVal != 0) {
-					throw new Exception(stderr.toString());
+				streamHandler.start();
+				process.waitFor();
+				streamHandler.stop();
+
+				int exitValue = process.exitValue();
+				if (exitValue != 0) {
+//					throw new Exception(stderr.toString());
 				}
+				result = out.toString();
+			}
+			else {
+				result = "";
 			}
 
-			outHandler.interrupt();
-			errHandler.interrupt();
-
-			result = stdout.toString();
-		}
-		catch (IOException ioe) {
-			throw new Exception(ioe.getMessage());
+			closeQuietly(process.getInputStream());
+			closeQuietly(process.getErrorStream());
+			closeQuietly(process.getOutputStream());
 		}
 		catch (Exception e) {
 			throw new Exception(e.getMessage());
@@ -62,55 +56,64 @@ public class LFSystemUtil {
 		return new LFSystemUtil().execCommand(cmds, isWait);
 	}
 
-	public class StreamHandler extends Thread {
-		InputStream is;
-		Writer writer;
-
-		public StreamHandler(InputStream is, Writer writer) {
-			this.is = is;
-			this.writer = writer;
+	private static class StreamHandler {
+		private InputStream procIn, procErr;
+		private OutputStream sout, serr;
+		private Thread outputThread, errorThread;
+		public StreamHandler(InputStream procIn, InputStream procErr, OutputStream sout, OutputStream serr) {
+			this.procIn = procIn;
+			this.procErr = procErr;
+			this.sout = sout;
+			this.serr = serr;
 		}
-
-		public void run() {
-			BufferedReader br = null;
-
+		public void start() {
+			outputThread = startPump(procIn, sout);
+			errorThread = startPump(procErr, serr);
+		}
+		public void stop() {
+			stopPump(outputThread);
+			stopPump(errorThread);
+		}
+		private Thread startPump(InputStream in, OutputStream out) {
+			Thread t = new Thread(new Pumper(in, out));
+			t.start();
+			return t;
+		}
+		private void stopPump(Thread t) {
 			try {
-				br = new BufferedReader(new InputStreamReader(is));
-				String line;
-				while ((line = br.readLine()) != null) {
-					writer.write(line + "\n");
-					writer.flush();
+				t.join();
+			} catch (InterruptedException ex) {
+				t.interrupt();
+			}
+		}
+	}
+
+	private static class Pumper implements Runnable {
+		private InputStream is;
+		private OutputStream os;
+		public Pumper(InputStream is, OutputStream os) {
+			this.is = is;
+			this.os = os;
+		}
+		public void run() {
+			try {
+				final byte[] buffer = new byte[4096];
+				int len;
+				while ((len = is.read(buffer)) > -1) {
+					os.write(buffer, 0, len);
 					if (Thread.interrupted()) {
 						break;
 					}
 				}
 			}
-			catch (Exception e) {
-				e.printStackTrace();
+			catch (IOException ignored) {
+				ignored.printStackTrace();
 			}
 			finally {
 				try {
-					writer.flush();
-				}
-				catch (IOException ex) {}
-
-				if (br != null) {
-					try {
-						br.close();
-					}
-					catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
-				if (is != null) {
-					try {
-						is.close();
-					}
-					catch (Exception e) {
-						e.printStackTrace();
-						is = null;
-					}
-				}
+					os.flush();
+				} catch (IOException ignored) {}
+				closeQuietly(os);
 			}
 		}
 	}
@@ -118,8 +121,33 @@ public class LFSystemUtil {
 	public static void main(String[] args) throws Exception {
 		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 
-		String[] cmd = new String[] {"/bin/sh", "-c", "echo hello"};
-		String str = LFSystemUtil.execute(cmd, true);
-		System.out.println(str);
+		final String[] cmd = new String[] {"/bin/sh", "-c", "pwd"};
+
+		ExecutorService executorService = Executors.newFixedThreadPool(100);
+		for(int i = 0; i < 100; i++) {
+			executorService.submit(new Runnable() {
+				@Override
+				public void run() {
+					try {
+						String str = LFSystemUtil.execute(cmd, true);
+						System.out.println("result: " + str);
+					}
+					catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			});
+		}
+
+		executorService.shutdown();
+	}
+
+	private static void closeQuietly(Closeable c) {
+		if (c != null) {
+			try {
+				c.close();
+			}
+			catch (IOException ignored) {}
+		}
 	}
 }

@@ -22,21 +22,24 @@ public class ProcessExecutorTest {
 	private String consoleCharset;
 	
 	
-//	@Before
+	@Before
 	public void setup() {
 		environmentCommand = SystemUtils.IS_OS_WINDOWS ? "cmd /c set" : "sh -c env";
 		consoleCharset = "MS949";
 	}
 	
-//	@Test
+	@Test
 	public void setWorkingDirectory() throws IOException {
 		String userHome = SystemUtils.getSystemProperty("user.home");
+		String command = SystemUtils.IS_OS_WINDOWS
+				? "cmd /c dir /w"
+				: "/bin/sh -c pwd";
 		
 		ToStringStreamHandler toStringStreamHandler = new ToStringStreamHandler();
 		ProcessExecutor processExecutor = new ProcessExecutor();
 		processExecutor.setWorkingDirectory(new File(userHome));
 		processExecutor.setStreamHandler(toStringStreamHandler);
-		processExecutor.execute("cmd /c dir /w");
+		processExecutor.execute(command);
 		
 		String output = toStringStreamHandler.getOutputString(consoleCharset);
 		Assert.assertTrue(output.contains(userHome));
